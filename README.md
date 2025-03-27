@@ -8,11 +8,16 @@ Repositório do trabalho de DAC sobre uma aplicação de um sistema de aeroporto
 **Ano:** 2025
 
 **Alunos:**
-GRR20230988 - André Luiz Morais de Brito
-GRR20221103 - Carlos Eduardo Camargo Viana
-GRR20221105 - Mariane Roesler - roeslermariane@gmail.com
-GRR20230984 - Pedro Felipe Ribeiro da Silva
-GRR20234975 - Tiago Pareja Vita
+- GRR20230988 - André Luiz Morais de Brito
+- GRR20221103 - Carlos Eduardo Camargo Viana
+- GRR20221105 - Mariane Roesler
+- GRR20230984 - Pedro Felipe Ribeiro da Silva
+- GRR20234975 - Tiago Pareja Vita
+
+## Sub-equipes
+### Configuração inicial das sub-equipes
+- Frontend: André, Carlos e Mariane
+- API Gateway e MS Auth: Pedro e Tiago
 
 ## Estrutura do Projeto
 dac-airport-system/\
