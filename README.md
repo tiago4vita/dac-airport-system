@@ -21,7 +21,7 @@ Repositório do trabalho de DAC sobre uma aplicação de um sistema de aeroporto
 
 ## Estrutura do Projeto
 dac-airport-system/\
-    &emsp;├── frontend/ # Aplicação React\
+    &emsp;├── front-end/ # Aplicação React\
     &emsp;├── api-gateway/ # API Gateway em Node.js\
     &emsp;└── services/ # Microsserviços\
     &emsp;&emsp;    ├──ms-reserva\

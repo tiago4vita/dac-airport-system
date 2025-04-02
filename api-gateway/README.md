@@ -42,7 +42,7 @@ npm install
 - Defina as variáveis necessárias (exemplo):
 ```bash
 PORT=3000
-MICROSERVICE1_URL=http://localhost:3001
+MICROSERVICE_AUTH_URL=http://localhost:3001
 ```
 2.1 Novas variaveis de ambiente devem ser adicionadas no arquivo `.env.example`.
 

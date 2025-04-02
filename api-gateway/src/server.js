@@ -18,7 +18,7 @@ app.get('/health', (req, res) => {
 });
 
 // Route traffic to microservices
-app.use('/service1', createProxyMiddleware(process.env.MICROSERVICE1_URL));
+app.use('/service1', createProxyMiddleware(process.env.MICROSERVICE_AUTH_URL));
 app.use('/service2', createProxyMiddleware(process.env.MICROSERVICE2_URL));
 
 // Define the port

@@ -1,0 +1,43 @@
+services:
+  api-gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - MICROSERVICE_AUTH_URL=http://ms-auth:8080
+    depends_on:
+      - ms-auth
+    networks:
+      - airport-network
+
+  ms-auth:
+    build:
+      context: ./services/ms-auth/airport-system.ms-auth
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/auth
+    depends_on:
+      - mongodb
+    networks:
+      - airport-network
+
+  mongodb:
+    image: mongo:6
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - airport-network
+
+networks:
+  airport-network:
+    driver: bridge
+
+volumes:
+  mongodb_data: 
