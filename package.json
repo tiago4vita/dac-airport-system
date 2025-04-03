@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "@hookform/resolvers": "^5.0.1",
+    "react-hook-form": "^7.55.0",
+    "react-input-mask": "^2.0.4",
+    "react-router-dom": "^7.4.1",
+    "yup": "^1.6.1"
+  }
+}
