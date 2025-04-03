@@ -1,31 +1,27 @@
-package com.example.meuprojeto.model
+package com.tads.airport_system.ms_auth.model
 
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import java.time.LocalDateTime
+import org.springframework.data.annotation.Id
+import org.springframework.data.mongodb.core.mapping.Document
+import org.springframework.data.mongodb.core.index.Indexed
+import jakarta.validation.constraints.Email
+import jakarta.validation.constraints.Size
 
-@Entity
+@Document(collection = "usuarios")
 data class Usuario(
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null,
+    val id: String? = null,
 
-    @Column(unique = true, nullable = false)
-    @Email(message = "Email inválido")
+    @Indexed(unique = true)
+    @field:Email(message = "Email inválido")
     var email: String,
-    @Column(nullable = false)
-    @Size(min = 8, message = "Senha deve ter no mínimo 8 caracteres")
+
+    @field:Size(min = 8, message = "Senha deve ter no mínimo 8 caracteres")
     val senha: String,
-    val tipoUser: userTipe,
-    val ativo: Boolean
-
-
-
+    
+    val tipoUser: UserType,
+    val ativo: Boolean = true
 ) {
-
-    enum class userTipe{ADMIN,USUARIO,CLIENTE}
+    enum class UserType { ADMIN, USUARIO, CLIENTE }
 
     fun isEmailValid(email: String): Boolean {
         // Verifica se o email é nulo ou vazio
