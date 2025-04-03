@@ -31,9 +31,14 @@ Thumbs.db
 *.swp
 *.swo
 
-#Build
+# Build directories
+**/build/
 build/
 
-#Gradle
+# Gradle
+**/.gradle/
 .gradle/
 
+!gradle/wrapper/gradle-wrapper.jar
+!gradlew
+!gradlew.bat
