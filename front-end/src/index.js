@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import { Login } from './Login';
 import { CadastroCliente }  from './SignUp';
+import { CadastroVoo } from './FlightSCD';
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
