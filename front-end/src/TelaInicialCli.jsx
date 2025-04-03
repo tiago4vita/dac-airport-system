@@ -12,11 +12,10 @@ export const TelaInicialCli = () => {
                     <div className="text-wrapper">DAC Aéreo</div>
                 </div>
                 <div className="rectangle-2">
-                <div className="text-wrapper-2">Saldo Atual</div>
+                    <div className="text-wrapper-2">Saldo Atual</div>
+                    <div className="text-wrapper-3">1.5000</div>
                 </div>
-
-                <div>
-                    <table class="border-collapse border border-gray-400">
+                <table class="border-collapse border border-gray-400">
                     <thead>
                         <tr>
                             <th class="border border-gray-300">Código</th>
@@ -30,36 +29,62 @@ export const TelaInicialCli = () => {
                     </thead>
                     <tbody>
                         <tr>
-                            <td class="border border-gray-300">Indiana</td>
-                            <td class="border border-gray-300">Indianapolis</td>
-                            <td class="border border-gray-300">Indianapolis</td>
-                            <td class="border border-gray-300">Indianapolis</td>
-                            <td class="border border-gray-300">Indianapolis</td>
-                            <td class="border border-gray-300">Indianapolis</td>
-                            <td class="border border-gray-300">Indianapolis</td>
+                            <td class="border border-gray-300">XTR945</td>
+                            <td class="border border-gray-300">YTZ</td>
+                            <td class="border border-gray-300">GRU</td>
+                            <td class="border border-gray-300">02/07/2025</td>
+                            <td class="border border-gray-300">02:50</td>
+                            <td class="border border-gray-300">CRIADA</td>
+                            <td class="border border-gray-300"></td>
                         </tr>
                         <tr>
-                            <td class="border border-gray-300">Ohio</td>
-                            <td class="border border-gray-300">Columbus</td>
-                            <td class="border border-gray-300">Columbus</td>
-                            <td class="border border-gray-300">Columbus</td>
-                            <td class="border border-gray-300">Columbus</td>
-                            <td class="border border-gray-300">Columbus</td>
-                            <td class="border border-gray-300">Columbus</td>
+                            <td class="border border-gray-300">XTR945</td>
+                            <td class="border border-gray-300">YTZ</td>
+                            <td class="border border-gray-300">GRU</td>
+                            <td class="border border-gray-300">02/07/2025</td>
+                            <td class="border border-gray-300">02:50</td>
+                            <td class="border border-gray-300">CRIADA</td>
+                            <td class="border border-gray-300"></td>
                         </tr>
                         <tr>
-                            <td class="border border-gray-300">Michigan</td>
-                            <td class="border border-gray-300">Detroit</td>
-                            <td class="border border-gray-300">Detroit</td>
-                            <td class="border border-gray-300">Detroit</td>
-                            <td class="border border-gray-300">Detroit</td>
-                            <td class="border border-gray-300">Detroit</td>
-                            <td class="border border-gray-300">Detroit</td>
+                            <td class="border border-gray-300">XTR945</td>
+                            <td class="border border-gray-300">YTZ</td>
+                            <td class="border border-gray-300">GRU</td>
+                            <td class="border border-gray-300">02/07/2025</td>
+                            <td class="border border-gray-300">02:50</td>
+                            <td class="border border-gray-300">CRIADA</td>
+                            <td class="border border-gray-300"></td>
+                        </tr>
+                        <tr>
+                            <td class="border border-gray-300">XTR945</td>
+                            <td class="border border-gray-300">YTZ</td>
+                            <td class="border border-gray-300">GRU</td>
+                            <td class="border border-gray-300">02/07/2025</td>
+                            <td class="border border-gray-300">02:50</td>
+                            <td class="border border-gray-300">CRIADA</td>
+                            <td class="border border-gray-300"></td>
+                        </tr>
+                        <tr>
+                            <td class="border border-gray-300">XTR945</td>
+                            <td class="border border-gray-300">YTZ</td>
+                            <td class="border border-gray-300">GRU</td>
+                            <td class="border border-gray-300">02/07/2025</td>
+                            <td class="border border-gray-300">02:50</td>
+                            <td class="border border-gray-300">CRIADA</td>
+                            <td class="border border-gray-300"></td>
+                        </tr>
+                        <tr>
+                            <td class="border border-gray-300">XTR945</td>
+                            <td class="border border-gray-300">YTZ</td>
+                            <td class="border border-gray-300">GRU</td>
+                            <td class="border border-gray-300">02/07/2025</td>
+                            <td class="border border-gray-300">02:50</td>
+                            <td class="border border-gray-300">CRIADA</td>
+                            <td class="border border-gray-300"></td>
                         </tr>
                     </tbody>
                     </table>
-                </div>
-        </div>
+            </div>
         </div>
     );
 };

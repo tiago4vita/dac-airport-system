@@ -220,15 +220,26 @@
   .telaInicialCli .rectangle-2 {
     width: 973px;
     height: 170px;
-    flex-shrink: 0;
     border-radius: 25px;
     background: #0F172A;
     width: 973;
     left: 13px;
+    position: absolute;
+    right: 60px;
   }
 
   .telaInicialCli .grid {
     width: 1055px;
     height: 547px;
-    flex-shrink: 0;
+    flex-shrink: 0; 
+  }
+
+  .telaInicialCli .text-wrapper-3 {
+    color: #FFF;
+    font-family: Inter;
+    font-size: 48px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    text-align: right;
   }
