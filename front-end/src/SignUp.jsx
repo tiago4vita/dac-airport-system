@@ -1,14 +1,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-// Função para gerar uma senha aleatória de 4 dígitos
 const gerarSenha = () => {
-  return Math.floor(1000 + Math.random() * 9000); // Gera um número entre 1000 e 9999
+  return Math.floor(1000 + Math.random() * 9000); 
 };
 
-// Função para enviar a senha por e-mail (simulação)
 const enviarEmail = (email, senha) => {
-  // Simulação de envio de e-mail
   alert(`Senha enviada para o e-mail ${email}: ${senha}`);
 };
 
@@ -137,4 +134,4 @@ const CadastroCliente = () => {
   );
 };
 
-export {CadastroCliente};
+export { CadastroCliente };
