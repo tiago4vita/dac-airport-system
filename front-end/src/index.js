@@ -4,11 +4,13 @@ import './index.css';
 import App from './App';
 import { Login } from './Login';
 import reportWebVitals from './reportWebVitals';
+import { TelaInicialCli } from './TelaInicialCli';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <Login />
+    <TelaInicialCli />
   </React.StrictMode>
 );
 
