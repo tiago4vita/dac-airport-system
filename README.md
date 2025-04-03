@@ -61,3 +61,63 @@ Onde ```<tipo>``` pode ser:
 >- ```fix(R01): acerta o botão de cancelar```\
 >\
 >```O botão de cancelar estava indo para uma página incorreta, agora vai para a página inicial do site```
+
+## Guia Rápido - Docker
+
+### Pré-requisitos
+1. Instalar o [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+2. Ter o repositório clonado localmente
+
+### Executando o Projeto
+1. Abra o terminal na pasta raiz do projeto (dac-airport-system)
+2. Execute os seguintes comandos:
+
+```bash
+# Construir todas as imagens
+docker compose build
+
+# Iniciar todos os serviços
+docker compose up
+```
+
+### Portas dos Serviços
+- Frontend: http://localhost:3000
+- API Gateway: http://localhost:3001
+- MS Auth: http://localhost:8080
+- MongoDB: http://localhost:27017
+
+### Comandos Úteis
+```bash
+# Parar todos os containers
+docker compose down
+
+# Ver logs de um serviço específico
+docker compose logs <nome-do-servico>
+# Exemplo: docker compose logs ms-auth
+
+# Reconstruir um serviço específico
+docker compose build <nome-do-servico>
+# Exemplo: docker compose build front-end
+
+# Reiniciar um serviço específico
+docker compose restart <nome-do-servico>
+# Exemplo: docker compose restart api-gateway
+
+# Limpar todos os containers, volumes e imagens não utilizadas
+docker system prune -a --volumes
+```
+
+### Problemas Comuns
+
+1. **Erro de permissão no Windows**
+   - Execute o Docker Desktop como administrador
+   - Verifique se o WSL2 está instalado e atualizado
+
+2. **Portas já em uso**
+   - Verifique se não há outros serviços usando as mesmas portas
+   - Use o comando `netstat -ano | findstr <PORTA>` para identificar processos
+
+3. **Containers não iniciam**
+   - Verifique se o Docker Desktop está rodando
+   - Tente reiniciar o Docker Desktop
+   - Execute `docker compose down` e depois `docker compose up`
