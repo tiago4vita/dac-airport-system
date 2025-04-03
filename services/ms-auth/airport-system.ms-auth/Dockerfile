@@ -4,7 +4,9 @@ WORKDIR /app
 
 COPY . .
 
-RUN ./gradlew
+# Make gradlew executable and build the project
+RUN chmod +x ./gradlew && \
+    ./gradlew clean bootJar
 
 EXPOSE 8080
 
