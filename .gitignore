@@ -35,6 +35,9 @@ Thumbs.db
 **/build/
 build/
 
+# Binary files
+**/bin/
+
 # Gradle
 **/.gradle/
 .gradle/
