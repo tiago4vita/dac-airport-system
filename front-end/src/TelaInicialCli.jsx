@@ -1,5 +1,5 @@
 import React from "react";
-import "./style.css";
+import "./TelaInicialCli.css";
 
 import Group from "./assets/Group.svg";
 
