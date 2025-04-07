@@ -6,6 +6,7 @@ import { Login } from './Login';
 import { CadastroCliente }  from './SignUp';
 import { CadastroVoo } from './FlightSCD';
 import reportWebVitals from './reportWebVitals';
+import { TelaInicialCli } from './TelaInicialCli';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
