@@ -45,6 +45,9 @@ services:
       - "27017:27017"
     volumes:
       - mongodb_data:/data/db
+      - ./services/ms-auth/airport-system.ms-auth/src/main/resources/mongodb/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+    environment:
+      - MONGO_INITDB_DATABASE=auth
     networks:
       - airport-network
 
