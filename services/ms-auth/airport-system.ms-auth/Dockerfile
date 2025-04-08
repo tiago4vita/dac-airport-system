@@ -1,13 +1,15 @@
+FROM gradle:8.5-jdk17 AS build
+
+WORKDIR /app
+COPY . .
+RUN gradle build -x test
+
 FROM openjdk:17-jdk-slim
 
 WORKDIR /app
+COPY --from=build /app/build/libs/*.jar app.jar
 
-COPY . .
+ENV SPRING_DEVTOOLS_REMOTE_SECRET=mysecret
+ENV SPRING_DEVTOOLS_RESTART_ENABLED=true
 
-# Make gradlew executable and build the project
-RUN chmod +x ./gradlew && \
-    ./gradlew clean bootJar
-
-EXPOSE 8080
-
-CMD ["java", "-jar", "build/libs/airport-system.ms-auth-0.0.1-SNAPSHOT.jar"] 
+ENTRYPOINT ["java", "-Dspring.devtools.restart.enabled=true", "-Dspring-boot.run.jvmArguments='-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8000'", "-jar", "app.jar"] 
