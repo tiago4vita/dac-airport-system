@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Login.css";
 import vector from "../assets/vector.svg";
 import group4174 from "../assets/group-1000004174.png";
@@ -9,6 +9,11 @@ export const Login = () => {
   const [senha, setSenha] = useState("");
   const [emailError, setEmailError] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setEmail("");
+    setSenha("");
+  }, []);
 
   const handleEmailChange = (e) => {
     const value = e.target.value;
@@ -67,8 +72,7 @@ export const Login = () => {
             <input
               id="email"
               type="email"
-              className="input"
-              placeholder="email@exemplo.com"
+              className="input filled"
               value={email}
               onChange={handleEmailChange}
               required
@@ -81,7 +85,7 @@ export const Login = () => {
             <input
               id="senha"
               type="password"
-              className="input"
+              className="input filled"
               value={senha}
               onChange={(e) => setSenha(e.target.value)}
               required

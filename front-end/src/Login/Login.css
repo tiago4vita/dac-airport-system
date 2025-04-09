@@ -114,3 +114,20 @@
   height: auto;
   margin-top: 80px;
 }
+
+.input {
+  height: 46px;
+  border: 1px solid var(--stroke);
+  border-radius: 6px;
+  padding: 0 16px;
+  font-size: 16px;
+  font-family: "Inter-Regular", Helvetica;
+  color: var(--gray); /* Mantém o placeholder mais claro */
+  outline: none;
+}
+
+.input.filled:focus,
+.input.filled:not(:placeholder-shown) {
+  color: var(--dark); /* Texto digitado mais escuro */
+}
+
