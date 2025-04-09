@@ -1,90 +1,147 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { Wallet, Plane, LogOut } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import "./TelaInicialCli.css";
 
-import Group from "../assets/Group.svg";
-
 export const TelaInicialCli = () => {
-    return (
-        <div className = "telaInicialCli">
-            <div className="div">
-                <div className="rectangle-1">
-                    <img className="group-icon" alt="icon" src={Group}/>
-                    <div className="text-wrapper">DAC Aéreo</div>
-                </div>
-                <div className="rectangle-2">
-                    <div className="text-wrapper-2">Saldo Atual</div>
-                    <div className="text-wrapper-3">1.5000</div>
-                </div>
-                <table class="border-collapse border border-gray-400">
-                    <thead>
-                        <tr>
-                            <th class="border border-gray-300">Código</th>
-                            <th class="border border-gray-300">Origem</th>
-                            <th class="border border-gray-300">Destino</th>
-                            <th class="border border-gray-300">Data</th>
-                            <th class="border border-gray-300">Hora</th>
-                            <th class="border border-gray-300">Status</th>
-                            <th class="border border-gray-300">Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="border border-gray-300">XTR945</td>
-                            <td class="border border-gray-300">YTZ</td>
-                            <td class="border border-gray-300">GRU</td>
-                            <td class="border border-gray-300">02/07/2025</td>
-                            <td class="border border-gray-300">02:50</td>
-                            <td class="border border-gray-300">CRIADA</td>
-                            <td class="border border-gray-300"></td>
-                        </tr>
-                        <tr>
-                            <td class="border border-gray-300">XTR945</td>
-                            <td class="border border-gray-300">YTZ</td>
-                            <td class="border border-gray-300">GRU</td>
-                            <td class="border border-gray-300">02/07/2025</td>
-                            <td class="border border-gray-300">02:50</td>
-                            <td class="border border-gray-300">CRIADA</td>
-                            <td class="border border-gray-300"></td>
-                        </tr>
-                        <tr>
-                            <td class="border border-gray-300">XTR945</td>
-                            <td class="border border-gray-300">YTZ</td>
-                            <td class="border border-gray-300">GRU</td>
-                            <td class="border border-gray-300">02/07/2025</td>
-                            <td class="border border-gray-300">02:50</td>
-                            <td class="border border-gray-300">CRIADA</td>
-                            <td class="border border-gray-300"></td>
-                        </tr>
-                        <tr>
-                            <td class="border border-gray-300">XTR945</td>
-                            <td class="border border-gray-300">YTZ</td>
-                            <td class="border border-gray-300">GRU</td>
-                            <td class="border border-gray-300">02/07/2025</td>
-                            <td class="border border-gray-300">02:50</td>
-                            <td class="border border-gray-300">CRIADA</td>
-                            <td class="border border-gray-300"></td>
-                        </tr>
-                        <tr>
-                            <td class="border border-gray-300">XTR945</td>
-                            <td class="border border-gray-300">YTZ</td>
-                            <td class="border border-gray-300">GRU</td>
-                            <td class="border border-gray-300">02/07/2025</td>
-                            <td class="border border-gray-300">02:50</td>
-                            <td class="border border-gray-300">CRIADA</td>
-                            <td class="border border-gray-300"></td>
-                        </tr>
-                        <tr>
-                            <td class="border border-gray-300">XTR945</td>
-                            <td class="border border-gray-300">YTZ</td>
-                            <td class="border border-gray-300">GRU</td>
-                            <td class="border border-gray-300">02/07/2025</td>
-                            <td class="border border-gray-300">02:50</td>
-                            <td class="border border-gray-300">CRIADA</td>
-                            <td class="border border-gray-300"></td>
-                        </tr>
-                    </tbody>
-                    </table>
-            </div>
+  const [cliente, setCliente] = useState(null);
+  const [reservas, setReservas] = useState([]);
+  const [paginaAtual, setPaginaAtual] = useState(1);
+  const [itensPorPagina, setItensPorPagina] = useState(10);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const calcularItensPorAltura = () => {
+      const altura = window.innerHeight;
+      if (altura > 1000) return 13;
+      if (altura > 850) return 10;
+      if (altura > 700) return 8;
+      if (altura > 550) return 5;
+      return 4;
+    };
+    setItensPorPagina(calcularItensPorAltura());
+  }, []);
+
+  useEffect(() => {
+    const codigoCliente = 1010;
+    axios.get(`http://localhost:8080/clientes/${codigoCliente}`).then((res) => {
+      setCliente(res.data);
+    });
+
+    axios
+      .get(`http://localhost:8080/reservas?codigo_cliente=${codigoCliente}`)
+      .then((res) => setReservas(res.data));
+  }, []);
+
+  const totalPaginas = Math.ceil(reservas.length / itensPorPagina);
+  const inicio = (paginaAtual - 1) * itensPorPagina;
+  const reservasPaginadas = reservas.slice(inicio, inicio + itensPorPagina);
+
+  return (
+    <div className="tela-inicial">
+      <aside className="menu-lateral">
+        <div>
+          <div className="logo">
+            <Plane className="icone-aviao" />
+            <span className="logo-texto">DAC Aéreo</span>
+          </div>
+          <span className="menu-titulo">MENU</span>
+          <nav className="navegacao">
+            {[
+              "Página Inicial",
+              "Reservar",
+              "Consultar Reserva",
+              "Comprar Milhas",
+              "Extrato de Milhas",
+              "Check-in",
+            ].map((item, index) => (
+              <button
+                key={index}
+                className={`menu-item ${index === 0 ? "ativo" : ""}`}
+              >
+                {item}
+              </button>
+            ))}
+          </nav>
         </div>
-    );
+        <button className="logout" onClick={() => navigate("/")}>
+          <LogOut className="icone-logout" /> Log Out
+        </button>
+      </aside>
+
+      <main className="conteudo">
+        <section className="card-milhas">
+          <Wallet className="icone-carteira" />
+          <div>
+            <h2>Saldo Atual</h2>
+            <p>
+              {cliente?.saldoMilhas || 0}
+              <span> Milhas</span>
+            </p>
+          </div>
+        </section>
+
+        <section className="tabela-reservas">
+          <table>
+            <thead>
+              <tr>
+                <th>Código</th>
+                <th>Origem</th>
+                <th>Destino</th>
+                <th>Data</th>
+                <th>Hora</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {reservasPaginadas.map((reserva, index) => {
+                const voo = reserva.voo;
+                const dataObj = new Date(voo?.data);
+                const statusClass = reserva.estado.toLowerCase().replace(/\s/g, "-");
+
+                return (
+                  <tr key={index}>
+                    <td>{reserva.codigo}</td>
+                    <td>{voo?.aeroporto_origem?.codigo}</td>
+                    <td>{voo?.aeroporto_destino?.codigo}</td>
+                    <td>{dataObj.toLocaleDateString("pt-BR")}</td>
+                    <td>
+                      {dataObj.toLocaleTimeString("pt-BR", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </td>
+                    <td>
+                      <span className={`status ${statusClass}`}>
+                        {reserva.estado}
+                      </span>
+                    </td>
+                    <td>
+                      <button className="ver">Ver</button>
+                      <button className="cancelar">Cancelar</button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+
+          {/* Paginação */}
+          <div className="paginacao">
+            {Array.from({ length: totalPaginas }, (_, i) => (
+              <button
+                key={i}
+                onClick={() => setPaginaAtual(i + 1)}
+                className={`pagina ${paginaAtual === i + 1 ? "ativa" : ""}`}
+              >
+                {i + 1}
+              </button>
+            ))}
+          </div>
+        </section>
+      </main>
+    </div>
+  );
 };
