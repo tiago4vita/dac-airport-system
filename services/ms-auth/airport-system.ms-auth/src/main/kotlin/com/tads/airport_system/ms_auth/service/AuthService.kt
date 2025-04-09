@@ -7,24 +7,25 @@ import org.springframework.stereotype.Service
 class AuthService(
     private val usuarioRepository: UsuarioRepository
 ) {
-    fun authenticate(email: String, senha: String): Boolean {
-        val usuario = usuarioRepository.findByEmail(email)
+    fun authenticate(login: String, senha: String): Boolean {
+        val usuario = usuarioRepository.findByEmail(login)
         
         if (usuario == null) {
-            println("User not found: $email")
+            println("User not found: $login")
             return false
         }
         
         if (!usuario.ativo) {
-            println("User is inactive: $email")
+            println("User is inactive: $login")
             return false
         }
         
         if (usuario.senha != senha) {
-            println("Password mismatch for user: $email")
+            println("Password mismatch for user: $login")
             return false
         }
         
+        println("User authenticated successfully: $login")
         return true
     }
 } 
