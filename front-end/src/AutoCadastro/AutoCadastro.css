@@ -1,0 +1,122 @@
+/* --- AUTOCADASTRO --- */
+
+.cadastro {
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    padding: 40px;
+    min-height: 100vh;
+    position: relative;
+    font-family: "Inter", sans-serif;
+  }
+  
+  .cadastro-container {
+    width: 100%;
+    max-width: 800px;
+    background: white;
+    position: relative;
+  }
+  
+  .cadastro-titulo {
+    text-align: center;
+    font-size: 48px;
+    font-weight: 700;
+    margin-bottom: 40px;
+    color: var(--dark);
+  }
+  
+  .cadastro-form {
+    background: #f9fafb;
+    border-radius: 8px;
+    padding: 40px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .cadastro-linha {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .cadastro-linha-dupla,
+  .cadastro-linha-tripla {
+    flex-direction: row;
+    gap: 16px;
+  }
+  
+  .cadastro-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .cadastro-input {
+    height: 40px;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    padding: 0 10px;
+    background-color: #f1f5f9;
+    font-size: 14px;
+  }
+  
+  .cadastro-label {
+    font-size: 14px;
+    margin-bottom: 6px;
+    color: #0f172a;
+    font-weight: 500 !important;
+  }
+  
+  .cadastro-botoes {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+  }
+  
+  .cadastro-cancelar {
+    background-color: #64748b;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .cadastro-cadastrar {
+    background-color: #0f172a;
+    color: white;
+    padding: 10px 24px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .cadastro .vector-bg {
+    width: 100%;
+    height: auto;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
+  }
+  
+  .cadastro-disabled {
+    background-color: #e2e8f0 !important;
+    color: #334155 !important;
+    cursor: not-allowed;
+  }
+  
+  .cadastro-label {
+    font-weight: 600 !important;
+    font-family: "Inter-SemiBold", Helvetica !important;
+  }
+  
+  .cadastro-error {
+    color: red;
+    font-size: 14px;
+    margin-top: 4px;
+    font-family: "Inter", Helvetica;
+  }

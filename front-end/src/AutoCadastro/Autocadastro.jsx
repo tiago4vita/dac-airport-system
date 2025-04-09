@@ -2,8 +2,8 @@ import React from "react";
 import { useForm, Controller } from "react-hook-form";
 import { IMaskInput } from "react-imask";
 import { useNavigate } from "react-router-dom";
-import vector from "./assets/vector.svg";
-import "./style.css";
+import vector from "../assets/vector.svg";
+import "./AutoCadastro.css";
 
 export const Autocadastro = () => {
   const {

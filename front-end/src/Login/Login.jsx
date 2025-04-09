@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import "./style.css";
-
-import vector from "./assets/vector.svg";
-import group4174 from "./assets/group-1000004174.png";
-import { Link } from "react-router-dom";
-
+import "./Login.css";
+import vector from "../assets/vector.svg";
+import group4174 from "../assets/group-1000004174.png";
+import { Link, useNavigate } from "react-router-dom";
 
 export const Login = () => {
   const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
   const [emailError, setEmailError] = useState("");
+  const navigate = useNavigate();
 
   const handleEmailChange = (e) => {
     const value = e.target.value;
@@ -19,6 +19,32 @@ export const Login = () => {
       setEmailError("Digite um email válido");
     } else {
       setEmailError("");
+    }
+  };
+
+  const handleLoginSubmit = async (e) => {
+    e.preventDefault();
+
+    if (emailError || !email || !senha) {
+      alert("Preencha todos os campos corretamente.");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `http://localhost:8080/usuarios?login=${email}&senha=${senha}`
+      );
+
+      const data = await response.json();
+
+      if (data.length > 0) {
+        navigate("/homepageC");
+      } else {
+        alert("Login inválido. Verifique suas credenciais.");
+      }
+    } catch (error) {
+      console.error("Erro ao fazer login:", error);
+      alert("Erro ao conectar com o servidor.");
     }
   };
 
@@ -35,7 +61,7 @@ export const Login = () => {
           />
         </div>
 
-        <form className="form">
+        <form className="form" onSubmit={handleLoginSubmit}>
           <div className="form-group">
             <label htmlFor="email" className="label">Email</label>
             <input
@@ -56,7 +82,8 @@ export const Login = () => {
               id="senha"
               type="password"
               className="input"
-              placeholder="••••••••"
+              value={senha}
+              onChange={(e) => setSenha(e.target.value)}
               required
             />
           </div>

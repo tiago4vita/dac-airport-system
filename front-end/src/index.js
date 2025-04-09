@@ -2,11 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
-import { Login } from './Login';
-import { CadastroCliente }  from './SignUp';
-import { CadastroVoo } from './FlightSCD';
+import { Login } from './Login/Login';
+import { AutoCadastro }  from './AutoCadastro/Autocadastro';
+import { CadastroVoo } from './CadastroVoo/FlightSCD';
 import reportWebVitals from './reportWebVitals';
-import { TelaInicialCli } from './TelaInicialCli';
+import { TelaInicialCli } from './TelaInicialCli/TelaInicialCli';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

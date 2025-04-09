@@ -1,0 +1,116 @@
+/* --- LOGIN --- */
+
+:root {
+  --white: #ffffff;
+  --dark: #0f172a;
+  --gray: rgba(156, 163, 175, 1);
+  --stroke: rgba(223, 228, 234, 1);
+}
+
+.login {
+  background-color: var(--white);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.content {
+  position: relative;
+  width: 100%;
+  max-width: 1440px;
+  padding: 60px 111px 0;
+}
+
+.text-wrapper {
+  font-family: "Inter-SemiBold", Helvetica;
+  font-size: 64px;
+  font-weight: 600;
+  color: var(--dark);
+  margin-bottom: 40px;
+}
+
+.group-image-wrapper {
+  position: absolute;
+  top: 60px;
+  right: 0;
+  width: 698px;
+}
+
+.group-image {
+  width: 100%;
+  height: auto;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  max-width: 475px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label {
+  font-family: "Inter-Medium", Helvetica;
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--dark);
+}
+
+.input {
+  height: 46px;
+  border: 1px solid var(--stroke);
+  border-radius: 6px;
+  padding: 0 16px;
+  font-size: 16px;
+  font-family: "Inter-Regular", Helvetica;
+  color: var(--gray);
+  outline: none;
+}
+
+.error-message {
+  font-size: 14px;
+  color: red;
+  margin-top: 4px;
+  font-family: "Inter", Helvetica;
+}
+
+.n-o-possui-uma-conta {
+  font-size: 16px;
+  font-family: "Inter-Medium", Helvetica;
+  color: var(--dark);
+}
+
+.text-wrapper-4 {
+  color: #0000ee;
+  text-decoration: underline;
+}
+
+.button {
+  margin-top: 16px;
+  height: 46px;
+  width: 137px;
+  background-color: var(--dark);
+  color: var(--white);
+  font-family: "Inter-Medium", Helvetica;
+  font-size: 20px;
+  font-weight: 500;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  align-self: flex-end;
+}
+
+.vector-bg {
+  width: 100%;
+  height: auto;
+  margin-top: 80px;
+}

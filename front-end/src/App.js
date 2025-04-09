@@ -1,7 +1,8 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { Login } from "./Login";
-import { Autocadastro } from "./Autocadastro"; // ou "./Cadastro"
+import { Login } from "./Login/Login";
+import { Autocadastro } from "./AutoCadastro/Autocadastro";
+import { TelaInicialCli } from "./TelaInicialCli/TelaInicialCli";
 import "./App.css";
 
 function App() {
@@ -10,6 +11,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/cadastro" element={<Autocadastro />} />
+        <Route path="/homepageC" element={<TelaInicialCli/>} />
       </Routes>
     </Router>
   );
