@@ -11,7 +11,7 @@ import { TelaInicialCli } from './TelaInicialCli/TelaInicialCli';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />  {/* Aqui vai o roteador com Login e Cadastro */}
+    <CadastroVoo />  {/* Aqui vai o roteador com Login e Cadastro */}
   </React.StrictMode>
 );
 
