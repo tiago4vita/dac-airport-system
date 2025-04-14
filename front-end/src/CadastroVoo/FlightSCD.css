@@ -23,7 +23,7 @@
     border-radius: 8px;
  }
 
-  .menu-titulo{
+  .menu-titulo{ /*Este é o css do menu lateral misturado com o css do titulo, alterar depois*/
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -62,4 +62,665 @@
 
  }
 
- 
+.menu-titulo{ /* Este é o css do titulo da pag, alterar acima*/
+   display: flex;
+   flex-direction: column;
+   align-items: flex-start;
+   padding: 0px;
+   gap: 5px;
+
+   position: absolute;
+   width: 390px;
+   height: 59px;
+   left: 368px;
+   top: 97px;
+   }
+
+   /* dialog 
+
+box-sizing: border-box;
+
+/* Auto layout 
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 24px;
+gap: 16px;
+
+position: absolute;
+width: 1062px;
+height: 438px;
+left: 344px;
+top: 267px;
+
+background: #FFFFFF;
+border: 1px solid #CBD5E1;
+box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.05);
+border-radius: 8px;
+
+
+/* Frame 2 */
+
+/* Auto layout 
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+gap: 14px;
+
+width: 1014px;
+height: 390px;
+
+
+/* Inside auto layout 
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* inputs */
+
+/* Auto layout 
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+gap: 16px;
+
+width: 631px;
+height: 46px;
+
+
+/* Inside auto layout 
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Frame 2 */
+
+/* Auto layout 
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px;
+gap: 16px;
+
+width: 1010px;
+height: 46px;
+
+
+/* Inside auto layout 
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Código* 
+
+width: 243px;
+height: 14px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 500;
+font-size: 20px;
+line-height: 14px;
+/* identical to box height, or 70% 
+text-align: right;
+
+color: #000000;
+
+
+/* Inside auto layout 
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* input/small 
+
+/* Auto layout
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 8px 12px;
+
+width: 751px;
+height: 46px;
+
+background: #FFFFFF;
+border: 1px solid #CBD5E1;
+border-radius: 6px;
+
+/* Inside auto layout 
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Email 
+
+width: 112px;
+height: 20px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 400;
+font-size: 16px;
+line-height: 20px;
+/* identical to box height, or 125% 
+
+color: #9CA3AF;
+
+
+/* Inside auto layout 
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Frame 2 
+
+/* Auto layout 
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px;
+gap: 16px;
+
+width: 1010px;
+height: 48px;
+
+
+/* Inside auto layout 
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Data* 
+
+width: 243px;
+height: 14px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 500;
+font-size: 20px;
+line-height: 14px;
+/* identical to box height, or 70% 
+text-align: right;
+
+color: #000000;
+
+
+/* Inside auto layout 
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Placeholder */
+
+/* Auto layout 
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 12px 16px 12px 20px;
+gap: 10px;
+
+width: 204px;
+height: 48px;
+
+/* White/White 
+background: #FFFFFF;
+border: 1px solid #CBD5E1;
+border-radius: 6px;
+
+/* Inside auto layout 
+flex: none;
+order: 1;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* user-alt 
+
+display: none;
+width: 16px;
+height: 16px;
+
+
+/* Inside auto layout 
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Frame 12 
+
+/* Auto layout
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+align-items: center;
+padding: 0px;
+gap: 116px;
+
+width: 168px;
+height: 24px;
+
+
+/* Inside auto layout 
+flex: none;
+order: 1;
+flex-grow: 1;
+
+
+/* Selecione a Data 
+margin: 0 auto;
+width: 127px;
+height: 24px;
+
+/* Body Medium/Regular 
+font-family: 'Inter';
+font-style: normal;
+font-weight: 400;
+font-size: 16px;
+line-height: 24px;
+/* identical to box height, or 150% 
+
+/* Dark/Dark 6 
+color: #9CA3AF;
+
+
+/* Inside auto layout 
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Vector 
+
+margin: 0 auto;
+width: 20px;
+height: 20px;
+
+background: rgba(17, 25, 40, 0.5);
+
+/* Inside auto layout 
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Horário* 
+
+width: 82px;
+height: 14px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 500;
+font-size: 20px;
+line-height: 14px;
+/* identical to box height, or 70% 
+text-align: right;
+
+color: #000000;
+
+
+/* Inside auto layout 
+flex: none;
+order: 2;
+flex-grow: 0;
+
+
+/* input/small */
+
+/* Auto layout 
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 8px 12px;
+
+width: 93px;
+height: 46px;
+
+background: #FFFFFF;
+border: 1px solid #CBD5E1;
+border-radius: 6px;
+
+/* Inside auto layout 
+flex: none;
+order: 3;
+flex-grow: 0;
+
+
+/* Email 
+
+width: 45px;
+height: 20px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 400;
+font-size: 16px;
+line-height: 20px;
+/* identical to box height, or 125% 
+
+color: #9CA3AF;
+
+
+/* Inside auto layout 
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Qnt. de Poltronas* 
+
+width: 177px;
+height: 20px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 500;
+font-size: 20px;
+line-height: 20px;
+/* identical to box height, or 100% 
+text-align: right;
+
+color: #000000;
+
+
+/* Inside auto layout 
+flex: none;
+order: 4;
+flex-grow: 0;
+
+
+/* input/small */
+
+/* Auto layout 
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 8px 12px;
+
+width: 131px;
+height: 46px;
+
+background: #FFFFFF;
+border: 1px solid #CBD5E1;
+border-radius: 6px;
+
+/* Inside auto layout 
+flex: none;
+order: 5;
+flex-grow: 0;
+
+
+/* Email 
+
+width: 88px;
+height: 20px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 400;
+font-size: 16px;
+line-height: 20px;
+/* identical to box height, or 125% 
+
+color: #9CA3AF;
+
+
+/* Inside auto layout 
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Frame 2 */
+
+/* Auto layout 
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px;
+gap: 16px;
+
+width: 1014px;
+height: 40px;
+
+
+/* Inside auto layout 
+flex: none;
+order: 2;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* Aeroportos* 
+
+width: 243px;
+height: 14px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 500;
+font-size: 20px;
+line-height: 14px;
+/* identical to box height, or 70% 
+text-align: right;
+
+color: #000000;
+
+
+/* Inside auto layout 
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* command */
+
+/* Auto layout 
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+
+width: 351px;
+height: 40px;
+
+border: 1px solid #CBD5E1;
+border-radius: 6px;
+
+/* Inside auto layout 
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Search 
+
+width: 351px;
+height: 40px;
+
+background: #FFFFFF;
+border-radius: 8px;
+
+/* Inside auto layout 
+flex: none;
+order: 0;
+align-self: stretch;
+flex-grow: 0;
+
+
+/* menu item */
+
+/* Auto layout 
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 10px 8px;
+gap: 8px;
+
+position: absolute;
+width: 237px;
+height: 40px;
+left: 8px;
+top: 0px;
+
+background: #FFFFFF;
+
+
+/* ⇤ 
+
+display: none;
+width: 15px;
+height: 20px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 500;
+font-size: 14px;
+line-height: 20px;
+/* identical to box height, or 143% */
+
+
+/* Inside auto layout 
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* icon/search 
+
+width: 16px;
+height: 16px;
+
+opacity: 0.5;
+
+/* Inside auto layout 
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Vector 
+
+position: absolute;
+left: 12.5%;
+right: 20.83%;
+top: 12.5%;
+bottom: 20.83%;
+
+/* slate/900 
+border: 2px solid #0F172A;
+
+
+/* Vector 
+
+position: absolute;
+left: 69.37%;
+right: 12.5%;
+top: 69.38%;
+bottom: 12.5%;
+
+/* slate/900 
+border: 2px solid #0F172A;
+
+
+/* Menu Item 
+
+width: 197px;
+height: 20px;
+
+/* subtle 
+font-family: 'Inter';
+font-style: normal;
+font-weight: 400;
+font-size: 14px;
+line-height: 20px;
+/* identical to box height, or 143% 
+
+color: rgba(15, 23, 42, 0.5);
+
+
+/* Inside auto layout 
+flex: none;
+order: 2;
+flex-grow: 1;
+
+
+/* ⌘⇧B︎ 
+
+display: none;
+width: 33px;
+height: 20px;
+
+/* detail 
+font-family: 'Inter';
+font-style: normal;
+font-weight: 500;
+font-size: 12px;
+line-height: 20px;
+/* identical to box height, or 167% */
+
+/* slate/500 
+/* Button 
+
+box-sizing: border-box;
+
+/* Auto layout 
+display: flex;
+flex-direction: row;
+justify-content: center;
+align-items: center;
+padding: 5px 20px;
+gap: 10px;
+
+width: 215px;
+height: 34px;
+
+/* White/White 
+background: #FFFFFF;
+border: 1px solid #0F172A;
+border-radius: 50px;
+
+/* Inside auto layout 
+flex: none;
+order: 1;
+flex-grow: 0;
+*/
+
+/* Button Text 
+
+width: 95px;
+height: 24px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 500;
+font-size: 20px;
+line-height: 24px;
+
+*/
+
+/* identical to box height, or 120% 
+display: flex;
+align-items: center;
+text-align: center;
+
+color: #0F172A;
+*/
+
+/* Inside auto layout
+flex: none;
+order: 0;
+flex-grow: 0;
+*/
