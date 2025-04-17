@@ -12,7 +12,7 @@
       "cpf": "12345678901",
       "email": "usuario@gmail.com",
       "nome": "Usuário",
-      "saldoMilhas": 1000,
+      "saldoMilhas": 1500,
       "endereco": {
         "cep": "80111000",
         "uf": "Paraná",
@@ -28,7 +28,7 @@
     {
       "codigo": "XPT001",
       "data": "2024-10-10T14:30:00Z",
-      "valor": 250.0,
+      "valor": 500.0,
       "milhas_utilizadas": 50,
       "quantidade_poltronas": 1,
       "codigo_cliente": 1010,
@@ -40,14 +40,24 @@
         "quantidade_poltronas_total": 100,
         "quantidade_poltronas_ocupadas": 90,
         "estado": "CONFIRMADO",
-        "aeroporto_origem": { "codigo": "GRU", "nome": "Guarulhos", "cidade": "São Paulo", "uf": "SP" },
-        "aeroporto_destino": { "codigo": "GIG", "nome": "Galeão", "cidade": "Rio de Janeiro", "uf": "RJ" }
+        "aeroporto_origem": {
+          "codigo": "GRU",
+          "nome": "Guarulhos",
+          "cidade": "São Paulo",
+          "uf": "SP"
+        },
+        "aeroporto_destino": {
+          "codigo": "GIG",
+          "nome": "Galeão",
+          "cidade": "Rio de Janeiro",
+          "uf": "RJ"
+        }
       }
     },
     {
       "codigo": "XPT002",
       "data": "2024-10-11T09:00:00Z",
-      "valor": 300.0,
+      "valor": 600.0,
       "milhas_utilizadas": 60,
       "quantidade_poltronas": 2,
       "codigo_cliente": 1010,
@@ -59,14 +69,24 @@
         "quantidade_poltronas_total": 120,
         "quantidade_poltronas_ocupadas": 110,
         "estado": "CONFIRMADO",
-        "aeroporto_origem": { "codigo": "BSB", "nome": "Brasília", "cidade": "Brasília", "uf": "DF" },
-        "aeroporto_destino": { "codigo": "SSA", "nome": "Salvador", "cidade": "Salvador", "uf": "BA" }
+        "aeroporto_origem": {
+          "codigo": "BSB",
+          "nome": "Brasília",
+          "cidade": "Brasília",
+          "uf": "DF"
+        },
+        "aeroporto_destino": {
+          "codigo": "SSA",
+          "nome": "Salvador",
+          "cidade": "Salvador",
+          "uf": "BA"
+        }
       }
     },
     {
       "codigo": "XPT003",
       "data": "2024-10-12T13:00:00Z",
-      "valor": 220.0,
+      "valor": 370.0,
       "milhas_utilizadas": 30,
       "quantidade_poltronas": 1,
       "codigo_cliente": 1010,
@@ -78,14 +98,24 @@
         "quantidade_poltronas_total": 90,
         "quantidade_poltronas_ocupadas": 85,
         "estado": "CRIADA",
-        "aeroporto_origem": { "codigo": "CNF", "nome": "Confins", "cidade": "Belo Horizonte", "uf": "MG" },
-        "aeroporto_destino": { "codigo": "REC", "nome": "Recife", "cidade": "Recife", "uf": "PE" }
+        "aeroporto_origem": {
+          "codigo": "CNF",
+          "nome": "Confins",
+          "cidade": "Belo Horizonte",
+          "uf": "MG"
+        },
+        "aeroporto_destino": {
+          "codigo": "REC",
+          "nome": "Recife",
+          "cidade": "Recife",
+          "uf": "PE"
+        }
       }
     },
     {
       "codigo": "XPT004",
       "data": "2024-10-13T08:15:00Z",
-      "valor": 180.0,
+      "valor": 280.0,
       "milhas_utilizadas": 20,
       "quantidade_poltronas": 1,
       "codigo_cliente": 1010,
@@ -97,14 +127,24 @@
         "quantidade_poltronas_total": 80,
         "quantidade_poltronas_ocupadas": 75,
         "estado": "CONFIRMADO",
-        "aeroporto_origem": { "codigo": "POA", "nome": "Salgado Filho", "cidade": "Porto Alegre", "uf": "RS" },
-        "aeroporto_destino": { "codigo": "CWB", "nome": "Afonso Pena", "cidade": "Curitiba", "uf": "PR" }
+        "aeroporto_origem": {
+          "codigo": "POA",
+          "nome": "Salgado Filho",
+          "cidade": "Porto Alegre",
+          "uf": "RS"
+        },
+        "aeroporto_destino": {
+          "codigo": "CWB",
+          "nome": "Afonso Pena",
+          "cidade": "Curitiba",
+          "uf": "PR"
+        }
       }
     },
     {
       "codigo": "XPT005",
       "data": "2024-10-14T17:00:00Z",
-      "valor": 260.0,
+      "valor": 610.0,
       "milhas_utilizadas": 70,
       "quantidade_poltronas": 2,
       "codigo_cliente": 1010,
@@ -116,14 +156,24 @@
         "quantidade_poltronas_total": 110,
         "quantidade_poltronas_ocupadas": 105,
         "estado": "CONFIRMADO",
-        "aeroporto_origem": { "codigo": "MAO", "nome": "Eduardo Gomes", "cidade": "Manaus", "uf": "AM" },
-        "aeroporto_destino": { "codigo": "FOR", "nome": "Pinto Martins", "cidade": "Fortaleza", "uf": "CE" }
+        "aeroporto_origem": {
+          "codigo": "MAO",
+          "nome": "Eduardo Gomes",
+          "cidade": "Manaus",
+          "uf": "AM"
+        },
+        "aeroporto_destino": {
+          "codigo": "FOR",
+          "nome": "Pinto Martins",
+          "cidade": "Fortaleza",
+          "uf": "CE"
+        }
       }
     },
     {
       "codigo": "XPT006",
       "data": "2024-10-15T15:45:00Z",
-      "valor": 310.0,
+      "valor": 810.0,
       "milhas_utilizadas": 100,
       "quantidade_poltronas": 3,
       "codigo_cliente": 1010,
@@ -135,14 +185,24 @@
         "quantidade_poltronas_total": 130,
         "quantidade_poltronas_ocupadas": 125,
         "estado": "CRIADA",
-        "aeroporto_origem": { "codigo": "FLN", "nome": "Hercílio Luz", "cidade": "Florianópolis", "uf": "SC" },
-        "aeroporto_destino": { "codigo": "IGU", "nome": "Cataratas", "cidade": "Foz do Iguaçu", "uf": "PR" }
+        "aeroporto_origem": {
+          "codigo": "FLN",
+          "nome": "Hercílio Luz",
+          "cidade": "Florianópolis",
+          "uf": "SC"
+        },
+        "aeroporto_destino": {
+          "codigo": "IGU",
+          "nome": "Cataratas",
+          "cidade": "Foz do Iguaçu",
+          "uf": "PR"
+        }
       }
     },
     {
       "codigo": "XPT007",
       "data": "2024-10-16T11:00:00Z",
-      "valor": 290.0,
+      "valor": 690.0,
       "milhas_utilizadas": 80,
       "quantidade_poltronas": 2,
       "codigo_cliente": 1010,
@@ -154,14 +214,24 @@
         "quantidade_poltronas_total": 150,
         "quantidade_poltronas_ocupadas": 145,
         "estado": "CONFIRMADO",
-        "aeroporto_origem": { "codigo": "NAT", "nome": "São Gonçalo do Amarante", "cidade": "Natal", "uf": "RN" },
-        "aeroporto_destino": { "codigo": "BEL", "nome": "Val de Cans", "cidade": "Belém", "uf": "PA" }
+        "aeroporto_origem": {
+          "codigo": "NAT",
+          "nome": "São Gonçalo do Amarante",
+          "cidade": "Natal",
+          "uf": "RN"
+        },
+        "aeroporto_destino": {
+          "codigo": "BEL",
+          "nome": "Val de Cans",
+          "cidade": "Belém",
+          "uf": "PA"
+        }
       }
     },
     {
       "codigo": "XPT008",
       "data": "2024-10-17T18:00:00Z",
-      "valor": 270.0,
+      "valor": 545.0,
       "milhas_utilizadas": 55,
       "quantidade_poltronas": 1,
       "codigo_cliente": 1010,
@@ -173,14 +243,24 @@
         "quantidade_poltronas_total": 140,
         "quantidade_poltronas_ocupadas": 139,
         "estado": "CRIADA",
-        "aeroporto_origem": { "codigo": "CGB", "nome": "Marechal Rondon", "cidade": "Cuiabá", "uf": "MT" },
-        "aeroporto_destino": { "codigo": "VIX", "nome": "Eurico de Aguiar Salles", "cidade": "Vitória", "uf": "ES" }
+        "aeroporto_origem": {
+          "codigo": "CGB",
+          "nome": "Marechal Rondon",
+          "cidade": "Cuiabá",
+          "uf": "MT"
+        },
+        "aeroporto_destino": {
+          "codigo": "VIX",
+          "nome": "Eurico de Aguiar Salles",
+          "cidade": "Vitória",
+          "uf": "ES"
+        }
       }
     },
     {
       "codigo": "XPT009",
       "data": "2024-10-18T20:30:00Z",
-      "valor": 240.0,
+      "valor": 565.0,
       "milhas_utilizadas": 65,
       "quantidade_poltronas": 2,
       "codigo_cliente": 1010,
@@ -192,14 +272,24 @@
         "quantidade_poltronas_total": 100,
         "quantidade_poltronas_ocupadas": 98,
         "estado": "CONFIRMADO",
-        "aeroporto_origem": { "codigo": "GYN", "nome": "Santa Genoveva", "cidade": "Goiânia", "uf": "GO" },
-        "aeroporto_destino": { "codigo": "SLZ", "nome": "Marechal Cunha Machado", "cidade": "São Luís", "uf": "MA" }
+        "aeroporto_origem": {
+          "codigo": "GYN",
+          "nome": "Santa Genoveva",
+          "cidade": "Goiânia",
+          "uf": "GO"
+        },
+        "aeroporto_destino": {
+          "codigo": "SLZ",
+          "nome": "Marechal Cunha Machado",
+          "cidade": "São Luís",
+          "uf": "MA"
+        }
       }
     },
     {
       "codigo": "XPT010",
       "data": "2024-10-19T07:00:00Z",
-      "valor": 310.0,
+      "valor": 660.0,
       "milhas_utilizadas": 70,
       "quantidade_poltronas": 1,
       "codigo_cliente": 1010,
@@ -211,14 +301,24 @@
         "quantidade_poltronas_total": 110,
         "quantidade_poltronas_ocupadas": 105,
         "estado": "CONFIRMADO",
-        "aeroporto_origem": { "codigo": "MCZ", "nome": "Zumbi dos Palmares", "cidade": "Maceió", "uf": "AL" },
-        "aeroporto_destino": { "codigo": "JPA", "nome": "Castro Pinto", "cidade": "João Pessoa", "uf": "PB" }
+        "aeroporto_origem": {
+          "codigo": "MCZ",
+          "nome": "Zumbi dos Palmares",
+          "cidade": "Maceió",
+          "uf": "AL"
+        },
+        "aeroporto_destino": {
+          "codigo": "JPA",
+          "nome": "Castro Pinto",
+          "cidade": "João Pessoa",
+          "uf": "PB"
+        }
       }
     },
     {
       "codigo": "XPT011",
       "data": "2024-10-20T13:30:00Z",
-      "valor": 200.0,
+      "valor": 400.0,
       "milhas_utilizadas": 40,
       "quantidade_poltronas": 1,
       "codigo_cliente": 1010,
@@ -230,14 +330,24 @@
         "quantidade_poltronas_total": 90,
         "quantidade_poltronas_ocupadas": 89,
         "estado": "CONFIRMADO",
-        "aeroporto_origem": { "codigo": "AJU", "nome": "Santa Maria", "cidade": "Aracaju", "uf": "SE" },
-        "aeroporto_destino": { "codigo": "THE", "nome": "Senador Petrônio Portella", "cidade": "Teresina", "uf": "PI" }
+        "aeroporto_origem": {
+          "codigo": "AJU",
+          "nome": "Santa Maria",
+          "cidade": "Aracaju",
+          "uf": "SE"
+        },
+        "aeroporto_destino": {
+          "codigo": "THE",
+          "nome": "Senador Petrônio Portella",
+          "cidade": "Teresina",
+          "uf": "PI"
+        }
       }
     },
     {
       "codigo": "XPT012",
       "data": "2024-10-21T16:00:00Z",
-      "valor": 330.0,
+      "valor": 780.0,
       "milhas_utilizadas": 90,
       "quantidade_poltronas": 2,
       "codigo_cliente": 1010,
@@ -249,8 +359,18 @@
         "quantidade_poltronas_total": 150,
         "quantidade_poltronas_ocupadas": 140,
         "estado": "CONFIRMADO",
-        "aeroporto_origem": { "codigo": "RBR", "nome": "Plácido de Castro", "cidade": "Rio Branco", "uf": "AC" },
-        "aeroporto_destino": { "codigo": "PVH", "nome": "Belmonte", "cidade": "Porto Velho", "uf": "RO" }
+        "aeroporto_origem": {
+          "codigo": "RBR",
+          "nome": "Plácido de Castro",
+          "cidade": "Rio Branco",
+          "uf": "AC"
+        },
+        "aeroporto_destino": {
+          "codigo": "PVH",
+          "nome": "Belmonte",
+          "cidade": "Porto Velho",
+          "uf": "RO"
+        }
       }
     }
   ]

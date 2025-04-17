@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Login } from "./Login/Login";
 import { Autocadastro } from "./AutoCadastro/Autocadastro";
 import { TelaInicialCli } from "./TelaInicialCli/TelaInicialCli";
+import { VerReserva } from "./VerReserva/VerReserva";
 import "./App.css";
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/cadastro" element={<Autocadastro />} />
         <Route path="/homepageC" element={<TelaInicialCli/>} />
+        <Route path="/ver-reserva/:codigo" element={<VerReserva />} />
       </Routes>
     </Router>
   );

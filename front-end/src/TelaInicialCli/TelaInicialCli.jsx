@@ -25,9 +25,9 @@ export const TelaInicialCli = () => {
 
   useEffect(() => {
     const codigoCliente = 1010;
-    axios.get(`http://localhost:8080/clientes/${codigoCliente}`).then((res) => {
-      setCliente(res.data);
-    });
+    axios.get(`http://localhost:8080/clientes?codigo=${codigoCliente}`).then((res) => {
+      setCliente(res.data[0]); // <-- Acessar o primeiro item do array retornado
+    });    
 
     axios
       .get(`http://localhost:8080/reservas?codigo_cliente=${codigoCliente}`)
@@ -46,23 +46,17 @@ export const TelaInicialCli = () => {
             <Plane className="icone-aviao" />
             <span className="logo-texto">DAC Aéreo</span>
           </div>
-          <span className="menu-titulo">MENU</span>
           <nav className="navegacao">
-            {[
-              "Página Inicial",
-              "Reservar",
-              "Consultar Reserva",
-              "Comprar Milhas",
-              "Extrato de Milhas",
-              "Check-in",
-            ].map((item, index) => (
-              <button
-                key={index}
-                className={`menu-item ${index === 0 ? "ativo" : ""}`}
-              >
-                {item}
-              </button>
-            ))}
+            {["Página Inicial", "Reservar", "Consultar Reserva", "Comprar Milhas", "Extrato de Milhas", "Check-in"].map(
+              (item, index) => (
+                <button
+                  key={index}
+                  className={`menu-item ${index === 0 ? "ativo" : ""}`}
+                >
+                  {item}
+                </button>
+              )
+            )}
           </nav>
         </div>
         <button className="logout" onClick={() => navigate("/")}>
@@ -70,13 +64,14 @@ export const TelaInicialCli = () => {
         </button>
       </aside>
 
+
       <main className="conteudo">
         <section className="card-milhas">
           <Wallet className="icone-carteira" />
           <div>
             <h2>Saldo Atual</h2>
             <p>
-              {cliente?.saldoMilhas || 0}
+              {cliente?.saldoMilhas ?? 0}
               <span> Milhas</span>
             </p>
           </div>
@@ -119,8 +114,26 @@ export const TelaInicialCli = () => {
                       </span>
                     </td>
                     <td>
-                      <button className="ver">Ver</button>
-                      <button className="cancelar">Cancelar</button>
+                    <button
+                        className="ver"
+                        onClick={() => navigate(`/ver-reserva/${reserva.codigo}`)}
+                    >
+                      Ver
+                    </button>
+                      <button
+                        className="cancelar"
+                        disabled={!["criada", "checkin"].includes(reserva.estado.toLowerCase().replace("-", ""))}
+                        style={{
+                          opacity: ["criada", "checkin"].includes(reserva.estado.toLowerCase().replace("-", ""))
+                            ? "1"
+                            : "0.5",
+                          cursor: ["criada", "checkin"].includes(reserva.estado.toLowerCase().replace("-", ""))
+                            ? "pointer"
+                            : "not-allowed",
+                        }}
+                      >
+                        Cancelar
+                      </button>
                     </td>
                   </tr>
                 );
