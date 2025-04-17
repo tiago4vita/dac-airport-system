@@ -1,0 +1,43 @@
+.tela-inicial {
+    display: flex;
+    background: #f8fafc;
+    font-family: "Inter", sans-serif;
+    min-height: 100vh;
+  }
+  
+.menu-lateral {
+    width: 250px;
+    background-color: #0f172a;
+    padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    overflow-y: auto;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+  
+.icone-aviao {
+    font-size: 24px;
+    color: white;
+}
+  
+.logo-texto {
+    color: white;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.navegacao {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
