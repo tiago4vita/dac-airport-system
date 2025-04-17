@@ -1,6 +1,7 @@
 package com.tads.airport_system.ms_func.controller
 
 import com.tads.airport_system.ms_func.dto.FuncDTO
+import com.tads.airport_system.ms_func.model.Func
 import com.tads.airport_system.ms_func.service.FuncService
 
 import org.springframework.http.ResponseEntity
