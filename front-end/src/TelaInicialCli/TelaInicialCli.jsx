@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Wallet, Plane, LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { ModalCancela } from "../ModalCancela/ModalCancela";
 import "./TelaInicialCli.css";
 
 export const TelaInicialCli = () => {
@@ -9,6 +10,7 @@ export const TelaInicialCli = () => {
   const [reservas, setReservas] = useState([]);
   const [paginaAtual, setPaginaAtual] = useState(1);
   const [itensPorPagina, setItensPorPagina] = useState(10);
+  const [reservaSelecionada, setReservaSelecionada] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -23,20 +25,33 @@ export const TelaInicialCli = () => {
     setItensPorPagina(calcularItensPorAltura());
   }, []);
 
-  useEffect(() => {
+  const carregarDados = () => {
     const codigoCliente = 1010;
     axios.get(`http://localhost:8080/clientes?codigo=${codigoCliente}`).then((res) => {
-      setCliente(res.data[0]); // <-- Acessar o primeiro item do array retornado
-    });    
+      setCliente(res.data[0]);
+    });
 
-    axios
-      .get(`http://localhost:8080/reservas?codigo_cliente=${codigoCliente}`)
-      .then((res) => setReservas(res.data));
+    axios.get(`http://localhost:8080/reservas?codigo_cliente=${codigoCliente}`).then((res) => {
+      setReservas(res.data);
+    });
+  };
+
+  useEffect(() => {
+    carregarDados();
   }, []);
 
   const totalPaginas = Math.ceil(reservas.length / itensPorPagina);
   const inicio = (paginaAtual - 1) * itensPorPagina;
   const reservasPaginadas = reservas.slice(inicio, inicio + itensPorPagina);
+
+  const handleCancelar = (reserva) => {
+    setReservaSelecionada(reserva);
+  };
+
+  // Apenas fecha o modal por enquanto
+  const confirmarCancelamento = () => {
+    setReservaSelecionada(null);
+  };
 
   return (
     <div className="tela-inicial">
@@ -63,7 +78,6 @@ export const TelaInicialCli = () => {
           <LogOut className="icone-logout" /> Log Out
         </button>
       </aside>
-
 
       <main className="conteudo">
         <section className="card-milhas">
@@ -114,23 +128,20 @@ export const TelaInicialCli = () => {
                       </span>
                     </td>
                     <td>
-                    <button
+                      <button
                         className="ver"
                         onClick={() => navigate(`/ver-reserva/${reserva.codigo}`)}
-                    >
-                      Ver
-                    </button>
+                      >
+                        Ver
+                      </button>
                       <button
                         className="cancelar"
-                        disabled={!["criada", "checkin"].includes(reserva.estado.toLowerCase().replace("-", ""))}
+                        disabled={!["criada", "check-in"].includes(reserva.estado.toLowerCase())}
                         style={{
-                          opacity: ["criada", "checkin"].includes(reserva.estado.toLowerCase().replace("-", ""))
-                            ? "1"
-                            : "0.5",
-                          cursor: ["criada", "checkin"].includes(reserva.estado.toLowerCase().replace("-", ""))
-                            ? "pointer"
-                            : "not-allowed",
+                          opacity: ["criada", "check-in"].includes(reserva.estado.toLowerCase()) ? "1" : "0.5",
+                          cursor: ["criada", "check-in"].includes(reserva.estado.toLowerCase()) ? "pointer" : "not-allowed",
                         }}
+                        onClick={() => handleCancelar(reserva)}
                       >
                         Cancelar
                       </button>
@@ -141,7 +152,6 @@ export const TelaInicialCli = () => {
             </tbody>
           </table>
 
-          {/* Paginação */}
           <div className="paginacao">
             {Array.from({ length: totalPaginas }, (_, i) => (
               <button
@@ -155,6 +165,14 @@ export const TelaInicialCli = () => {
           </div>
         </section>
       </main>
+
+      {reservaSelecionada && (
+        <ModalCancela
+          isOpen={!!reservaSelecionada}
+          onConfirm={confirmarCancelamento}
+          onCancel={() => setReservaSelecionada(null)}
+        />
+      )}
     </div>
   );
 };

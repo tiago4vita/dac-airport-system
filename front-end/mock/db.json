@@ -1,7 +1,7 @@
 {
   "usuarios": [
     {
-      "id": 1,
+      "id": "1",
       "login": "usuario@gmail.com",
       "senha": "pass"
     }
@@ -21,14 +21,15 @@
         "rua": "Rua das Palmeiras",
         "numero": "500",
         "complemento": "Casa"
-      }
+      },
+      "id": "d09e"
     }
   ],
   "reservas": [
     {
       "codigo": "XPT001",
       "data": "2024-10-10T14:30:00Z",
-      "valor": 500.0,
+      "valor": 500,
       "milhas_utilizadas": 50,
       "quantidade_poltronas": 1,
       "codigo_cliente": 1010,
@@ -36,7 +37,7 @@
       "voo": {
         "codigo": "FL001",
         "data": "2024-10-15T14:30:00Z",
-        "valor_passagem": 500.0,
+        "valor_passagem": 500,
         "quantidade_poltronas_total": 100,
         "quantidade_poltronas_ocupadas": 90,
         "estado": "CONFIRMADO",
@@ -52,12 +53,13 @@
           "cidade": "Rio de Janeiro",
           "uf": "RJ"
         }
-      }
+      },
+      "id": "d2b7"
     },
     {
       "codigo": "XPT002",
       "data": "2024-10-11T09:00:00Z",
-      "valor": 600.0,
+      "valor": 600,
       "milhas_utilizadas": 60,
       "quantidade_poltronas": 2,
       "codigo_cliente": 1010,
@@ -65,7 +67,7 @@
       "voo": {
         "codigo": "FL002",
         "data": "2024-10-20T10:00:00Z",
-        "valor_passagem": 550.0,
+        "valor_passagem": 550,
         "quantidade_poltronas_total": 120,
         "quantidade_poltronas_ocupadas": 110,
         "estado": "CONFIRMADO",
@@ -81,20 +83,21 @@
           "cidade": "Salvador",
           "uf": "BA"
         }
-      }
+      },
+      "id": "2360"
     },
     {
       "codigo": "XPT003",
       "data": "2024-10-12T13:00:00Z",
-      "valor": 370.0,
+      "valor": 370,
       "milhas_utilizadas": 30,
       "quantidade_poltronas": 1,
       "codigo_cliente": 1010,
-      "estado": "CRIADA",
+      "estado": "CANCELADA",
       "voo": {
         "codigo": "FL003",
         "data": "2024-10-22T12:30:00Z",
-        "valor_passagem": 420.0,
+        "valor_passagem": 420,
         "quantidade_poltronas_total": 90,
         "quantidade_poltronas_ocupadas": 85,
         "estado": "CRIADA",
@@ -110,12 +113,13 @@
           "cidade": "Recife",
           "uf": "PE"
         }
-      }
+      },
+      "id": "f8fd"
     },
     {
       "codigo": "XPT004",
       "data": "2024-10-13T08:15:00Z",
-      "valor": 280.0,
+      "valor": 280,
       "milhas_utilizadas": 20,
       "quantidade_poltronas": 1,
       "codigo_cliente": 1010,
@@ -123,7 +127,7 @@
       "voo": {
         "codigo": "FL004",
         "data": "2024-10-23T09:30:00Z",
-        "valor_passagem": 360.0,
+        "valor_passagem": 360,
         "quantidade_poltronas_total": 80,
         "quantidade_poltronas_ocupadas": 75,
         "estado": "CONFIRMADO",
@@ -139,12 +143,13 @@
           "cidade": "Curitiba",
           "uf": "PR"
         }
-      }
+      },
+      "id": "fe59"
     },
     {
       "codigo": "XPT005",
       "data": "2024-10-14T17:00:00Z",
-      "valor": 610.0,
+      "valor": 610,
       "milhas_utilizadas": 70,
       "quantidade_poltronas": 2,
       "codigo_cliente": 1010,
@@ -152,7 +157,7 @@
       "voo": {
         "codigo": "FL005",
         "data": "2024-10-25T16:00:00Z",
-        "valor_passagem": 470.0,
+        "valor_passagem": 470,
         "quantidade_poltronas_total": 110,
         "quantidade_poltronas_ocupadas": 105,
         "estado": "CONFIRMADO",
@@ -168,20 +173,21 @@
           "cidade": "Fortaleza",
           "uf": "CE"
         }
-      }
+      },
+      "id": "496f"
     },
     {
       "codigo": "XPT006",
       "data": "2024-10-15T15:45:00Z",
-      "valor": 810.0,
+      "valor": 810,
       "milhas_utilizadas": 100,
       "quantidade_poltronas": 3,
       "codigo_cliente": 1010,
-      "estado": "CRIADA",
+      "estado": "CANCELADA",
       "voo": {
         "codigo": "FL006",
         "data": "2024-10-28T15:00:00Z",
-        "valor_passagem": 490.0,
+        "valor_passagem": 490,
         "quantidade_poltronas_total": 130,
         "quantidade_poltronas_ocupadas": 125,
         "estado": "CRIADA",
@@ -197,12 +203,13 @@
           "cidade": "Foz do Iguaçu",
           "uf": "PR"
         }
-      }
+      },
+      "id": "4a58"
     },
     {
       "codigo": "XPT007",
       "data": "2024-10-16T11:00:00Z",
-      "valor": 690.0,
+      "valor": 690,
       "milhas_utilizadas": 80,
       "quantidade_poltronas": 2,
       "codigo_cliente": 1010,
@@ -210,7 +217,7 @@
       "voo": {
         "codigo": "FL007",
         "data": "2024-10-30T13:00:00Z",
-        "valor_passagem": 510.0,
+        "valor_passagem": 510,
         "quantidade_poltronas_total": 150,
         "quantidade_poltronas_ocupadas": 145,
         "estado": "CONFIRMADO",
@@ -226,12 +233,13 @@
           "cidade": "Belém",
           "uf": "PA"
         }
-      }
+      },
+      "id": "f5bb"
     },
     {
       "codigo": "XPT008",
       "data": "2024-10-17T18:00:00Z",
-      "valor": 545.0,
+      "valor": 545,
       "milhas_utilizadas": 55,
       "quantidade_poltronas": 1,
       "codigo_cliente": 1010,
@@ -239,7 +247,7 @@
       "voo": {
         "codigo": "FL008",
         "data": "2024-11-02T19:30:00Z",
-        "valor_passagem": 530.0,
+        "valor_passagem": 530,
         "quantidade_poltronas_total": 140,
         "quantidade_poltronas_ocupadas": 139,
         "estado": "CRIADA",
@@ -255,12 +263,13 @@
           "cidade": "Vitória",
           "uf": "ES"
         }
-      }
+      },
+      "id": "f0d1"
     },
     {
       "codigo": "XPT009",
       "data": "2024-10-18T20:30:00Z",
-      "valor": 565.0,
+      "valor": 565,
       "milhas_utilizadas": 65,
       "quantidade_poltronas": 2,
       "codigo_cliente": 1010,
@@ -268,7 +277,7 @@
       "voo": {
         "codigo": "FL009",
         "data": "2024-11-04T21:00:00Z",
-        "valor_passagem": 480.0,
+        "valor_passagem": 480,
         "quantidade_poltronas_total": 100,
         "quantidade_poltronas_ocupadas": 98,
         "estado": "CONFIRMADO",
@@ -284,12 +293,13 @@
           "cidade": "São Luís",
           "uf": "MA"
         }
-      }
+      },
+      "id": "b226"
     },
     {
       "codigo": "XPT010",
       "data": "2024-10-19T07:00:00Z",
-      "valor": 660.0,
+      "valor": 660,
       "milhas_utilizadas": 70,
       "quantidade_poltronas": 1,
       "codigo_cliente": 1010,
@@ -297,7 +307,7 @@
       "voo": {
         "codigo": "FL010",
         "data": "2024-11-06T07:30:00Z",
-        "valor_passagem": 510.0,
+        "valor_passagem": 510,
         "quantidade_poltronas_total": 110,
         "quantidade_poltronas_ocupadas": 105,
         "estado": "CONFIRMADO",
@@ -313,12 +323,13 @@
           "cidade": "João Pessoa",
           "uf": "PB"
         }
-      }
+      },
+      "id": "1cce"
     },
     {
       "codigo": "XPT011",
       "data": "2024-10-20T13:30:00Z",
-      "valor": 400.0,
+      "valor": 400,
       "milhas_utilizadas": 40,
       "quantidade_poltronas": 1,
       "codigo_cliente": 1010,
@@ -326,7 +337,7 @@
       "voo": {
         "codigo": "FL011",
         "data": "2024-11-08T13:30:00Z",
-        "valor_passagem": 400.0,
+        "valor_passagem": 400,
         "quantidade_poltronas_total": 90,
         "quantidade_poltronas_ocupadas": 89,
         "estado": "CONFIRMADO",
@@ -342,12 +353,13 @@
           "cidade": "Teresina",
           "uf": "PI"
         }
-      }
+      },
+      "id": "ce96"
     },
     {
       "codigo": "XPT012",
       "data": "2024-10-21T16:00:00Z",
-      "valor": 780.0,
+      "valor": 780,
       "milhas_utilizadas": 90,
       "quantidade_poltronas": 2,
       "codigo_cliente": 1010,
@@ -355,7 +367,7 @@
       "voo": {
         "codigo": "FL012",
         "data": "2024-11-10T16:00:00Z",
-        "valor_passagem": 530.0,
+        "valor_passagem": 530,
         "quantidade_poltronas_total": 150,
         "quantidade_poltronas_ocupadas": 140,
         "estado": "CONFIRMADO",
@@ -371,7 +383,8 @@
           "cidade": "Porto Velho",
           "uf": "RO"
         }
-      }
+      },
+      "id": "0a0e"
     }
   ]
 }
