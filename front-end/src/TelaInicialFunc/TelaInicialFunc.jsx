@@ -94,14 +94,14 @@ export const TelaInicialFunc = () => {
                                             </span>
                                         </td>
                                         <td>
-                                            {/*O botão inserido aqui é o de confirmar embarque. O path (caminho /confirmar-embarque/ ainda não foi setado, porém será.)*/}
+                                            {/*O botão inserido abaixo é o de confirmar embarque. O path (caminho /confirmar-embarque/) ainda foi setado, porém funções visuais ainda são necessárias.*/}
                                             <button
                                                 className="confirmar"
                                                 onClick={() => navigate(`/confirmar-embarque/${reserva.codigo}`)}
                                                 >
                                                     Confirmar
                                             </button>
-                                            {/*O botão inserido aqui é o de cancelar embarque. As funções ainda não estão completamente implementadas, mas serão.*/}
+                                            {/*O botão inserido abaixo é o de cancelar embarque. As funções ainda não estão completamente implementadas, mas serão.*/}
                                             <button
                                                 className="cancelar"
                                                 disabled={!["confirmada"].includes(reserva.estado.toLowerCase().replace("-", ""))}
@@ -115,6 +115,12 @@ export const TelaInicialFunc = () => {
                                                 }}
                                             >
                                                 Cancelar
+                                            </button>
+                                            {/*O botão inserido aqui é o de realizar embarque. As funções ainda não estão completamente implementadas, mas serão.*/}
+                                            <button
+                                                className="realizar"
+                                                >
+                                                <Plane className="icone-aviao" />
                                             </button>
                                         </td>
                                     </tr>

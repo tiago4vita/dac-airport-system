@@ -140,6 +140,12 @@
     cursor: pointer;
 }
 
+.realizar {
+  background-color: #0f172a;
+  color: white;
+  border: none;
+}
+
 .paginacao {
     display: flex;
     justify-content: center;
