@@ -41,3 +41,125 @@
     flex-direction: column;
     gap: 12px;
 }
+
+.menu-item {
+    background: none;
+    border: none;
+    color: #e2e8f0;
+    text-align: left;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.menu-item:hover,
+.menu-item.ativo {
+  background-color: #1e293b;
+  color: white;
+}
+
+.logout {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    color: #e2e8f0;
+    font-size: 14px;
+    cursor: pointer;
+    margin-top: auto;
+}
+
+.conteudo {
+    flex: 1;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    margin-left: 270px;
+}
+
+.tabela-reservas table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.tabela-reservas th,
+.tabela-reservas td {
+  padding: 16px;
+  text-align: center;
+}
+
+.tabela-reservas thead {
+  background-color: #f1f5f9;
+  font-weight: 600;
+}
+
+.status {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.status.confirmado {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.status.criada {
+  background-color: #fef9c3;
+  color: #92400e;
+}
+
+.status.check-in {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.confirmar {
+    background: white;
+    color: #0f172a;
+    border: 1px solid #0f172a;
+    padding: 6px 12px;
+    border-radius: 6px;
+    margin-right: 6px;
+    cursor: pointer;
+}
+
+.cancelar {
+    background-color: #0f172a;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.paginacao {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 20px;
+}
+  
+.pagina {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background-color: #e2e8f0;
+    color: #0f172a;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.2s;
+}
+  
+.pagina.ativa {
+    background-color: #0f172a;
+    color: white;
+}
