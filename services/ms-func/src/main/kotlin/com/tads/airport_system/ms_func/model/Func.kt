@@ -7,7 +7,7 @@ import jakarta.persistence.*
 data class Func(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0,
+    var id: Long? = 0,
 
     @Column(nullable = false)
     val userId: Long, // ID do Usuário no microsserviço auth

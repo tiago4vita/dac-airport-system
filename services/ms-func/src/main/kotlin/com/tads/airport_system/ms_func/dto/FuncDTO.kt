@@ -2,7 +2,7 @@ package com.tads.airport_system.ms_func.dto
 import com.tads.airport_system.ms_func.model.Func
 
 data class FuncDTO(
-    val id: Long = 0,
+    val id: Long,
     val userId: Long, // ID do Usuário no microsserviço auth
     val role: String, // Cargo do funcionário
     val department: String // Departamento do funcionário
