@@ -32,13 +32,16 @@ data class Cliente(
     @Column
     var complemento: String?,
 
+    @Column(nullable = false)
+    var bairro: String,
+
     @Column(length = 8, nullable = false)
     var cep: String,
 
     @Column(nullable = false)
     var cidade: String,
 
-    @Column(length = 2, nullable = false)
+    @Column(nullable = false)
     var uf: String,
 
     @Column(nullable = false)

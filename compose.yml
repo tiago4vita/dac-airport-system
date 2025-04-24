@@ -21,8 +21,10 @@ services:
     environment:
       - PORT=3001
       - MICROSERVICE_AUTH_URL=http://ms-auth:8080
+      - MICROSERVICE_CLIENTE_URL=http://ms-cliente:8081
     depends_on:
       - ms-auth
+      - ms-cliente
     networks:
       - airport-network
 
@@ -54,9 +56,38 @@ services:
     networks:
       - airport-network
 
+  ms-cliente:
+    build:
+      context: ./services/ms-cliente/airport-system.ms-cliente
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-cliente:5432/cliente_db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+    depends_on:
+      - postgres-cliente
+    networks:
+      - airport-network
+
+  postgres-cliente:
+    image: postgres:16
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_DB=cliente_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - postgres_cliente_data:/var/lib/postgresql/data
+    networks:
+      - airport-network
+
 networks:
   airport-network:
     driver: bridge
 
 volumes:
-  mongodb_data: 
+  mongodb_data:
+  postgres_cliente_data: 

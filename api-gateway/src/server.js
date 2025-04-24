@@ -62,6 +62,42 @@ app.post('/login', validateLoginRequest, async (req, res) => {
   }
 });
 
+app.post('/clientes', async (req, res) => {
+  try {
+    const clienteUrl = `${process.env.MICROSERVICE_CLIENTE_URL}/api/clientes`;
+    const response = await fetch(clienteUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(req.body)
+    });
+
+    res.status(response.status);
+    for (const [key, value] of response.headers.entries()) {
+      res.setHeader(key, value);
+    }
+
+    let responseBody;
+    const contentType = response.headers.get('content-type');
+    if (contentType && contentType.includes('application/json')) {
+      responseBody = await response.json();
+    }
+
+    if (responseBody) {
+      res.json(responseBody);
+    } else {
+      res.end();
+    }
+  } catch (error) {
+    console.error('Error forwarding cliente request:', error);
+    res.status(500).json({
+      error: 'Internal Server Error',
+      message: error.message
+    });
+  }
+});
+
 // Route traffic to microservices
 app.use('/service1', createProxyMiddleware(process.env.MICROSERVICE_AUTH_URL));
 app.use('/service2', createProxyMiddleware(process.env.MICROSERVICE2_URL));
