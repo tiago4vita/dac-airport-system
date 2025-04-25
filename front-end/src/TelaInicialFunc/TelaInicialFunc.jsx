@@ -32,6 +32,7 @@ export const TelaInicialFunc = () => {
 
     return (
         <div className="tela-inicial">
+            
             <aside className="menu-lateral">
                 <div>
                     <div className="logo">
@@ -56,7 +57,13 @@ export const TelaInicialFunc = () => {
                     </button>
             </aside>
 
+
             <main className="conteudo">
+                <section className="etiqueta-funcionario">
+                    <div>
+                        <h4>FUNCIONÁRIO</h4>
+                    </div>
+                </section>
                 <section className="tabela-reservas">
                     <table>
                         <thead>
@@ -94,6 +101,12 @@ export const TelaInicialFunc = () => {
                                             </span>
                                         </td>
                                         <td>
+                                            {/*O botão inserido aqui é o de realizar embarque. As funções ainda não estão completamente implementadas, mas serão.*/}
+                                            <button
+                                                className="embarque"
+                                                >
+                                                Embarque
+                                            </button>
                                             {/*O botão inserido abaixo é o de confirmar embarque. O path (caminho /confirmar-embarque/) ainda foi setado, porém funções visuais ainda são necessárias.*/}
                                             <button
                                                 className="confirmar"
@@ -115,12 +128,6 @@ export const TelaInicialFunc = () => {
                                                 }}
                                             >
                                                 Cancelar
-                                            </button>
-                                            {/*O botão inserido aqui é o de realizar embarque. As funções ainda não estão completamente implementadas, mas serão.*/}
-                                            <button
-                                                className="realizar"
-                                                >
-                                                <Plane className="icone-aviao" />
                                             </button>
                                         </td>
                                     </tr>
