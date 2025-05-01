@@ -23,4 +23,4 @@ class ClienteController(
             ResponseEntity.internalServerError().body(mapOf("error" to "Erro interno do servidor"))
         }
     }
-} 
+}

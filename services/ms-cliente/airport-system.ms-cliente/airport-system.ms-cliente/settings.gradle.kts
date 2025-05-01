@@ -1,1 +1,0 @@
-rootProject.name = "airport-system.ms-cliente"

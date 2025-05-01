@@ -84,6 +84,17 @@ services:
     networks:
       - airport-network
 
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"  # AMQP port
+      - "15672:15672"  # Management UI
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    networks:
+      - airport-network
+
 networks:
   airport-network:
     driver: bridge
