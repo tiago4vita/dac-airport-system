@@ -4,6 +4,7 @@ import { Login } from "./Login/Login";
 import { Autocadastro } from "./AutoCadastro/Autocadastro";
 import { TelaInicialCli } from "./TelaInicialCli/TelaInicialCli";
 import { VerReserva } from "./VerReserva/VerReserva";
+import { ConfirmacaoEmbarque } from "./ConfirmacaoEmbarque/ConfirmacaoEmbarque";
 import { BuscarVoos } from "./BuscarVoos/BuscarVoos";
 import { SideMenuCliente } from "./SideMenuCliente/SideMenuCliente";
 import { EscolherVoo } from "./EscolherVoo/EscolherVoo";
@@ -17,6 +18,8 @@ function App() {
         {/* Rotas públicas */}
         <Route path="/" element={<Login />} />
         <Route path="/cadastro" element={<Autocadastro />} />
+        <Route path="/confirmar-embarque/:codigo" element={<ConfirmacaoEmbarque />} />
+
 
         {/* Rotas com menu lateral (SideMenuCliente) */}
         <Route element={<SideMenuCliente />}>
