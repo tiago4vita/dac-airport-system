@@ -1,7 +1,6 @@
 package com.tads.airport_system.ms_auth.service
 
 import com.tads.airport_system.ms_auth.repository.UsuarioRepository
-import org.springframework.stereotype.Service
 
 @Service
 class AuthService(
