@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*
 
 class FuncController(
     private val funcService: FuncService
-) 
+) {
     @PostMapping("/create")
     fun createFunc(@RequestBody funcDTO: FuncDTO): ResponseEntity<FuncDTO> {
         val createdFunc = funcService.createFunc(funcDTO)
@@ -71,3 +71,4 @@ class FuncController(
             ResponseEntity.notFound().build()
         }
     }
+}
