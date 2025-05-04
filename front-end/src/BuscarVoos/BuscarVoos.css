@@ -1,0 +1,106 @@
+.buscar-voos {
+    padding: 40px;
+    font-family: "Inter", sans-serif;
+  }
+  
+  .buscar-voos h2 {
+    margin-bottom: 30px;
+  }
+  
+  .campos-busca {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  
+  .campo {
+    position: relative;
+  }
+  
+  .campo-texto {
+    display: flex;
+    width: 370px;
+    padding: 10px 8px;
+    align-items: center;
+    gap: 8px;
+    background: #FFF;
+    border: 1px solid #CBD5E1;
+    border-radius: 8px;
+  }
+  
+  .sugestoes {
+    position: absolute;
+    top: 100%;
+    width: 100%;
+    background: white;
+    border: 1px solid #cbd5e1;
+    border-top: none;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 100;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .sugestoes li {
+    padding: 10px;
+    cursor: pointer;
+  }
+  
+  .sugestoes li:hover {
+    background: #f1f5f9;
+  }
+  
+  .seta {
+    font-size: 24px;
+    color: #475569;
+  }
+  
+  .botao-buscar {
+    display: flex;
+    width: 144px;
+    padding: 5px 20px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-radius: 50px;
+    border: 1px solid #0F172A;
+    background: #FFF;
+    cursor: pointer;
+    font-weight: 600;
+    margin-left: auto; 
+  }
+  
+  
+  .datas .seta {
+    font-weight: bold;
+    font-size: 1rem;
+    padding: 0.4rem 0.6rem;
+    background-color: white;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+  }
+  
+  .inputs-linha {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  
+  .botoes-linha {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1rem;
+  }
+
+  .erro-mensagem {
+    margin-top: 1rem;
+    color: red;
+    font-weight: 500;
+  }
+  

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Wallet, Plane, LogOut } from "lucide-react";
+import { Wallet } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { ModalCancela } from "../ModalCancela/ModalCancela";
 import "./TelaInicialCli.css";
@@ -48,123 +48,96 @@ export const TelaInicialCli = () => {
     setReservaSelecionada(reserva);
   };
 
-  // Apenas fecha o modal por enquanto
   const confirmarCancelamento = () => {
     setReservaSelecionada(null);
   };
 
   return (
-    <div className="tela-inicial">
-      <aside className="menu-lateral">
+    <>
+      <section className="card-milhas">
+        <Wallet className="icone-carteira" />
         <div>
-          <div className="logo">
-            <Plane className="icone-aviao" />
-            <span className="logo-texto">DAC Aéreo</span>
-          </div>
-          <nav className="navegacao">
-            {["Página Inicial", "Reservar", "Consultar Reserva", "Comprar Milhas", "Extrato de Milhas", "Check-in"].map(
-              (item, index) => (
-                <button
-                  key={index}
-                  className={`menu-item ${index === 0 ? "ativo" : ""}`}
-                >
-                  {item}
-                </button>
-              )
-            )}
-          </nav>
+          <h2>Saldo Atual</h2>
+          <p>
+            {cliente?.saldoMilhas ?? 0}
+            <span> Milhas</span>
+          </p>
         </div>
-        <button className="logout" onClick={() => navigate("/")}>
-          <LogOut className="icone-logout" /> Log Out
-        </button>
-      </aside>
+      </section>
 
-      <main className="conteudo">
-        <section className="card-milhas">
-          <Wallet className="icone-carteira" />
-          <div>
-            <h2>Saldo Atual</h2>
-            <p>
-              {cliente?.saldoMilhas ?? 0}
-              <span> Milhas</span>
-            </p>
-          </div>
-        </section>
+      <section className="tabela-reservas">
+        <table>
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Origem</th>
+              <th>Destino</th>
+              <th>Data</th>
+              <th>Hora</th>
+              <th>Status</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            {reservasPaginadas.map((reserva, index) => {
+              const voo = reserva.voo;
+              const dataObj = new Date(voo?.data);
+              const statusClass = reserva.estado.toLowerCase().replace(/\s/g, "-");
 
-        <section className="tabela-reservas">
-          <table>
-            <thead>
-              <tr>
-                <th>Código</th>
-                <th>Origem</th>
-                <th>Destino</th>
-                <th>Data</th>
-                <th>Hora</th>
-                <th>Status</th>
-                <th>Ações</th>
-              </tr>
-            </thead>
-            <tbody>
-              {reservasPaginadas.map((reserva, index) => {
-                const voo = reserva.voo;
-                const dataObj = new Date(voo?.data);
-                const statusClass = reserva.estado.toLowerCase().replace(/\s/g, "-");
+              return (
+                <tr key={index}>
+                  <td>{reserva.codigo}</td>
+                  <td>{voo?.aeroporto_origem?.codigo}</td>
+                  <td>{voo?.aeroporto_destino?.codigo}</td>
+                  <td>{dataObj.toLocaleDateString("pt-BR")}</td>
+                  <td>
+                    {dataObj.toLocaleTimeString("pt-BR", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </td>
+                  <td>
+                    <span className={`status ${statusClass}`}>
+                      {reserva.estado}
+                    </span>
+                  </td>
+                  <td>
+                    <button
+                      className="ver"
+                      onClick={() => navigate(`ver-reserva/${reserva.codigo}`)}
+                    >
+                      Ver
+                    </button>
+                    <button
+                      className="cancelar"
+                      disabled={!["criada", "check-in"].includes(reserva.estado.toLowerCase())}
+                      style={{
+                        opacity: ["criada", "check-in"].includes(reserva.estado.toLowerCase()) ? "1" : "0.5",
+                        cursor: ["criada", "check-in"].includes(reserva.estado.toLowerCase()) ? "pointer" : "not-allowed",
+                      }}
+                      onClick={() => handleCancelar(reserva)}
+                    >
+                      Cancelar
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
 
-                return (
-                  <tr key={index}>
-                    <td>{reserva.codigo}</td>
-                    <td>{voo?.aeroporto_origem?.codigo}</td>
-                    <td>{voo?.aeroporto_destino?.codigo}</td>
-                    <td>{dataObj.toLocaleDateString("pt-BR")}</td>
-                    <td>
-                      {dataObj.toLocaleTimeString("pt-BR", {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </td>
-                    <td>
-                      <span className={`status ${statusClass}`}>
-                        {reserva.estado}
-                      </span>
-                    </td>
-                    <td>
-                      <button
-                        className="ver"
-                        onClick={() => navigate(`/ver-reserva/${reserva.codigo}`)}
-                      >
-                        Ver
-                      </button>
-                      <button
-                        className="cancelar"
-                        disabled={!["criada", "check-in"].includes(reserva.estado.toLowerCase())}
-                        style={{
-                          opacity: ["criada", "check-in"].includes(reserva.estado.toLowerCase()) ? "1" : "0.5",
-                          cursor: ["criada", "check-in"].includes(reserva.estado.toLowerCase()) ? "pointer" : "not-allowed",
-                        }}
-                        onClick={() => handleCancelar(reserva)}
-                      >
-                        Cancelar
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-
-          <div className="paginacao">
-            {Array.from({ length: totalPaginas }, (_, i) => (
-              <button
-                key={i}
-                onClick={() => setPaginaAtual(i + 1)}
-                className={`pagina ${paginaAtual === i + 1 ? "ativa" : ""}`}
-              >
-                {i + 1}
-              </button>
-            ))}
-          </div>
-        </section>
-      </main>
+        <div className="paginacao">
+          {Array.from({ length: totalPaginas }, (_, i) => (
+            <button
+              key={i}
+              onClick={() => setPaginaAtual(i + 1)}
+              className={`pagina ${paginaAtual === i + 1 ? "ativa" : ""}`}
+            >
+              {i + 1}
+            </button>
+          ))}
+        </div>
+      </section>
 
       {reservaSelecionada && (
         <ModalCancela
@@ -173,6 +146,6 @@ export const TelaInicialCli = () => {
           onCancel={() => setReservaSelecionada(null)}
         />
       )}
-    </div>
+    </>
   );
 };

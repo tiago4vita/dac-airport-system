@@ -4,16 +4,29 @@ import { Login } from "./Login/Login";
 import { Autocadastro } from "./AutoCadastro/Autocadastro";
 import { TelaInicialCli } from "./TelaInicialCli/TelaInicialCli";
 import { VerReserva } from "./VerReserva/VerReserva";
+import { BuscarVoos } from "./BuscarVoos/BuscarVoos";
+import { SideMenuCliente } from "./SideMenuCliente/SideMenuCliente";
+import { EscolherVoo } from "./EscolherVoo/EscolherVoo";
+import { Reservar } from "./Reservar/Reservar";
 import "./App.css";
 
 function App() {
   return (
     <Router>
       <Routes>
+        {/* Rotas públicas */}
         <Route path="/" element={<Login />} />
         <Route path="/cadastro" element={<Autocadastro />} />
-        <Route path="/homepageC" element={<TelaInicialCli/>} />
-        <Route path="/ver-reserva/:codigo" element={<VerReserva />} />
+
+        {/* Rotas com menu lateral (SideMenuCliente) */}
+        <Route element={<SideMenuCliente />}>
+          <Route path="/homepageC" element={<TelaInicialCli />} />
+          <Route path="/homepageC/ver-reserva/:codigo" element={<VerReserva />} />
+          <Route path="/buscar-voos" element={<BuscarVoos />} />
+          <Route path="/buscar-voos/escolher-voo" element={<EscolherVoo />} />
+          <Route path="buscar-voos/escolher-voo/reservar/:codigo" element={<Reservar />} />
+
+        </Route>
       </Routes>
     </Router>
   );
