@@ -1,177 +1,137 @@
-.ver-reserva-container {
-    display: flex;
-    min-height: 100vh;
-    background-color: #f8fafc;
-    font-family: "Inter", sans-serif;
-  }
-  
-  .sidebar {
-    width: 250px;
-    background-color: #0f172a;
-    padding: 2rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-  
-  .logo-container {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    color: #ffffff;
-    font-weight: 600;
-    font-size: 1.25rem;
-  }
-  
-  .menu-title {
-    text-align: center;
-    color: #94a3b8;
-    font-weight: 500;
-  }
-  
-  .menu-items {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-  
-  .menu-button {
-    background: none;
-    border: none;
-    color: #e2e8f0;
-    padding: 0.5rem 1rem;
-    text-align: left;
-    border-radius: 0.5rem;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  .menu-button.active,
-  .menu-button:hover {
-    background-color: #1e293b;
-    color: #ffffff;
-  }
-  
-  .logout-btn {
-    color: #e2e8f0;
-    background: none;
-    border: none;
-    cursor: pointer;
-  }
-  
-  .ver-reserva-content {
-    flex: 1;
-    padding: 2.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    align-items: center;
-  }
-  
-  .card {
-    background-color: #ffffff;
-    border-radius: 0.75rem;
-    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.1);
-    padding: 2rem;
-    width: 100%;
-    max-width: 800px;
-  }
-  
-  .reserva-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 1rem;
-  }
-  
-  .status-badge {
-    padding: 0.25rem 0.75rem;
-    border-radius: 1rem;
-    font-size: 0.875rem;
-    font-weight: 500;
-  }
-  
-  .status.confirmado {
-    background-color: #d1fae5;
-    color: #065f46;
-  }
-  
-  .status.checkin {
-    background-color: #dbeafe;
-    color: #1e40af;
-  }
-  
-  .status.criada {
-    background-color: #fef9c3;
-    color: #92400e;
-  }
-  
-  .reserva-table {
-    width: 100%;
-    text-align: center;
-    margin-bottom: 1.5rem;
-  }
-  
-  .reserva-table th,
-  .reserva-table td {
-    padding: 0.75rem 0;
-  }
-  
-  .reserva-summary {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    border-top: 1px solid #e5e7eb;
-    padding-top: 1rem;
-  }
-  
-  .reserva-summary div {
-    display: flex;
-    justify-content: space-between;
-  }
-  
-  .reserva-summary .total {
-    font-weight: bold;
-    margin-top: 0.5rem;
-  }
-  
-  .flight-info {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .flight-location {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-  
-  .flight-location .icon {
-    color: #0f172a;
-  }
-  
-  .flight-location span {
-    font-size: 0.875rem;
-    color: #64748b;
-  }
-  
-  .arrow-icon {
-    color: #64748b;
-  }
-  
-  .return-btn {
-    border: 1px solid #0f172a;
-    background-color: transparent;
-    color: #0f172a;
-    padding: 0.5rem 1.5rem;
-    border-radius: 9999px;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  
-  .return-btn:hover {
-    background-color: #0f172a;
-    color: #ffffff;
-  }
-  
+.ver-reserva-content {
+  flex: 1;
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: center;
+}
+
+.card {
+  background-color: #ffffff;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.1);
+  padding: 2rem;
+  width: 100%;
+  max-width: 800px;
+}
+
+.reserva-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.status {
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.status.confirmado {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.status.checkin {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.status.criada {
+  background-color: #fef9c3;
+  color: #92400e;
+}
+
+.reserva-table {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  border-collapse: collapse;
+}
+
+.reserva-table th {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.reserva-table td {
+  padding: 0.75rem 0;
+}
+
+.reserva-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 1rem;
+}
+
+.reserva-summary div {
+  display: flex;
+  justify-content: space-between;
+}
+
+.reserva-summary .total {
+  font-weight: bold;
+  margin-top: 0.5rem;
+}
+
+.flight-info {
+  background-color: #ffffff;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.1);
+  padding: 1.5rem;
+  width: 100%;
+  max-width: 800px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #e2e8f0;
+}
+
+.flight-location {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+}
+
+.flight-location .icon {
+  color: #0f172a;
+}
+
+.flight-location span {
+  font-size: 0.875rem;
+  color: #64748b;
+  display: block;
+}
+
+.flight-location strong {
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.arrow-icon {
+  color: #64748b;
+  margin: 0 1rem;
+}
+
+.return-btn {
+  border: 1px solid #0f172a;
+  background-color: transparent;
+  color: #0f172a;
+  padding: 0.75rem 2rem;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 500;
+  margin-top: 1rem;
+}
+
+.return-btn:hover {
+  background-color: #0f172a;
+  color: #ffffff;
+}

@@ -1,0 +1,124 @@
+.escolher-voo {
+  padding: 2rem;
+  background-color: #f9f9fb;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.voltar {
+  background-color: #0a0e2a;
+  color: white;
+  border: none;
+  padding: 0.5rem 1.2rem;
+  border-radius: 12px;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  cursor: pointer;
+}
+
+.voltar:hover {
+  background-color: #1a1e3a;
+}
+
+h2 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.datas {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.data-button {
+  border-radius: 10px;
+  border: 1px solid var(--Stroke, #DFE4EA);
+  background: var(--White-White, #FFF);
+  padding: 0.4rem 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #333;
+  transition: background-color 0.2s, border 0.2s;
+}
+
+.data-button:hover {
+  background-color: #f0f0f0;
+}
+
+.data-button.ativa {
+  background-color: #2e2e38;
+  color: white;
+  font-weight: 600;
+  border: none;
+}
+
+.seta {
+  border: none !important;        
+  background: transparent !important; 
+  padding: 0.4rem 0.6rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+  cursor: pointer;
+}
+
+.lista-voos {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.card-voo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  padding: 1rem 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+}
+
+.card-voo:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background-color: #f8f9fa;
+}
+
+.card-voo:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+.card-voo span {
+  margin: 0 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.card-voo span:nth-child(1) {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.card-voo span:nth-child(5) {
+  align-items: flex-end;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.card-voo span:nth-child(5) div {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: #777;
+}
