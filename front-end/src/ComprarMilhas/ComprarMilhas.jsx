@@ -71,6 +71,10 @@ export const ComprarMilhas = () => {
 
                     </tbody>
                 </table>
+
+                <div>
+                    <p>Seu saldo atual de milhas:</p>
+                </div>
             </section>
       </main>
     </div>
