@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from "react";
+import axios from "axios";
 import { Plane, LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import "./TelaInicialFunc.css";
@@ -24,7 +25,11 @@ export const TelaInicialFunc = () => {
 
     useEffect(() => {
         const codigoFuncionario = 1011;
-    });
+        axios.get("http://localhost:8080/reservas").then((res) => {
+          setReservas(res.data);
+        });
+      }, []);
+      
 
     const totalPaginas = Math.ceil(reservas.length / itensPorPagina);
     const inicio = (paginaAtual - 1) * itensPorPagina;
@@ -40,7 +45,7 @@ export const TelaInicialFunc = () => {
                         <span className="logo-texto">DAC Aéreo</span>
                     </div>
                     <nav className="navegacao">
-                        {["Página Inicial", "Cadastro de Voo", "Listagem de Funcionários", "Inserção de Funcionário", "Alteração de Funcionário", "Remoção de Funcionário"].map(
+                        {["Página Inicial", "Cadastro de Voo", "Listagem de Funcionários"].map(
                             (item, index) => (
                                 <button
                                 key={index}
@@ -73,7 +78,6 @@ export const TelaInicialFunc = () => {
                                 <th>Destino</th>
                                 <th>Data</th>
                                 <th>Hora</th>
-                                <th>Status</th>
                                 <th>Ações</th>
                             </tr>
                         </thead>
@@ -94,11 +98,6 @@ export const TelaInicialFunc = () => {
                                                 hour: "2-digit",
                                                 minute: "2-digit",
                                             })}
-                                        </td>
-                                        <td>
-                                            <span className={`status ${statusClass}`}>
-                                                {reserva.estado}
-                                            </span>
                                         </td>
                                         <td>
                                             {/*O botão inserido aqui é o de realizar embarque. As funções ainda não estão completamente implementadas, mas serão.*/}

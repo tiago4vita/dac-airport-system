@@ -1,35 +1,36 @@
 .tela-inicial {
-    display: flex;
-    background: #f8fafc;
-    font-family: "Inter", sans-serif;
-    min-height: 100vh;
-  }
-  
+  display: flex;
+  background: #f8fafc;
+  font-family: "Inter", sans-serif;
+  min-height: 100vh;
+}
+
 .menu-lateral {
-    width: 250px;
-    background-color: #0f172a;
-    padding: 30px 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    overflow-y: auto;
+  width: 250px;
+  background-color: #0f172a;
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: fixed;
+  z-index: 10;
+  top: 0;
+  bottom: 0;
+  overflow-y: auto;
 }
 
 .logo {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
 }
-  
+
 .icone-aviao {
   font-size: 24px;
   color: white;
 }
-  
+
 .logo-texto {
   color: white;
   font-size: 20px;
@@ -72,35 +73,49 @@
 }
 
 .conteudo {
-  flex: 1;
-  padding: 0px;
+  margin-left: 250px; 
+  padding: 2rem 3rem;
+  padding-top: 100px;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  gap: 40px;
-  margin-left: 270px;
+  align-items: center; 
 }
 
-.etiqueta-funcionario h4 {
-  background: #D9D9D9;
-  color: black;
-  text-align: center;
+.etiqueta-funcionario {
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
-  height: 25px;
-  flex-shrink: 0;
-  margin: 0%;
+  height: 24px; 
+  background: #d1d5db;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 0; /* atrás do menu */
+  font-family: "Inter", sans-serif;
+}
+
+.etiqueta-funcionario h2 {
+  font-size: 0.7rem; 
+  font-weight: 500;
+  color: #1e293b;
+  margin: 0;
+  text-transform: uppercase;
 }
 
 .tabela-reservas {
-  padding: 40px;
+  width: 100%;
+  max-width: 1000px;
+  background-color: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .tabela-reservas table {
-    width: 100%;
-    padding: 40px;
-    border-collapse: collapse;
-    background-color: white;
-    border-radius: 12px;
-    overflow: hidden;
+  width: 100%;
+  border-collapse: collapse;
 }
 
 .tabela-reservas th,
@@ -110,78 +125,80 @@
 }
 
 .tabela-reservas thead {
-  padding: 40px;
   background-color: #f1f5f9;
   font-weight: 600;
 }
 
-.status {
-  padding: 4px 10px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 500;
-}
-
-.status.confirmado {
-  background-color: #d1fae5;
-  color: #065f46;
-}
-
-.status.criada {
-  background-color: #fef9c3;
-  color: #92400e;
-}
-
-.status.check-in {
-  background-color: #dbeafe;
-  color: #1e40af;
-}
-
-.confirmar {
-  background: white;
-  color: #0f172a;
-  border: 1px solid #0f172a;
-  padding: 6px 12px;
-  border-radius: 6px;
-  margin-right: 6px;
+/* Botões uniformes */
+.tabela-reservas button {
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  min-width: 100px;
   cursor: pointer;
+  transition: all 0.2s;
 }
 
-.cancelar {
-    background-color: #0f172a;
-    color: white;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 6px;
-    cursor: pointer;
+/* Estilos individuais */
+.tabela-reservas .embarque {
+  border: 1px solid #0f172a;
+  background-color: white;
+  color: #0f172a;
 }
 
-.realizar {
+.tabela-reservas .embarque:hover:not(:disabled) {
   background-color: #0f172a;
+  color: white;
+}
+
+.tabela-reservas .confirmar {
+  border: 1px solid #0f172a;
+  background-color: white;
+  color: #0f172a;
+}
+
+.tabela-reservas .confirmar:hover:not(:disabled) {
+  background-color: #0f172a;
+  color: white;
+}
+
+.tabela-reservas .cancelar {
+  background-color: #6b7280; /* cinza médio */
   color: white;
   border: none;
 }
 
+.tabela-reservas .cancelar:hover:not(:disabled) {
+  background-color: #4b5563; /* cinza escuro */
+}
+
+.tabela-reservas button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .paginacao {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
 }
-  
+
 .pagina {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    border: none;
-    background-color: #e2e8f0;
-    color: #0f172a;
-    font-weight: 500;
-    cursor: pointer;
-    transition: 0.2s;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background-color: #e2e8f0;
+  color: #0f172a;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.2s;
 }
-  
+
 .pagina.ativa {
-    background-color: #0f172a;
-    color: white;
+  background-color: #0f172a;
+  color: white;
 }
+

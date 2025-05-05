@@ -22,6 +22,7 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/cadastro" element={<Autocadastro />} />
         <Route path="/confirmar-embarque/:codigo" element={<ConfirmacaoEmbarque />} />
+        <Route path="/homepageF" element={<TelaInicialFunc />} />
 
 
         {/* Rotas com menu lateral (SideMenuCliente) */}
