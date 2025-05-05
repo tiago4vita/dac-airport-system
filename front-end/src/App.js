@@ -10,6 +10,8 @@ import { BuscarVoos } from "./BuscarVoos/BuscarVoos";
 import { SideMenuCliente } from "./SideMenuCliente/SideMenuCliente";
 import { EscolherVoo } from "./EscolherVoo/EscolherVoo";
 import { Reservar } from "./Reservar/Reservar";
+import { Consulta } from "./ConsultarReserva/ConsultarReserva"
+import { Checkin } from "./Checkin/Checkin"
 import "./App.css";
 
 function App() {
@@ -20,6 +22,7 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/cadastro" element={<Autocadastro />} />
         <Route path="/confirmar-embarque/:codigo" element={<ConfirmacaoEmbarque />} />
+        <Route path="/homepageF" element={<TelaInicialFunc />} />
 
 
         {/* Rotas com menu lateral (SideMenuCliente) */}
@@ -29,6 +32,8 @@ function App() {
           <Route path="/buscar-voos" element={<BuscarVoos />} />
           <Route path="/buscar-voos/escolher-voo" element={<EscolherVoo />} />
           <Route path="buscar-voos/escolher-voo/reservar/:codigo" element={<Reservar />} />
+          <Route path="/consulta" element={<Consulta />} />
+          <Route path="/checkin" element={<Checkin />} />
 
         </Route>
       </Routes>
