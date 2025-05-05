@@ -1,11 +1,11 @@
-.tela-inicial {
+.tela-inicial-func {
   display: flex;
   background: #f8fafc;
   font-family: "Inter", sans-serif;
   min-height: 100vh;
 }
 
-.menu-lateral {
+.menu-lateral-func {
   width: 250px;
   background-color: #0f172a;
   padding: 30px 20px;
@@ -72,7 +72,7 @@
   margin-top: auto;
 }
 
-.conteudo {
+.conteudo-func {
   margin-left: 250px; 
   padding: 2rem 3rem;
   padding-top: 100px;
@@ -83,17 +83,17 @@
 }
 
 .etiqueta-funcionario {
-  position: fixed;
+  position: absolute;
   top: 0;
-  left: 0;
-  width: 100%;
-  height: 24px; 
+  left: 250px; 
+  width: calc(100% - 250px);
+  height: 24px;
   background: #d1d5db;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 0; /* atrás do menu */
   font-family: "Inter", sans-serif;
+  z-index: 1; 
 }
 
 .etiqueta-funcionario h2 {
@@ -104,7 +104,7 @@
   text-transform: uppercase;
 }
 
-.tabela-reservas {
+.tabela-reservas-func {
   width: 100%;
   max-width: 1000px;
   background-color: white;
@@ -113,24 +113,23 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
-.tabela-reservas table {
+.tabela-reservas-func table {
   width: 100%;
   border-collapse: collapse;
 }
 
-.tabela-reservas th,
-.tabela-reservas td {
+.tabela-reservas-func th,
+.tabela-reservas-func td {
   padding: 16px;
   text-align: center;
 }
 
-.tabela-reservas thead {
+.tabela-reservas-func thead {
   background-color: #f1f5f9;
   font-weight: 600;
 }
 
-/* Botões uniformes */
-.tabela-reservas button {
+.tabela-reservas-func button {
   padding: 6px 14px;
   border-radius: 8px;
   font-weight: 600;
@@ -140,40 +139,39 @@
   transition: all 0.2s;
 }
 
-/* Estilos individuais */
-.tabela-reservas .embarque {
+.tabela-reservas-func .embarque {
   border: 1px solid #0f172a;
   background-color: white;
   color: #0f172a;
 }
 
-.tabela-reservas .embarque:hover:not(:disabled) {
+.tabela-reservas-func .embarque:hover:not(:disabled) {
   background-color: #0f172a;
   color: white;
 }
 
-.tabela-reservas .confirmar {
+.tabela-reservas-func .confirmar {
   border: 1px solid #0f172a;
   background-color: white;
   color: #0f172a;
 }
 
-.tabela-reservas .confirmar:hover:not(:disabled) {
+.tabela-reservas-func .confirmar:hover:not(:disabled) {
   background-color: #0f172a;
   color: white;
 }
 
-.tabela-reservas .cancelar {
+.tabela-reservas-func .cancelar {
   background-color: #6b7280; /* cinza médio */
   color: white;
   border: none;
 }
 
-.tabela-reservas .cancelar:hover:not(:disabled) {
+.tabela-reservas-func .cancelar:hover:not(:disabled) {
   background-color: #4b5563; /* cinza escuro */
 }
 
-.tabela-reservas button:disabled {
+.tabela-reservas-func button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }

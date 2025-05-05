@@ -36,9 +36,9 @@ export const TelaInicialFunc = () => {
     const reservasPaginadas = reservas.slice(inicio, inicio + itensPorPagina);
 
     return (
-        <div className="tela-inicial">
+        <div className="tela-inicial-func">
             
-            <aside className="menu-lateral">
+            <aside className="menu-lateral-func">
                 <div>
                     <div className="logo">
                         <Plane className="icone-aviao" />
@@ -63,13 +63,13 @@ export const TelaInicialFunc = () => {
             </aside>
 
 
-            <main className="conteudo">
+            <main className="conteudo-func">
                 <section className="etiqueta-funcionario">
                     <div>
                         <h4>FUNCIONÁRIO</h4>
                     </div>
                 </section>
-                <section className="tabela-reservas">
+                <section className="tabela-reservas-func">
                     <table>
                         <thead>
                             <tr>

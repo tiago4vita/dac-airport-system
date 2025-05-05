@@ -388,6 +388,68 @@
     }
   ],
 
+ "transacoes": [
+  {
+    "id": 1,
+    "codigo_cliente": 1010,
+    "tipo": "SAÍDA",
+    "codigo_reserva": "XPT001",
+    "data": "2025-03-02",
+    "milhas": 400,
+    "valor": 2000,
+    "origem": "YTZ",
+    "destino": "GRU"
+  },
+  {
+    "id": 2,
+    "codigo_cliente": 1010,
+    "tipo": "SAÍDA",
+    "codigo_reserva": "XPT002",
+    "data": "2025-02-01",
+    "milhas": 100,
+    "valor": 500,
+    "origem": "YEG",
+    "destino": "YTZ"
+  },
+  {
+    "id": 3,
+    "codigo_cliente": 1010,
+    "tipo": "ENTRADA",
+    "codigo_reserva": null,
+    "data": "2024-12-11",
+    "milhas": 400,
+    "valor": 2000
+  },
+  {
+    "id": 4,
+    "codigo_cliente": 1010,
+    "tipo": "ENTRADA",
+    "codigo_reserva": null,
+    "data": "2024-08-10",
+    "milhas": 400,
+    "valor": 2000
+  },
+  {
+    "id": 5,
+    "codigo_cliente": 1010,
+    "tipo": "ENTRADA",
+    "codigo_reserva": null,
+    "data": "2024-06-30",
+    "milhas": 400,
+    "valor": 2000
+  },
+  {
+    "id": 6,
+    "codigo_cliente": 1010,
+    "tipo": "ENTRADA",
+    "codigo_reserva": null,
+    "data": "2024-06-10",
+    "milhas": 300,
+    "valor": 1500
+  }
+],
+
+
   "voos": [
     {
       "codigo": "JNJN4960",

@@ -12,7 +12,7 @@ export const SideMenuCliente = () => {
     { label: "Reservar", path: "/buscar-voos" },
     { label: "Consultar Reserva", path: "/consulta" },
     { label: "Comprar Milhas", path: "#" },
-    { label: "Extrato de Milhas", path: "#" },
+    { label: "Extrato de Milhas", path: "/extrato" },
     { label: "Check-in", path: "/checkin" },
   ];
 

@@ -54,18 +54,18 @@ export const TelaInicialCli = () => {
 
   return (
     <>
-      <section className="card-milhas">
-        <Wallet className="icone-carteira" />
-        <div>
+      <section className="card-milhas-cliente">
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <Wallet className="icone-carteira" />
           <h2>Saldo Atual</h2>
-          <p>
-            {cliente?.saldoMilhas ?? 0}
-            <span> Milhas</span>
-          </p>
         </div>
+        <p>
+          {cliente?.saldoMilhas ?? 0}
+          <span> Milhas</span>
+        </p>
       </section>
 
-      <section className="tabela-reservas">
+      <section className="tabela-reservas-cliente">
         <table>
           <thead>
             <tr>
