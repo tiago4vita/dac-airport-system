@@ -4,6 +4,7 @@ import { Login } from "./Login/Login";
 import { Autocadastro } from "./AutoCadastro/Autocadastro";
 import { TelaInicialCli } from "./TelaInicialCli/TelaInicialCli";
 import { VerReserva } from "./VerReserva/VerReserva";
+import { TelaInicialFunc } from "./TelaInicialFunc/TelaInicialFunc";
 import { ConfirmacaoEmbarque } from "./ConfirmacaoEmbarque/ConfirmacaoEmbarque";
 import { BuscarVoos } from "./BuscarVoos/BuscarVoos";
 import { SideMenuCliente } from "./SideMenuCliente/SideMenuCliente";
