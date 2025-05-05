@@ -157,7 +157,7 @@
   .checkbox-container input[type="checkbox"] {
     width: 16px;
     height: 16px;
-    accent-color: #0a0e2a; /* cor da caixinha marcada */
+    accent-color: #0a0e2a; 
     cursor: pointer;
   }
   
