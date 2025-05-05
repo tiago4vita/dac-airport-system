@@ -9,6 +9,7 @@ import { BuscarVoos } from "./BuscarVoos/BuscarVoos";
 import { SideMenuCliente } from "./SideMenuCliente/SideMenuCliente";
 import { EscolherVoo } from "./EscolherVoo/EscolherVoo";
 import { Reservar } from "./Reservar/Reservar";
+import { Consulta } from "./ConsultarReserva/ConsultarReserva"
 import "./App.css";
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
           <Route path="/buscar-voos" element={<BuscarVoos />} />
           <Route path="/buscar-voos/escolher-voo" element={<EscolherVoo />} />
           <Route path="buscar-voos/escolher-voo/reservar/:codigo" element={<Reservar />} />
+          <Route path="/consulta" element={<Consulta />} />
 
         </Route>
       </Routes>
