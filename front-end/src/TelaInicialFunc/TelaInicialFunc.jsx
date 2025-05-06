@@ -5,7 +5,7 @@ import { EtiquetaFuncionario } from "../LabelFunc/LabelFunc";
 import "./TelaInicialFunc.css";
 
 export const TelaInicialFunc = () => {
-  const [reservas, setReservas] = useState([]);
+  const [voos, setVoos] = useState([]);
   const [paginaAtual, setPaginaAtual] = useState(1);
   const [itensPorPagina, setItensPorPagina] = useState(10);
   const navigate = useNavigate();
@@ -23,14 +23,14 @@ export const TelaInicialFunc = () => {
   }, []);
 
   useEffect(() => {
-    axios.get("http://localhost:8080/reservas").then((res) => {
-      setReservas(res.data);
+    axios.get("http://localhost:8080/voos").then((res) => {
+      setVoos(res.data);
     });
   }, []);
 
-  const totalPaginas = Math.ceil(reservas.length / itensPorPagina);
+  const totalPaginas = Math.ceil(voos.length / itensPorPagina);
   const inicio = (paginaAtual - 1) * itensPorPagina;
-  const reservasPaginadas = reservas.slice(inicio, inicio + itensPorPagina);
+  const voosPaginados = voos.slice(inicio, inicio + itensPorPagina);
 
   return (
     <>
@@ -38,9 +38,12 @@ export const TelaInicialFunc = () => {
 
       <div className="tela-inicial-func">
         <div className="titulo-funcionario">
-            <h2>Reservas Pendentes para Embarque</h2>
-            <p className="subtitulo">Apenas voos que acontecerão dentro de 48 horas estão listados</p>
+          <h2>Reservas Pendentes para Embarque</h2>
+          <p className="subtitulo">
+            Apenas voos que acontecerão dentro de 48 horas estão listados
+          </p>
         </div>
+
         <section className="tabela-reservas-func">
           <table>
             <thead>
@@ -54,15 +57,14 @@ export const TelaInicialFunc = () => {
               </tr>
             </thead>
             <tbody>
-              {reservasPaginadas.map((reserva, index) => {
-                const voo = reserva.voo;
-                const dataObj = new Date(voo?.data);
+              {voosPaginados.map((voo, index) => {
+                const dataObj = new Date(voo.data);
 
                 return (
                   <tr key={index}>
-                    <td>{reserva.codigo}</td>
-                    <td>{voo?.aeroporto_origem?.codigo}</td>
-                    <td>{voo?.aeroporto_destino?.codigo}</td>
+                    <td>{voo.codigo}</td>
+                    <td>{voo.aeroporto_origem?.codigo}</td>
+                    <td>{voo.aeroporto_destino?.codigo}</td>
                     <td>{dataObj.toLocaleDateString("pt-BR")}</td>
                     <td>
                       {dataObj.toLocaleTimeString("pt-BR", {
@@ -75,18 +77,14 @@ export const TelaInicialFunc = () => {
                       <button
                         className="confirmar"
                         onClick={() =>
-                          navigate(`/confirmar-embarque/${reserva.codigo}`)
+                          navigate(`/confirmar-embarque/${voo.codigo}`)
                         }
                       >
                         Confirmar
                       </button>
                       <button
                         className="cancelar"
-                        disabled={
-                          !["confirmada"].includes(
-                            reserva.estado.toLowerCase()
-                          )
-                        }
+                        disabled={voo.estado.toLowerCase() !== "criada"}
                       >
                         Cancelar
                       </button>
@@ -97,18 +95,19 @@ export const TelaInicialFunc = () => {
             </tbody>
           </table>
 
-          <div className="paginacao">
-            {Array.from({ length: totalPaginas }, (_, i) => (
-              <button
-                key={i}
-                onClick={() => setPaginaAtual(i + 1)}
-                className={`pagina ${paginaAtual === i + 1 ? "ativa" : ""}`}
-              >
-                {i + 1}
-              </button>
-            ))}
-          </div>
-        </section>
+          </section>
+
+        <div className="paginacao">  {/* ✅ CORRETO - Fora do .tabela-reservas-func */}
+        {Array.from({ length: totalPaginas }, (_, i) => (
+            <button
+            key={i}
+            onClick={() => setPaginaAtual(i + 1)}
+            className={`pagina ${paginaAtual === i + 1 ? "ativa" : ""}`}
+            >
+            {i + 1}
+            </button>
+        ))}
+        </div>
       </div>
     </>
   );
