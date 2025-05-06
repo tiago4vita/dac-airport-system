@@ -1,0 +1,50 @@
+.saldo-milhas {
+    background-color: #0f172a;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-radius: 16px;
+    padding: 24px 32px;
+    max-width: 1000px;
+    width: 100%;
+    margin: 0 auto 2rem auto;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .saldo-milhas .esquerda {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .saldo-milhas .esquerda svg {
+    width: 24px;
+    height: 24px;
+    stroke: white;
+  }
+  
+  .saldo-milhas .esquerda h2 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 500;
+  }
+  
+  .saldo-milhas .direita {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+  
+  .saldo-milhas .milhas {
+    font-size: 32px;
+    font-weight: 700;
+  }
+  
+  .saldo-milhas .unidade {
+    font-size: 12px;
+    font-weight: 400;
+    margin-top: 4px;
+  }
+  

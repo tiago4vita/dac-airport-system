@@ -1,0 +1,23 @@
+.etiqueta-funcionario {
+    position: fixed;
+    top: 0;
+    left: 250px; 
+    right: 0;
+    height: 24px; 
+    background: #d1d5db;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Inter", sans-serif;
+    font-weight: 700;
+    z-index: 1; 
+  }
+  
+  .etiqueta-funcionario h2 {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
+    text-transform: uppercase;
+  }
+  

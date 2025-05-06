@@ -5,39 +5,7 @@
   min-height: 100vh;
 }
 
-.card-milhas {
-  display: flex;
-  align-items: center;
-  background: #0f172a;
-  color: white;
-  padding: 20px 30px;
-  border-radius: 16px;
-  gap: 20px;
-  max-width: 400px;
-}
-
-.icone-carteira {
-  font-size: 32px;
-}
-
-.card-milhas h2 {
-  margin: 0;
-  font-size: 18px;
-  font-weight: 500;
-}
-
-.card-milhas p {
-  font-size: 28px;
-  font-weight: 700;
-}
-
-.card-milhas span {
-  font-size: 14px;
-  font-weight: 400;
-  margin-left: 4px;
-}
-
-.tabela-reservas table {
+.tabela-reservas-cliente table {
   width: 100%;
   border-collapse: collapse;
   background-color: white;
@@ -45,13 +13,13 @@
   overflow: hidden;
 }
 
-.tabela-reservas th,
-.tabela-reservas td {
+.tabela-reservas-cliente th,
+.tabela-reservas-cliente td {
   padding: 16px;
   text-align: center;
 }
 
-.tabela-reservas thead {
+.tabela-reservas-cliente thead {
   background-color: #f1f5f9;
   font-weight: 600;
 }

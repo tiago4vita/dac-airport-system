@@ -3,6 +3,7 @@ import axios from "axios";
 import { Wallet } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { ModalCancela } from "../ModalCancela/ModalCancela";
+import { SaldoMilhas } from "../SaldoMilhas/SaldoMilhas";
 import "./TelaInicialCli.css";
 
 export const TelaInicialCli = () => {
@@ -54,18 +55,9 @@ export const TelaInicialCli = () => {
 
   return (
     <>
-      <section className="card-milhas">
-        <Wallet className="icone-carteira" />
-        <div>
-          <h2>Saldo Atual</h2>
-          <p>
-            {cliente?.saldoMilhas ?? 0}
-            <span> Milhas</span>
-          </p>
-        </div>
-      </section>
+      <SaldoMilhas saldo={cliente?.saldoMilhas ?? 0} />
 
-      <section className="tabela-reservas">
+      <section className="tabela-reservas-cliente">
         <table>
           <thead>
             <tr>
