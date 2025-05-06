@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Wallet } from "lucide-react";
+import { SaldoMilhas } from "../SaldoMilhas/SaldoMilhas";
 import "./ExtratoMilhas.css";
 
 export const Extrato = () => {
@@ -44,16 +45,7 @@ export const Extrato = () => {
 
   return (
     <>
-      <section className="card-milhas-cliente">
-        <Wallet className="icone-carteira" />
-        <div>
-          <h2>Saldo Atual</h2>
-          <p>
-            {(cliente?.saldoMilhas ?? 0).toLocaleString("pt-BR")}
-            <span> Milhas</span>
-          </p>
-        </div>
-      </section>
+      <SaldoMilhas saldo={cliente?.saldoMilhas ?? 0} />
 
       <section className="tabela-reservas">
         <table>

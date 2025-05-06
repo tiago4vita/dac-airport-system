@@ -169,7 +169,9 @@ export const Reservar = () => {
           </div>
 
           <div className="resumo">
-            <p>Subtotal: <strong>{subtotal.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}</strong></p>
+            <p>
+              Subtotal: <strong>{quantidade} x {valorPorPassagem.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}</strong>
+            </p>
             <p>Milhas Utilizadas (-): <strong>{desconto.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}</strong></p>
             <p>Total a pagar: <strong>{total.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}</strong></p>
           </div>
