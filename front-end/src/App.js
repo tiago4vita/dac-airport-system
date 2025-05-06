@@ -36,11 +36,11 @@ function App() {
           <Route path="/consulta" element={<Consulta />} />
           <Route path="/checkin" element={<Checkin />} />
           <Route path="/extrato" element={<Extrato />} />
-          <Route path="/" element={<Home />} />
-          <Route path="/cadastro-voo" element={<CadastroVoo />} />
-          <Route path="/funcionarios" element={<Funcionarios />} />
-          {/*<Route path="/logout" element={<Logout />} /> = tela de logout do funcionario vai para onde?*/}
         </Route>
+
+        {/* Rotas com menu lateral (SideMenuFunc) */}
+          {/*<Route path="/cadastro-voo" element={<CadastroVoo />} />*/}
+          {/*<Route path="/funcionarios" element={<Funcionarios />} />*/}
       </Routes>
     </Router>
   );
