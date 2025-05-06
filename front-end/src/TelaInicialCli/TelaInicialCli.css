@@ -5,45 +5,6 @@
   min-height: 100vh;
 }
 
-.card-milhas-cliente {
-  display: flex;
-  align-items: center;
-  background: #0f172a;
-  color: white;
-  padding: 20px 30px;
-  border-radius: 16px;
-  gap: 20px;
-  max-width: 400px;
-  margin: 0 auto 2rem auto;
-}
-
-.card-milhas-cliente .icone-carteira {
-  width: 24px;
-  height: 24px;
-  margin-right: 12px;
-}
-
-.card-milhas-cliente h2 {
-  font-size: 14px;
-  font-weight: 500;
-  margin: 0;
-  color: #ffffff;
-}
-
-.card-milhas-cliente p {
-  font-size: 32px;
-  font-weight: 700;
-  margin: 0;
-  color: #ffffff;
-}
-
-.card-milhas-cliente span {
-  font-size: 12px;
-  font-weight: 400;
-  margin-left: 4px;
-  color: #ffffff;
-}
-
 .tabela-reservas-cliente table {
   width: 100%;
   border-collapse: collapse;
