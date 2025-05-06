@@ -8,6 +8,7 @@ import { TelaInicialFunc } from "./TelaInicialFunc/TelaInicialFunc";
 import { ConfirmacaoEmbarque } from "./ConfirmacaoEmbarque/ConfirmacaoEmbarque";
 import { BuscarVoos } from "./BuscarVoos/BuscarVoos";
 import { SideMenuCliente } from "./SideMenuCliente/SideMenuCliente";
+import { SideMenuFunc } from "./SideMenuFunc/SideMenuFunc"
 import { EscolherVoo } from "./EscolherVoo/EscolherVoo";
 import { Reservar } from "./Reservar/Reservar";
 import { Consulta } from "./ConsultarReserva/ConsultarReserva"
@@ -24,9 +25,7 @@ function App() {
         <Route path="/cadastro" element={<Autocadastro />} />
         <Route path="/confirmar-embarque/:codigo" element={<ConfirmacaoEmbarque />} />
 
-
-
-        {/* Rotas com menu lateral (SideMenuCliente) */}
+        {/* Cliente */}
         <Route element={<SideMenuCliente />}>
           <Route path="/homepageC" element={<TelaInicialCli />} />
           <Route path="/homepageC/ver-reserva/:codigo" element={<VerReserva />} />
@@ -36,7 +35,11 @@ function App() {
           <Route path="/consulta" element={<Consulta />} />
           <Route path="/checkin" element={<Checkin />} />
           <Route path="/extrato" element={<Extrato />} />
+        </Route>
 
+        {/* Funcionário */}
+        <Route element={<SideMenuFunc />}>
+          <Route path="/homepageF" element={<TelaInicialFunc />} />
         </Route>
       </Routes>
     </Router>

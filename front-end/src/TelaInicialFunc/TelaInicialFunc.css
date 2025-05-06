@@ -1,112 +1,42 @@
-.tela-inicial-func {
-  display: flex;
-  background: #f8fafc;
+body {
   font-family: "Inter", sans-serif;
+  background-color: #f8fafc;
+}
+
+.tela-inicial-func {
   min-height: 100vh;
+  box-sizing: border-box;
 }
 
-.menu-lateral-func {
-  width: 250px;
-  background-color: #0f172a;
-  padding: 30px 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  position: fixed;
-  z-index: 10;
-  top: 0;
-  bottom: 0;
-  overflow-y: auto;
+.titulo-funcionario {
+  padding: 2rem 2rem 2rem 50px;
+  max-width: 1000px;
+  width: 100%;
 }
 
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 24px;
-}
-
-.icone-aviao {
-  font-size: 24px;
-  color: white;
-}
-
-.logo-texto {
-  color: white;
-  font-size: 20px;
+.titulo-funcionario h2 {
+  font-size: 1.5rem;
   font-weight: 600;
+  margin-bottom: 0.25rem;
 }
 
-.navegacao {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+.titulo-funcionario .subtitulo {
+  color: #575c63;
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
 }
 
-.menu-item {
-  background: none;
-  border: none;
-  color: #e2e8f0;
-  text-align: left;
-  padding: 10px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.menu-item:hover,
-.menu-item.ativo {
-  background-color: #1e293b;
-  color: white;
-}
-
-.logout {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: none;
-  border: none;
-  color: #e2e8f0;
-  font-size: 14px;
-  cursor: pointer;
-  margin-top: auto;
-}
 
 .conteudo-func {
   margin-left: 250px; 
   padding: 2rem 3rem;
-  padding-top: 100px;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center; 
-}
-
-.etiqueta-funcionario {
-  position: absolute;
-  top: 0;
-  left: 250px; 
-  width: calc(100% - 250px);
-  height: 24px;
-  background: #d1d5db;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: "Inter", sans-serif;
-  z-index: 1; 
-}
-
-.etiqueta-funcionario h2 {
-  font-size: 0.7rem; 
-  font-weight: 500;
-  color: #1e293b;
-  margin: 0;
-  text-transform: uppercase;
+  padding-top: 80px;
+  width: 100%;
 }
 
 .tabela-reservas-func {
-  width: 100%;
   max-width: 1000px;
+  margin: 0 auto;
   background-color: white;
   border-radius: 12px;
   overflow: hidden;
@@ -122,6 +52,7 @@
 .tabela-reservas-func td {
   padding: 16px;
   text-align: center;
+  font-size: 14px;
 }
 
 .tabela-reservas-func thead {
@@ -129,20 +60,22 @@
   font-weight: 600;
 }
 
+/* Botões */
 .tabela-reservas-func button {
-  padding: 6px 14px;
-  border-radius: 8px;
+  padding: 6px 12px;
+  border-radius: 6px;
   font-weight: 600;
   font-size: 14px;
-  min-width: 100px;
+  margin: 0 4px;
   cursor: pointer;
   transition: all 0.2s;
+  min-width: 90px;
 }
 
 .tabela-reservas-func .embarque {
-  border: 1px solid #0f172a;
   background-color: white;
   color: #0f172a;
+  border: 1px solid #0f172a;
 }
 
 .tabela-reservas-func .embarque:hover:not(:disabled) {
@@ -151,9 +84,9 @@
 }
 
 .tabela-reservas-func .confirmar {
-  border: 1px solid #0f172a;
   background-color: white;
   color: #0f172a;
+  border: 1px solid #0f172a;
 }
 
 .tabela-reservas-func .confirmar:hover:not(:disabled) {
@@ -162,13 +95,13 @@
 }
 
 .tabela-reservas-func .cancelar {
-  background-color: #6b7280; /* cinza médio */
+  background-color: #6b7280;
   color: white;
   border: none;
 }
 
 .tabela-reservas-func .cancelar:hover:not(:disabled) {
-  background-color: #4b5563; /* cinza escuro */
+  background-color: #4b5563;
 }
 
 .tabela-reservas-func button:disabled {
@@ -176,11 +109,12 @@
   cursor: not-allowed;
 }
 
+/* Paginação */
 .paginacao {
   display: flex;
   justify-content: center;
   gap: 8px;
-  margin-top: 20px;
+  margin: 20px 0;
 }
 
 .pagina {
@@ -199,4 +133,3 @@
   background-color: #0f172a;
   color: white;
 }
-

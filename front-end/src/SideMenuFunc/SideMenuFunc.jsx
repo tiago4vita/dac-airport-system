@@ -1,19 +1,16 @@
 import React from "react";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { Plane, LogOut } from "lucide-react";
-import "./SideMenuCliente.css";
+import "./SideMenuFunc.css";
 
-export const SideMenuCliente = () => {
+export const SideMenuFunc = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
   const menuItems = [
-    { label: "Página Inicial", path: "/homepageC" },
-    { label: "Reservar", path: "/buscar-voos" },
-    { label: "Consultar Reserva", path: "/consulta" },
-    { label: "Comprar Milhas", path: "#" },
-    { label: "Extrato de Milhas", path: "/extrato" },
-    { label: "Check-in", path: "/checkin" },
+    { label: "Página Inicial", path: "/homepageF" },
+    { label: "Cadastro de Voo", path: "/#" },
+    { label: "Listagem de Funcionários", path: "/#" },
   ];
 
   return (
