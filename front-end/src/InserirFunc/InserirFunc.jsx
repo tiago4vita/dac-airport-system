@@ -62,6 +62,7 @@ export default function InserirFunc() {
       email: "",
       telefone: "",
     });
+    navigate("/homepageF");
   };
 
   const navigate = useNavigate();

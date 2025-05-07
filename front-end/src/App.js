@@ -16,8 +16,9 @@ import { ComprarMilhas } from "./ComprarMilhas/ComprarMilhas";
 import { Checkin } from "./Checkin/Checkin"
 import { Extrato } from "./ExtratoMilhas/ExtratoMilhas"
 import InserirFunc from "./InserirFunc/InserirFunc";
-import "./App.css";
 import { CadastroVoo } from "./CadastroVoo/FlightSCD";
+import AlterarFunc from "./AlterarFunc/AlterarFunc";
+import "./App.css";
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
         <Route element={<SideMenuFunc />}>
           <Route path="/homepageF" element={<TelaInicialFunc />} />
           <Route path="/inserirfunc" element={<InserirFunc />} />
+          <Route path="/alterarfunc" element={<AlterarFunc />} />
           <Route path="/cadastrovoo" element={<CadastroVoo />} />
           <Route path="/confirmar-embarque/:codigo" element={<ConfirmacaoEmbarque />} />
         </Route>
