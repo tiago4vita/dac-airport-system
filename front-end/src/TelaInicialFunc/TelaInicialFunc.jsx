@@ -29,7 +29,10 @@ export const TelaInicialFunc = () => {
 
   useEffect(() => {
     axios.get("http://localhost:8080/voos").then((res) => {
-      setVoos(res.data);
+      const filtrados = res.data.filter((voo) =>
+        voo.estado?.toLowerCase() === "criada"
+      );
+      setVoos(filtrados);
     });
   }, []);
 
@@ -51,14 +54,14 @@ export const TelaInicialFunc = () => {
     console.log("Cancelar voo:", vooSelecionado?.codigo);
     setModalCancelamentoAberto(false);
     setVooSelecionado(null);
-    // Aqui você pode fazer o update no backend se quiser
+    // Atualizar backend se necessário
   };
 
   const confirmarRealizacao = () => {
     console.log("Confirmar voo:", vooSelecionado?.codigo);
     setModalConfirmacaoAberto(false);
     setVooSelecionado(null);
-    // Aqui você pode fazer o update no backend se quiser
+    // Atualizar backend se necessário
   };
 
   return (
@@ -88,7 +91,6 @@ export const TelaInicialFunc = () => {
             <tbody>
               {voosPaginados.map((voo, index) => {
                 const dataObj = new Date(voo.data);
-
                 return (
                   <tr key={index}>
                     <td>{voo.codigo}</td>
@@ -102,7 +104,12 @@ export const TelaInicialFunc = () => {
                       })}
                     </td>
                     <td>
-                      <button className="ver">Embarque</button>
+                      <button
+                        className="ver"
+                        onClick={() => navigate(`/confirmar-embarque/${voo.codigo}`)}
+                      >
+                        Embarque
+                      </button>
                       <button
                         className="confirmar"
                         onClick={() => abrirModalConfirmacao(voo)}
@@ -111,7 +118,6 @@ export const TelaInicialFunc = () => {
                       </button>
                       <button
                         className="cancelar"
-                        disabled={voo.estado.toLowerCase() !== "criada"}
                         onClick={() => abrirModalCancelamento(voo)}
                       >
                         Cancelar

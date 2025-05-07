@@ -125,7 +125,7 @@
       "codigo_cliente": 1010,
       "estado": "CHECK-IN",
       "voo": {
-        "codigo": "FL004",
+        "codigo": "QGBW6603",
         "data": "2024-10-23T09:30:00Z",
         "valor_passagem": 360,
         "quantidade_poltronas_total": 80,
@@ -155,7 +155,7 @@
       "codigo_cliente": 1010,
       "estado": "CONFIRMADO",
       "voo": {
-        "codigo": "FL005",
+        "codigo": "MDJB6893",
         "data": "2024-10-25T16:00:00Z",
         "valor_passagem": 470,
         "quantidade_poltronas_total": 110,
@@ -185,7 +185,7 @@
       "codigo_cliente": 1010,
       "estado": "CANCELADA",
       "voo": {
-        "codigo": "FL006",
+        "codigo": "FTBV4347",
         "data": "2024-10-28T15:00:00Z",
         "valor_passagem": 490,
         "quantidade_poltronas_total": 130,
@@ -215,7 +215,7 @@
       "codigo_cliente": 1010,
       "estado": "CONFIRMADO",
       "voo": {
-        "codigo": "FL007",
+        "codigo": "OXKG6238",
         "data": "2024-10-30T13:00:00Z",
         "valor_passagem": 510,
         "quantidade_poltronas_total": 150,
@@ -245,7 +245,7 @@
       "codigo_cliente": 1010,
       "estado": "CRIADA",
       "voo": {
-        "codigo": "FL008",
+        "codigo": "GQYQ2095",
         "data": "2024-11-02T19:30:00Z",
         "valor_passagem": 530,
         "quantidade_poltronas_total": 140,
@@ -275,7 +275,7 @@
       "codigo_cliente": 1010,
       "estado": "CONFIRMADO",
       "voo": {
-        "codigo": "FL009",
+        "codigo": "XQZE8963",
         "data": "2024-11-04T21:00:00Z",
         "valor_passagem": 480,
         "quantidade_poltronas_total": 100,
@@ -305,7 +305,7 @@
       "codigo_cliente": 1010,
       "estado": "CONFIRMADO",
       "voo": {
-        "codigo": "FL010",
+        "codigo": "CHKB7923",
         "data": "2024-11-06T07:30:00Z",
         "valor_passagem": 510,
         "quantidade_poltronas_total": 110,
@@ -335,7 +335,7 @@
       "codigo_cliente": 1010,
       "estado": "CHECK-IN",
       "voo": {
-        "codigo": "FL011",
+        "codigo": "HPHY2585",
         "data": "2024-11-08T13:30:00Z",
         "valor_passagem": 400,
         "quantidade_poltronas_total": 90,
@@ -365,7 +365,7 @@
       "codigo_cliente": 1010,
       "estado": "CRIADA",
       "voo": {
-        "codigo": "FL012",
+        "codigo": "LHCK6952",
         "data": "2024-11-10T16:00:00Z",
         "valor_passagem": 530,
         "quantidade_poltronas_total": 150,

@@ -43,7 +43,9 @@ export const Consulta = () => {
 
   return (
     <div className="consulta-content">
-      <h2>Insira o Código da Reserva que deseja consultar:</h2>
+    <h2>Insira o Código da Reserva que deseja consultar:</h2>
+
+    <div className="consulta-wrapper">
       <div className="busca-codigo">
         <Search size={16} className="search-icon" />
         <input
@@ -133,7 +135,7 @@ export const Consulta = () => {
             <button
               onClick={() => setReservaParaCancelar(reserva)}
               disabled={!podeCancelar}
-              className="cancel-button"
+              className="cancel-reserva-button"
             >
               Cancelar
             </button>
@@ -171,6 +173,7 @@ export const Consulta = () => {
           reserva={reservaParaCheckin}
         />
       )}
+    </div>
     </div>
   );
 };

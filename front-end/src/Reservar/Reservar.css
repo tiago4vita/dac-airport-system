@@ -16,7 +16,7 @@
     cursor: pointer;
   }
   
-  .container {
+  .container-reservar {
     display: flex;
     flex-direction: column;
     gap: 2rem;
@@ -29,20 +29,20 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   }
   
-  .topo {
+  .topo-reservar {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1rem;
   }
   
-  .quantidade-wrapper {
+  .quantidade-wrapper-reservar {
     display: flex;
     align-items: center;
     gap: 1rem;
   }
   
-  .quantidade {
+  .quantidade-reservar {
     width: 114px;
     height: 36px;
     border-radius: 5px;
@@ -55,13 +55,13 @@
     color: #333;
   }
   
-  .quantidade button {
+  .quantidade-reservar button {
     all: unset;
     font-size: 18px;
     cursor: pointer;
   }
   
-  .quantidade span {
+  .quantidade-reservar span {
     min-width: 1.5rem;
     text-align: center;
   }
@@ -85,36 +85,36 @@
     width: 120px;
   }
   
-  .checkout {
+  .checkout-reservar {
     background: #fff;
     padding: 2rem;
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   }
   
-  .checkout h3 {
+  .checkout-reservar h3 {
     margin-bottom: 1rem;
   }
   
-  .checkout table {
+  .checkout-reservar table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 1.5rem;
   }
   
-  .checkout th,
-  .checkout td {
+  .checkout-reservar th,
+  .checkout-reservar td {
     padding: 0.6rem;
     font-size: 0.95rem;
     border-bottom: 1px solid #eee;
     text-align: left;
   }
   
-  .milhas-box {
+  .milhas-box-reservar {
     margin-bottom: 1rem;
   }
   
-  .milhas-box input[type="number"] {
+  .milhas-box-reservar input[type="number"] {
     margin-top: 0.5rem;
     width: 100%;
     padding: 0.5rem;
@@ -122,14 +122,14 @@
     border-radius: 6px;
   }
   
-  .resumo p {
+  .resumo-reservar p {
     display: flex;
     justify-content: space-between;
     margin: 0.4rem 0;
     font-size: 0.95rem;
   }
   
-  .confirmar {
+  .confirmar-reservar {
     margin-top: 1rem;
     background: none;
     border: 1px solid #0a0e2a;
@@ -141,12 +141,12 @@
     transition: background-color 0.2s, color 0.2s;
   }
   
-  .confirmar:hover {
+  .confirmar-reservar:hover {
     background-color: #0a0e2a;
     color: white;
   }
 
-  .checkbox-container {
+  .checkbox-container-reservar {
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -154,14 +154,14 @@
     margin-top: 0.5rem;
   }
   
-  .checkbox-container input[type="checkbox"] {
+  .checkbox-container-reservar input[type="checkbox"] {
     width: 16px;
     height: 16px;
     accent-color: #0a0e2a; 
     cursor: pointer;
   }
   
-  .confirmar:disabled {
+  .confirmar-reservar:disabled {
     opacity: 0.5;
     cursor: not-allowed;
   }

@@ -25,7 +25,6 @@ function App() {
         {/* Rotas públicas */}
         <Route path="/" element={<Login />} />
         <Route path="/cadastro" element={<Autocadastro />} />
-        <Route path="/confirmar-embarque/:codigo" element={<ConfirmacaoEmbarque />} />
 
         {/* Cliente */}
         <Route element={<SideMenuCliente />}>
@@ -44,6 +43,7 @@ function App() {
         <Route element={<SideMenuFunc />}>
           <Route path="/homepageF" element={<TelaInicialFunc />} />
           <Route path="/inserirfunc" element={<InserirFunc />} />
+          <Route path="/confirmar-embarque/:codigo" element={<ConfirmacaoEmbarque />} />
         </Route>
       </Routes>
     </Router>

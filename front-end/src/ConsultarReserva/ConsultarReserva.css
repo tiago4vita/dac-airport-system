@@ -1,16 +1,27 @@
 .consulta-content {
-    flex: 1;
-    padding: 2.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    align-items: right;
-    font-family: "Inter", sans-serif;
-    width: 100%;
-    max-width: 1000px;
-    margin: 0 auto;
-    box-sizing: border-box;
-  }
+  font-family: "Inter", sans-serif;
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.consulta-content h2 {
+  text-align: left;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.consulta-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+  width: 100%;
+  gap: 2rem;
+}
   
   .busca-codigo {
     display: flex;
@@ -175,12 +186,12 @@
     transition: all 0.2s;
   }
   
-  .cancel-button {
+  .cancel-reserva-button {
     background-color: #0f172a;
     color: white;
   }
   
-  .cancel-button:hover:not(:disabled) {
+  .cancel-reserva-button:hover:not(:disabled) {
     background-color: white;
     color: #0f172a;
   }
@@ -199,4 +210,3 @@
     opacity: 0.5;
     cursor: not-allowed;
   }
-  

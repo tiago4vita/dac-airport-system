@@ -63,13 +63,13 @@ export const Reservar = () => {
     <div className="reservar-page">
       <button className="voltar" onClick={() => navigate(-1)}>Voltar</button>
 
-      <div className="container">
+      <div className="container-reservar">
         <section className="assentos-section">
-          <div className="topo">
+          <div className="topo-reservar">
             <h2>Escolha os assentos</h2>
-            <div className="quantidade-wrapper">
+            <div className="quantidade-wrapper-reservar">
               <span>Quantidade</span>
-              <div className="quantidade">
+              <div className="quantidade-reservar">
                 <button onClick={() => {
                   const nova = Math.max(1, quantidade - 1);
                   setQuantidade(nova);
@@ -114,7 +114,7 @@ export const Reservar = () => {
           ))}
         </section>
 
-        <section className="checkout">
+        <section className="checkout-reservar">
           <h3>Checkout</h3>
           <table>
             <thead>
@@ -137,10 +137,10 @@ export const Reservar = () => {
             </tbody>
           </table>
 
-          <div className="milhas-box">
+          <div className="milhas-box-reservar">
             <p>Seu saldo de Milhas: <strong>{saldoMilhas}</strong></p>
 
-            <label className="checkbox-container">
+            <label className="checkbox-container-reservar">
             <input
                 type="checkbox"
                 checked={usarMilhas}
@@ -168,7 +168,7 @@ export const Reservar = () => {
             />
           </div>
 
-          <div className="resumo">
+          <div className="resumo-reservar">
             <p>
               Subtotal: <strong>{quantidade} x {valorPorPassagem.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}</strong>
             </p>
@@ -177,7 +177,7 @@ export const Reservar = () => {
           </div>
 
           <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "1.5rem" }}>
-            <button className="confirmar" onClick={handleConfirmar} disabled={!assentosPreenchidos}>
+            <button className="confirmar-reservar" onClick={handleConfirmar} disabled={!assentosPreenchidos}>
               Confirmar Reserva
             </button>
           </div>
