@@ -10,6 +10,7 @@ export const ModalRealiza = ({ isOpen, onConfirm, onCancel }) => {
             <div className="modal-confirmacao">
                 <img src={alertaIcon} alt="Alerta" />
                 <h3>Deseja confirmar a ocorrência deste voo?</h3>
+                <p>Ao confirmar o vôo, todos os passageiros que ainda não embarcaram perderão sua Reserva</p>
                 <div className="botoes">
                     <button className="botao-nao" onClick={onCancel}>Não</button>
                     <button className="botao-sim" onClick={onConfirm}>Sim</button>

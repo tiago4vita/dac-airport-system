@@ -101,7 +101,7 @@ export const TelaInicialCli = () => {
                       Ver
                     </button>
                     <button
-                      className="cancelar"
+                      className="cancelar-reserva"
                       disabled={!["criada", "check-in"].includes(reserva.estado.toLowerCase())}
                       style={{
                         opacity: ["criada", "check-in"].includes(reserva.estado.toLowerCase()) ? "1" : "0.5",

@@ -2,12 +2,17 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { EtiquetaFuncionario } from "../LabelFunc/LabelFunc";
+import { ModalCancelaVoo } from "../ModalCancelaVoo/ModalCancelaVoo";
+import { ModalRealiza } from "../ModalRealiza/ModalRealiza";
 import "./TelaInicialFunc.css";
 
 export const TelaInicialFunc = () => {
   const [voos, setVoos] = useState([]);
   const [paginaAtual, setPaginaAtual] = useState(1);
   const [itensPorPagina, setItensPorPagina] = useState(10);
+  const [vooSelecionado, setVooSelecionado] = useState(null);
+  const [modalCancelamentoAberto, setModalCancelamentoAberto] = useState(false);
+  const [modalConfirmacaoAberto, setModalConfirmacaoAberto] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -31,6 +36,30 @@ export const TelaInicialFunc = () => {
   const totalPaginas = Math.ceil(voos.length / itensPorPagina);
   const inicio = (paginaAtual - 1) * itensPorPagina;
   const voosPaginados = voos.slice(inicio, inicio + itensPorPagina);
+
+  const abrirModalCancelamento = (voo) => {
+    setVooSelecionado(voo);
+    setModalCancelamentoAberto(true);
+  };
+
+  const abrirModalConfirmacao = (voo) => {
+    setVooSelecionado(voo);
+    setModalConfirmacaoAberto(true);
+  };
+
+  const confirmarCancelamento = () => {
+    console.log("Cancelar voo:", vooSelecionado?.codigo);
+    setModalCancelamentoAberto(false);
+    setVooSelecionado(null);
+    // Aqui você pode fazer o update no backend se quiser
+  };
+
+  const confirmarRealizacao = () => {
+    console.log("Confirmar voo:", vooSelecionado?.codigo);
+    setModalConfirmacaoAberto(false);
+    setVooSelecionado(null);
+    // Aqui você pode fazer o update no backend se quiser
+  };
 
   return (
     <>
@@ -76,15 +105,14 @@ export const TelaInicialFunc = () => {
                       <button className="ver">Embarque</button>
                       <button
                         className="confirmar"
-                        onClick={() =>
-                          navigate(`/confirmar-embarque/${voo.codigo}`)
-                        }
+                        onClick={() => abrirModalConfirmacao(voo)}
                       >
-                        Confirmar
+                        Confirmar Vôo
                       </button>
                       <button
                         className="cancelar"
                         disabled={voo.estado.toLowerCase() !== "criada"}
+                        onClick={() => abrirModalCancelamento(voo)}
                       >
                         Cancelar
                       </button>
@@ -94,20 +122,32 @@ export const TelaInicialFunc = () => {
               })}
             </tbody>
           </table>
+        </section>
 
-          </section>
-
-        <div className="paginacao">  {/* ✅ CORRETO - Fora do .tabela-reservas-func */}
-        {Array.from({ length: totalPaginas }, (_, i) => (
+        <div className="paginacao">
+          {Array.from({ length: totalPaginas }, (_, i) => (
             <button
-            key={i}
-            onClick={() => setPaginaAtual(i + 1)}
-            className={`pagina ${paginaAtual === i + 1 ? "ativa" : ""}`}
+              key={i}
+              onClick={() => setPaginaAtual(i + 1)}
+              className={`pagina ${paginaAtual === i + 1 ? "ativa" : ""}`}
             >
-            {i + 1}
+              {i + 1}
             </button>
-        ))}
+          ))}
         </div>
+
+        {/* Modais */}
+        <ModalCancelaVoo
+          isOpen={modalCancelamentoAberto}
+          onConfirm={confirmarCancelamento}
+          onCancel={() => setModalCancelamentoAberto(false)}
+        />
+
+        <ModalRealiza
+          isOpen={modalConfirmacaoAberto}
+          onConfirm={confirmarRealizacao}
+          onCancel={() => setModalConfirmacaoAberto(false)}
+        />
       </div>
     </>
   );
