@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./InserirFunc.css"; 
 
 // Para puxar CPF cadastrados
-const existingCpfs = [];
+const cpfCadastrado = [];
 
 export default function InserirFunc() {
   const [form, setForm] = useState({
@@ -21,7 +21,7 @@ export default function InserirFunc() {
   };
 
   // Gera a senha aleatória de 4 dígitos
-  const generatePassword = () => {
+  const genPass = () => {
     return Math.floor(1000 + Math.random() * 9000).toString();
   };
 
@@ -34,15 +34,15 @@ export default function InserirFunc() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (existingCpfs.includes(form.cpf)) {
+    if (cpfCadastrado.includes(form.cpf)) {
       alert("CPF já cadastrado!");
       return;
     }
 
-    const senha = generatePassword();
+    const senha = genPass();
     sendEmail(form.email, senha);
 
-    existingCpfs.push(form.cpf);
+    cpfCadastrado.push(form.cpf);
 
     alert("Funcionário cadastrado com sucesso!");
     setForm({
