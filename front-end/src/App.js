@@ -14,6 +14,7 @@ import { Reservar } from "./Reservar/Reservar";
 import { Consulta } from "./ConsultarReserva/ConsultarReserva"
 import { Checkin } from "./Checkin/Checkin"
 import { Extrato } from "./ExtratoMilhas/ExtratoMilhas"
+import InserirFunc from "./InserirFunc/InserirFunc";
 import "./App.css";
 
 function App() {
@@ -40,6 +41,7 @@ function App() {
         {/* Funcionário */}
         <Route element={<SideMenuFunc />}>
           <Route path="/homepageF" element={<TelaInicialFunc />} />
+          <Route path="/inserirfunc" element={<InserirFunc />} />
         </Route>
       </Routes>
     </Router>
