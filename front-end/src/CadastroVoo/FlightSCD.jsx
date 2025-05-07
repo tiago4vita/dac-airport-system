@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Plane, LogOut } from "lucide-react";
 import "./FlightSCD.css";
 
-const calcularMilhas = (valor) => valor * 100;
+const calcularMilhas = (valor) => valor * 0.2;
 
 const CadastroVoo = () => {
   const [codigoVoo, setCodigoVoo] = useState("");
