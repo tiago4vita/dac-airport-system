@@ -16,6 +16,7 @@ import { ComprarMilhas } from "./ComprarMilhas/ComprarMilhas";
 import { Checkin } from "./Checkin/Checkin"
 import { Extrato } from "./ExtratoMilhas/ExtratoMilhas"
 import InserirFunc from "./InserirFunc/InserirFunc";
+import ListarFunc from "./ListarFunc/ListarFunc";
 import "./App.css";
 import { CadastroVoo } from "./CadastroVoo/FlightSCD";
 
@@ -47,6 +48,9 @@ function App() {
           <Route path="/cadastrovoo" element={<CadastroVoo />} />
           <Route path="/confirmar-embarque/:codigo" element={<ConfirmacaoEmbarque />} />
         </Route>
+        
+        {/* Rota para listar funcionários (independente do menu) */}
+        <Route path="/listarfunc" element={<ListarFunc />} />
       </Routes>
     </Router>
   );

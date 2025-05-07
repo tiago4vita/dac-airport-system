@@ -4,6 +4,32 @@
       "id": "1",
       "login": "usuario@gmail.com",
       "senha": "pass"
+    },
+    {
+      "id": "2",
+      "login": "admin@gmail.com",
+      "senha": "admin"
+    },
+    {
+      "id": "3",
+      "login": "funcionario@gmail.com",
+      "senha": "funcionario"
+    }
+  ],
+  "funcionarios": [
+    {
+      "codigo": "2",
+      "nome": "ADMINISTRADOR",
+      "email": "admin@gmail.com",
+      "telefone": "11999999999",
+      "cpf": "12345678901"
+    },
+    {
+      "codigo": "3",
+      "nome": "FUNCIONARIO",
+      "email": "funcionario@gmail.com",
+      "telefone": "11999999999",
+      "cpf": "12345678902"
     }
   ],
   "clientes": [
