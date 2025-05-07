@@ -1,17 +1,10 @@
-//falta importar os routes corretamente, deu bug no teste
+import React, { useState } from "react";
+import "./InserirFunc.css"; 
 
-import { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+// Para puxar CPF cadastrados
+const cpfCadastrado = [];
 
-//Para puxar CPF cadastrados
-const existingCpfs = [];
-
-export default function AddEmployee() {
+export default function InserirFunc() {
   const [form, setForm] = useState({
     nome: "",
     cpf: "",
@@ -27,31 +20,41 @@ export default function AddEmployee() {
     }));
   };
 
-  //Gera a senha aleatória de 4 digitos
-  const generatePassword = () => {
-    return Math.floor(1000 + Math.random() * 9000).toString(); 
+  // Gera a senha aleatória de 4 dígitos
+  const genPass = () => {
+    return Math.floor(1000 + Math.random() * 9000).toString();
   };
 
-  //Envio de email com a senha gerada
+  // Envio de email com a senha gerada
   const sendEmail = (email, senha) => {
     console.log(`Enviando e-mail para ${email} com a senha: ${senha}`);
-    toast.success(`Senha enviada para ${email}: ${senha}`);
+    alert(`Senha enviada para ${email}: ${senha}`);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (existingCpfs.includes(form.cpf)) {
-      toast.error("CPF já cadastrado!");
+    if (cpfCadastrado.includes(form.cpf)) {
+      alert("CPF já cadastrado!");
       return;
     }
 
-    const senha = generatePassword();
+    const senha = genPass();
     sendEmail(form.email, senha);
 
-    existingCpfs.push(form.cpf);
+    cpfCadastrado.push(form.cpf);
 
-    toast.success("Funcionário cadastrado com sucesso!");
+    alert("Funcionário cadastrado com sucesso!");
+    setForm({
+      nome: "",
+      cpf: "",
+      email: "",
+      telefone: "",
+    });
+  };
+
+  // Limpa campos (Atualizar caso precise redirecionar para outra página)
+  const handleCancel = () => {
     setForm({
       nome: "",
       cpf: "",
@@ -61,60 +64,36 @@ export default function AddEmployee() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <Card className="w-full max-w-md p-6">
-        <CardContent>
-          <h1 className="text-2xl font-bold mb-6 text-center">Cadastrar Funcionário</h1>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <Label htmlFor="nome">Nome</Label>
-              <Input
-                id="nome"
-                name="nome"
-                value={form.nome}
-                onChange={handleChange}
-                required
-              />
-            </div>
-            <div>
-              <Label htmlFor="cpf">CPF</Label>
-              <Input
-                id="cpf"
-                name="cpf"
-                value={form.cpf}
-                onChange={handleChange}
-                required
-                pattern="\d{11}"
-                title="Digite 11 números do CPF"
-              />
-            </div>
-            <div>
-              <Label htmlFor="email">E-mail</Label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                value={form.email}
-                onChange={handleChange}
-                required
-              />
-            </div>
-            <div>
-              <Label htmlFor="telefone">Telefone</Label>
-              <Input
-                id="telefone"
-                name="telefone"
-                value={form.telefone}
-                onChange={handleChange}
-                required
-              />
-            </div>
-            <Button type="submit" className="w-full">
-              Cadastrar
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
+    <div className="container">
+      <div className="card">
+        <h1 className="title">Adicionar Novo Funcionário</h1>
+        <form onSubmit={handleSubmit} className="form">
+          <div>
+            <label htmlFor="nome" className="label">Nome*</label>
+            <input id="nome" name="nome" value={form.nome} onChange={handleChange} required className="input"/>
+          </div>
+          <div>
+            <label htmlFor="cpf" className="label">CPF*</label>
+            <input id="cpf" name="cpf" value={form.cpf} onChange={handleChange} required pattern="\d{11}" title="Digite 11 números do CPF" className="input"/>
+          </div>
+          <div>
+            <label htmlFor="email" className="label">E-mail*</label>
+            <input id="email" name="email" type="email" value={form.email} onChange={handleChange} required className="input"/>
+          </div>
+          <div>
+            <label htmlFor="telefone" className="label">Telefone*</label>
+            <input id="telefone" name="telefone" value={form.telefone} onChange={handleChange} required className="input"/>
+          </div>
+          <div className="buttons">
+            <button type="button" onClick={handleCancel} className="button cancel-button">
+              Cancelar
+            </button>
+            <button type="submit" className="button">
+              Adicionar
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }
