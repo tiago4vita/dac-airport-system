@@ -12,6 +12,7 @@ import { SideMenuFunc } from "./SideMenuFunc/SideMenuFunc"
 import { EscolherVoo } from "./EscolherVoo/EscolherVoo";
 import { Reservar } from "./Reservar/Reservar";
 import { Consulta } from "./ConsultarReserva/ConsultarReserva"
+import { ComprarMilhas } from "./ComprarMilhas/ComprarMilhas";
 import { Checkin } from "./Checkin/Checkin"
 import { Extrato } from "./ExtratoMilhas/ExtratoMilhas"
 import "./App.css";
@@ -33,6 +34,7 @@ function App() {
           <Route path="/buscar-voos/escolher-voo" element={<EscolherVoo />} />
           <Route path="buscar-voos/escolher-voo/reservar/:codigo" element={<Reservar />} />
           <Route path="/consulta" element={<Consulta />} />
+          <Route path="/compra" element={<ComprarMilhas />} />
           <Route path="/checkin" element={<Checkin />} />
           <Route path="/extrato" element={<Extrato />} />
         </Route>

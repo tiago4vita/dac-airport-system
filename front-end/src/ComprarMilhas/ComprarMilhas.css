@@ -86,8 +86,84 @@
     margin-left: 270px;
 }
 
+.campo-milhas {
+    width: 1033px;
+    height: 114px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    border: 1px solid var(--Stroke, #DFE4EA);
+    background: var(--White-White, #FFF);
+    box-shadow: 0px 10px 20px 0px rgba(92, 115, 160, 0.07);
+}
+
 .inserir-milhas {
     display: flex;
-    border-radius: 5px;
+    width: 513px;
+    height: 50px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+    flex-shrink: 0;
+    border-radius: 10px;
+}
+
+.checkout-milhas{
+    width: 1036px;
+    height: 430px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    border: 1px solid var(--Stroke, #DFE4EA);
+    background: var(--White-White, #FFF);
+
+    /* Shadow 3 */
+    box-shadow: 0px 10px 20px 0px rgba(92, 115, 160, 0.07);
+}
+
+.checkout-milhas thead {
+    width: 916.111px;
+    height: 46px;
+    flex-shrink: 0;
+    border-radius: 6px;
+    border: 0.5px solid var(--Stroke, #DFE4EA);
+    background: var(--Gray-Gray, #F9FAFB);
+}
+
+.checkout-milhas tr {
+    display: flex;
+    width: 913.504px;
+    align-items: left;
+    gap: 25px;
     
+}
+
+.botao {
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+    padding-right: 20px;
+    margin-top: 1rem;
+}
+
+.botao .botao-confirma {
+    padding: 5px 20px;
+    border-radius: 50px;
+    border: 1px solid #94A3B8;
+    background: none;
+    color: #0a0e2a;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.botao .botao-confirma:hover {
+    background-color: #0a0e2a;
+    color: white;
+}
+
+.valor {
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+    margin: 0.4rem 0;
+    font-size: 0.95rem;
 }
