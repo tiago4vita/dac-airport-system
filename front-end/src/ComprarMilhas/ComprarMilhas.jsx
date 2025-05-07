@@ -1,73 +1,84 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Plane, LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import "./ComprarMilhas.css";
-import { SaldoMilhas } from "../SaldoMilhas/SaldoMilhas";
 
 export const ComprarMilhas = () => {
   const [cliente, setCliente] = useState(null);
+  const [quantidade, setQuantidade] = useState(0);
+  const valorMilha = 5;
+  const codigoCliente = 1010;
   const navigate = useNavigate();
 
-  const carregarDados = () => {
-    const codigoCliente = 1010;
+  useEffect(() => {
     axios.get(`http://localhost:8080/clientes?codigo=${codigoCliente}`).then((res) => {
       setCliente(res.data[0]);
     });
-  };
-
-  useEffect(() => {
-    carregarDados();
   }, []);
 
+  const total = quantidade * valorMilha;
+  const dataHoje = new Date().toLocaleDateString("pt-BR");
+
+  const handleCompra = () => {
+    // Aqui você pode fazer lógica de POST ou PATCH no futuro, se desejar salvar a compra
+    navigate("/extrato");
+  };
+
   return (
-      <div className="tela-inicial">
-        <main className="conteudo">
-              <section className="campo-milhas">
-                  <div>
-                      <h2>Quantas milhas deseja comprar?</h2>
-                      <p>
-                          <input className="inserir-milhas"
-                          type="number"
-                          placeholder="Quantidade de milhas"
-                          ></input>
-                      </p>
-                  </div>
-              </section>
+    <div className="pagina-milhas">
+      <main className="conteudo-milhas">
+        <section className="form-milhas">
+          <h2>Quantas milhas deseja comprar?</h2>
+          <input
+            type="number"
+            placeholder="Quantidade de Milhas"
+            min={0}
+            value={quantidade}
+            onChange={(e) => setQuantidade(Number(e.target.value))}
+          />
+        </section>
 
-              <section className="checkout-milhas">
-                  <div>
-                      <h2>Checkout</h2>
-                  </div>
-                  <table>
-                      <thead>
-                          <tr>
-                              <th>Quantidade de milhas</th>
-                              <th>Data</th>
-                              <th>Valor por Milha</th>
-                          </tr>
-                      </thead>
-                      <tbody>
-                          <tr>
-                              <td>0</td>
-                              <td>25/03/2023</td>
-                              <td>R$ 5,00</td>
-                          </tr>
-                      </tbody>
-                  </table>
+        <section className="checkout-milhas">
+          <h3>Checkout</h3>
+          <div className="checkout-esquerda">
+            <table>
+              <thead>
+                <tr>
+                  <th>Quantidade de Milhas</th>
+                  <th>Data</th>
+                  <th>Valor por Milha</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{quantidade}</td>
+                  <td>{dataHoje}</td>
+                  <td>{valorMilha} BRL</td>
+                </tr>
+              </tbody>
+            </table>
+            <p className="saldo">
+              Seu saldo atual de Milhas: <strong>{cliente?.saldoMilhas ?? 0}</strong>
+            </p>
+          </div>
 
-                  <div className="saldo">
-                      <p>Seu saldo atual de milhas: 1.500</p>
-                    </div>
-                  <div className="valor">
-                    <p>Total a pagar &nbsp;</p>
-                      <p>R$ 0,00 &nbsp;</p>
-                  </div>
-                  <div className="botao">
-                    <button className="botao-confirma" onClick={() => navigate('../homepageC')}>Comprar</button>
-                  </div>
-              </section>
-        </main>
-      </div>
+          <div className="total-abaixo">
+            <span>Total a pagar</span>
+            <strong>
+              {total.toLocaleString("pt-BR", {
+                style: "currency",
+                currency: "BRL",
+              })}
+            </strong>
+          </div>
+        </section>
+
+        <div className="botoes-footer">
+          <button className="btn-comprar" disabled={quantidade <= 0} onClick={handleCompra}>
+            Comprar
+          </button>
+        </div>
+      </main>
+    </div>
   );
 };
