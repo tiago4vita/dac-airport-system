@@ -14,27 +14,6 @@ const CadastroVoo = () => {
 
   return (
     <div className="tela-inicial-func">
-      <aside className="menu-lateral-func">
-        <div>
-          <div className="logo">
-            <Plane className="icone-aviao" />
-            <span className="logo-texto">DAC Aéreo</span>
-          </div>
-          <nav className="navegacao">
-            {["Página Inicial", "Cadastro de Voo", "Listagem de Funcionários"].map(
-              (item, index) => (
-                <button
-                  key={index}
-                  className={`menu-item ${index === 1 ? "ativo" : ""}`}
-                >
-                  {item}
-                </button>
-              )
-            )}
-          </nav>
-        </div>
-      </aside>
-
       <main className="main-content">
         <h1>Cadastro de Voo</h1>
         <h3>Preencha os campos abaixo para criar um novo voo</h3>
