@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./InserirFunc.css"; 
 
 // Para puxar CPF cadastrados
@@ -62,6 +63,8 @@ export default function InserirFunc() {
       telefone: "",
     });
   };
+
+  const navigate = useNavigate();
 
   return (
     <div className="container">

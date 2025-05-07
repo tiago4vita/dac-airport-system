@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import { Plane, LogOut } from "lucide-react";
 import "./FlightSCD.css";
 
