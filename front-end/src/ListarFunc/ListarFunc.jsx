@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './ListarFunc.css';
 import { SideMenuFunc } from '../SideMenuFunc/SideMenuFunc';
+import { Link } from 'react-router-dom';
 
 const ListarFunc = () => {
   const [funcionarios, setFuncionarios] = useState([]);
@@ -46,7 +47,7 @@ const ListarFunc = () => {
         <section class="lista-funcionarios">
             <h2>Lista de Funcionários</h2>
             <p>Aqui você pode ver todos os funcionários cadastrados no sistema e gerenciá-los!</p> 
-            <button className="add-btn">+ Novo Funcionário</button>  
+            <Link to="/inserirfunc" className="add-btn">+ Novo Funcionário</Link>  
         </section>
 
         <div className="funcionarios-section">

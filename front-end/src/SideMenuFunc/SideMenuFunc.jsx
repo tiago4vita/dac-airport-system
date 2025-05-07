@@ -10,7 +10,7 @@ export const SideMenuFunc = () => {
   const menuItems = [
     { label: "Página Inicial", path: "/homepageF" },
     { label: "Cadastro de Voo", path: "/cadastrovoo" },
-    { label: "Lista de Funcionários", path: "/inserirfunc" },
+    { label: "Lista de Funcionários", path: "/listarfunc" },
   ];
 
   return (
