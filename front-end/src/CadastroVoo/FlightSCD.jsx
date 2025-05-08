@@ -12,6 +12,9 @@ const CadastroVoo = () => {
   const [valor, setValor] = useState("");
   const [poltronas, setPoltronas] = useState("");
 
+const aeroportos = ["GRU - São Paulo", "GIG - Rio de Janeiro", "BSB - Brasília", "CNF - Belo Horizonte"];
+
+
   return (
     <div className="tela-inicial-func">
       <main className="main-content">
@@ -35,21 +38,20 @@ const CadastroVoo = () => {
           />
 
           <label>Aeroporto Origem:</label>
-          <input
-            type="text"
-            value={origem}
-            onChange={(e) => setOrigem(e.target.value)}
-            required
-          />
+          <select value={origem} onChange={(e) => setOrigem(e.target.value)} required>
+            <option value="" disabled>Selecione o aeroporto de origem</option>
+            {aeroportos.map((aeroporto, index) => (
+              <option key={index} value={aeroporto}>{aeroporto}</option>
+            ))}
+          </select>
 
           <label>Aeroporto Destino:</label>
-          <input
-            type="text"
-            value={destino}
-            onChange={(e) => setDestino(e.target.value)}
-            required
-          />
-
+          <select value={destino} onChange={(e) => setDestino(e.target.value)} required>
+            <option value="" disabled>Selecione o aeroporto de destino</option>
+            {aeroportos.map((aeroporto, index) => (
+              <option key={index} value={aeroporto}>{aeroporto}</option>
+            ))}
+          </select>
           <label>Valor da Passagem (R$):</label>
           <input
             type="number"
