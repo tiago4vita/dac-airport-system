@@ -4,6 +4,7 @@ import './ListarFunc.css';
 import { SideMenuFunc } from '../SideMenuFunc/SideMenuFunc';
 import { Link, useNavigate } from 'react-router-dom';
 import ConfirmarDeleteFunc from './ConfirmarDeleteFunc';
+import AlterarFunc from '../AlterarFunc/AlterarFunc';
 
 const ListarFunc = () => {
   const [funcionarios, setFuncionarios] = useState([]);
@@ -13,6 +14,8 @@ const ListarFunc = () => {
   const [error, setError] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedFuncionario, setSelectedFuncionario] = useState(null);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedFuncionarioToEdit, setSelectedFuncionarioToEdit] = useState(null);
   const navigate = useNavigate();
 
   const fetchFuncionarios = async () => {
@@ -99,6 +102,25 @@ const ListarFunc = () => {
     navigate('/listarfunc'); // Refresh the page
   };
 
+  // Handle edit button click
+  const handleEditClick = (funcionario) => {
+    setSelectedFuncionarioToEdit(funcionario);
+    setShowEditModal(true);
+  };
+
+  // Close edit modal
+  const handleCloseEditModal = () => {
+    setShowEditModal(false);
+    setSelectedFuncionarioToEdit(null);
+  };
+
+  // Handle successful edit
+  const handleEditSuccess = () => {
+    setShowEditModal(false);
+    setSelectedFuncionarioToEdit(null);
+    fetchFuncionarios(); // Refresh the data
+  };
+
   return (
     <div className="listar-func-container">
       <SideMenuFunc />
@@ -150,7 +172,12 @@ const ListarFunc = () => {
                         </span>
                       </td>
                       <td className="actions">
-                        <button className="edit-btn">Editar</button>
+                        <button 
+                          className="edit-btn"
+                          onClick={() => handleEditClick(funcionario)}
+                        >
+                          Editar
+                        </button>
                         <button 
                           className="remove-btn"
                           onClick={() => handleDeleteClick(funcionario)}
@@ -202,6 +229,14 @@ const ListarFunc = () => {
           funcionario={selectedFuncionario}
           onClose={handleCloseModal}
           onSuccess={handleDeleteSuccess}
+        />
+      )}
+
+      {showEditModal && selectedFuncionarioToEdit && (
+        <AlterarFunc 
+          funcionario={selectedFuncionarioToEdit}
+          onClose={handleCloseEditModal}
+          onSuccess={handleEditSuccess}
         />
       )}
     </div>

@@ -10,6 +10,7 @@ export default function InserirFunc() {
     cpf: "",
     email: "",
     telefone: "",
+    status: "ATIVO"
   });
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -243,7 +244,8 @@ export default function InserirFunc() {
         cpf: form.cpf.replace(/\D/g, ''),
         email: form.email,
         telefone: form.telefone.replace(/\D/g, ''),
-        senha: senha
+        senha: senha,
+        status: "ATIVO"
       };
       
       // Post to the API

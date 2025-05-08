@@ -19,7 +19,7 @@ const ConfirmarDeleteFunc = ({ funcionario, onClose, onSuccess }) => {
       
       // Try with id first, then codigo if id doesn't exist
       const funcionarioId = funcionario.id || funcionario.codigo;
-      // deixei como patch para não deletar o funcionário, alterar para delete depois e tratar como put no gateway
+      // deixei como patch para não deletar o funcionário, alterar para delete depois e tratar como PUT no gateway
       await axios.patch(`http://localhost:8080/funcionarios/${funcionarioId}`, { status: "INATIVO" });
       onSuccess();
     } catch (err) {
