@@ -55,10 +55,10 @@ export const Login = () => {
 
   return (
     <div className="login">
-      <div className="content">
-        <h1 className="text-wrapper">Login</h1>
+      <div className="content-login">
+        <h1 className="text-wrapper-login">Login</h1>
 
-        <div className="group-image-wrapper">
+        <div className="group-image-wrapper-login">
           <img
             className="group-image"
             src={group4174}
@@ -66,13 +66,13 @@ export const Login = () => {
           />
         </div>
 
-        <form className="form" onSubmit={handleLoginSubmit}>
-          <div className="form-group">
-            <label htmlFor="email" className="label">Email</label>
+        <form className="form-login" onSubmit={handleLoginSubmit}>
+          <div className="form-group-login">
+            <label htmlFor="email" className="label-login">Email</label>
             <input
               id="email"
               type="email"
-              className="input filled"
+              className="input-login filled"
               value={email}
               onChange={handleEmailChange}
               required
@@ -80,12 +80,12 @@ export const Login = () => {
             {emailError && <p className="error-message">{emailError}</p>}
           </div>
 
-          <div className="form-group">
-            <label htmlFor="senha" className="label">Senha</label>
+          <div className="form-group-login">
+            <label htmlFor="senha" className="label-login">Senha</label>
             <input
               id="senha"
               type="password"
-              className="input filled"
+              className="input-login filled"
               value={senha}
               onChange={(e) => setSenha(e.target.value)}
               required
@@ -97,7 +97,7 @@ export const Login = () => {
             <Link className="text-wrapper-4" to="/cadastro">Cadastre-se!</Link>
           </p>
 
-          <button type="submit" className="button">Login</button>
+          <button type="submit" className="button-login">Login</button>
         </form>
       </div>
 

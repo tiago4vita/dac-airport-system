@@ -18,14 +18,15 @@
   overflow: hidden;
 }
 
-.content {
+.content-login {
   position: relative;
   width: 100%;
   max-width: 1440px;
   padding: 60px 111px 0;
 }
 
-.text-wrapper {
+.text-wrapper-login {
+  text-align: left;
   font-family: "Inter-SemiBold", Helvetica;
   font-size: 64px;
   font-weight: 600;
@@ -33,7 +34,7 @@
   margin-bottom: 40px;
 }
 
-.group-image-wrapper {
+.group-image-wrapper-login {
   position: absolute;
   top: 60px;
   right: 0;
@@ -45,27 +46,27 @@
   height: auto;
 }
 
-.form {
+.form-login {
   display: flex;
   flex-direction: column;
   gap: 32px;
   max-width: 475px;
 }
 
-.form-group {
+.form-group-login {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-.label {
+.label-login {
   font-family: "Inter-Medium", Helvetica;
   font-size: 20px;
   font-weight: 500;
   color: var(--dark);
 }
 
-.input {
+.input-login {
   height: 46px;
   border: 1px solid var(--stroke);
   border-radius: 6px;
@@ -94,7 +95,7 @@
   text-decoration: underline;
 }
 
-.button {
+.button-login {
   margin-top: 16px;
   height: 46px;
   width: 137px;
@@ -115,19 +116,19 @@
   margin-top: 80px;
 }
 
-.input {
+.input-login {
   height: 46px;
   border: 1px solid var(--stroke);
   border-radius: 6px;
   padding: 0 16px;
   font-size: 16px;
   font-family: "Inter-Regular", Helvetica;
-  color: var(--gray); /* Mantém o placeholder mais claro */
+  color: var(--gray); 
   outline: none;
 }
 
-.input.filled:focus,
-.input.filled:not(:placeholder-shown) {
-  color: var(--dark); /* Texto digitado mais escuro */
+.input-login.filled:focus,
+.input-login.filled:not(:placeholder-shown) {
+  color: var(--dark); 
 }
 

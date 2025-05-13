@@ -5,126 +5,7 @@
   min-height: 100vh;
 }
 
-.menu-lateral {
-  width: 250px;
-  background-color: #0f172a;
-  padding: 30px 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  overflow-y: auto;
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 24px;
-}
-
-.icone-aviao {
-  font-size: 24px;
-  color: white;
-}
-
-.logo-texto {
-  color: white;
-  font-size: 20px;
-  font-weight: 600;
-}
-
-.menu-titulo {
-  display: block;
-  text-align: center;
-  color: #94a3b8;
-  font-size: 14px;
-  margin-top: 40px; 
-  margin-bottom: 32px; 
-  font-weight: 600;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-
-.navegacao {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.menu-item {
-  background: none;
-  border: none;
-  color: #e2e8f0;
-  text-align: left;
-  padding: 10px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.menu-item:hover,
-.menu-item.ativo {
-  background-color: #1e293b;
-  color: white;
-}
-
-.logout {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: none;
-  border: none;
-  color: #e2e8f0;
-  font-size: 14px;
-  cursor: pointer;
-  margin-top: auto;
-}
-
-.conteudo {
-  flex: 1;
-  padding: 40px;
-  display: flex;
-  flex-direction: column;
-  gap: 40px;
-  margin-left: 270px; /* AUMENTADO O ESPAÇAMENTO */
-}
-
-.card-milhas {
-  display: flex;
-  align-items: center;
-  background: #0f172a;
-  color: white;
-  padding: 20px 30px;
-  border-radius: 16px;
-  gap: 20px;
-  max-width: 400px;
-}
-
-.icone-carteira {
-  font-size: 32px;
-}
-
-.card-milhas h2 {
-  margin: 0;
-  font-size: 18px;
-  font-weight: 500;
-}
-
-.card-milhas p {
-  font-size: 28px;
-  font-weight: 700;
-}
-
-.card-milhas span {
-  font-size: 14px;
-  font-weight: 400;
-  margin-left: 4px;
-}
-
-.tabela-reservas table {
+.tabela-reservas-cliente table {
   width: 100%;
   border-collapse: collapse;
   background-color: white;
@@ -132,13 +13,13 @@
   overflow: hidden;
 }
 
-.tabela-reservas th,
-.tabela-reservas td {
+.tabela-reservas-cliente th,
+.tabela-reservas-cliente td {
   padding: 16px;
   text-align: center;
 }
 
-.tabela-reservas thead {
+.tabela-reservas-cliente thead {
   background-color: #f1f5f9;
   font-weight: 600;
 }
@@ -185,7 +66,7 @@
   cursor: pointer;
 }
 
-.cancelar {
+.cancelar-reserva {
   background-color: #0f172a;
   color: white;
   border: none;

@@ -1,0 +1,135 @@
+body {
+  font-family: "Inter", sans-serif;
+  background-color: #f8fafc;
+}
+
+.tela-inicial-func {
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.titulo-funcionario {
+  padding: 2rem 2rem 2rem 50px;
+  max-width: 1000px;
+  width: 100%;
+}
+
+.titulo-funcionario h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.titulo-funcionario .subtitulo {
+  color: #575c63;
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+}
+
+
+.conteudo-func {
+  margin-left: 250px; 
+  padding: 2rem 3rem;
+  padding-top: 80px;
+  width: 100%;
+}
+
+.tabela-reservas-func {
+  max-width: 1000px;
+  margin: 0 auto;
+  background-color: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.tabela-reservas-func table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabela-reservas-func th,
+.tabela-reservas-func td {
+  padding: 16px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.tabela-reservas-func thead {
+  background-color: #f1f5f9;
+  font-weight: 600;
+}
+
+/* Botões */
+.tabela-reservas-func button {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  margin: 0 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-width: 90px;
+}
+
+.tabela-reservas-func .embarque {
+  background-color: white;
+  color: #0f172a;
+  border: 1px solid #0f172a;
+}
+
+.tabela-reservas-func .embarque:hover:not(:disabled) {
+  background-color: #0f172a;
+  color: white;
+}
+
+.tabela-reservas-func .confirmar {
+  background-color: white;
+  color: #0f172a;
+  border: 1px solid #0f172a;
+}
+
+.tabela-reservas-func .confirmar:hover:not(:disabled) {
+  background-color: #0f172a;
+  color: white;
+}
+
+.tabela-reservas-func .cancelar {
+  background-color: #0f172a;
+  color: white;
+  border: none;
+}
+
+.tabela-reservas-func .cancelar:hover:not(:disabled) {
+  background-color: #4b5563;
+}
+
+.tabela-reservas-func button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Paginação */
+.paginacao {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin: 20px 0;
+}
+
+.pagina {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background-color: #e2e8f0;
+  color: #0f172a;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.pagina.ativa {
+  background-color: #0f172a;
+  color: white;
+}

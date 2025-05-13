@@ -1,0 +1,169 @@
+.confirmacao-embarque-content {
+  flex: 1;
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: center;
+  font-family: "Inter", sans-serif;
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.busca-codigo {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.busca-codigo input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 9999px;
+  font-size: 0.95rem;
+  min-width: 220px;
+}
+
+.busca-codigo button {
+  border: 1px solid #0f172a;
+  background-color: #ffffff;
+  color: #0f172a;
+  padding: 0.6rem 1.2rem;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+
+.busca-codigo button:hover {
+  background-color: #0f172a;
+  color: white;
+}
+
+.erro {
+  color: red;
+  font-weight: 500;
+}
+
+.card {
+  background-color: #ffffff;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.1);
+  padding: 2rem;
+  width: 100%;
+}
+
+.reserva-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.status {
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status.confirmado {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.status.checkin {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.status.criada {
+  background-color: #fef9c3;
+  color: #92400e;
+}
+
+.reserva-table {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  border-collapse: collapse;
+}
+
+.reserva-table th,
+.reserva-table td {
+  padding: 0.75rem;
+}
+
+.flight-info {
+  background-color: #ffffff;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.1);
+  padding: 1.5rem;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #e2e8f0;
+}
+
+.flight-location {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+}
+
+.flight-location span {
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+.flight-location strong {
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.arrow-icon {
+  color: #64748b;
+  margin: 0 1rem;
+}
+
+.acoes {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.acoes button {
+  border: 1px solid #0f172a;
+  padding: 0.6rem 1.2rem;
+  border-radius: 9999px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cancel-reserva-button {
+  background-color: #0f172a;
+  color: white;
+}
+
+.cancel-button:hover {
+  background-color: white;
+  color: #0f172a;
+}
+
+.checkin-button {
+  background-color: white;
+  color: #0f172a;
+}
+
+.checkin-button:hover {
+  background-color: #0f172a;
+  color: white;
+}

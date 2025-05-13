@@ -1,0 +1,100 @@
+
+.checkin-page {
+    padding: 2rem;
+    font-family: "Inter", sans-serif;
+    min-height: 100vh;
+  }
+  
+  .checkin-page h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+  
+  .checkin-page p.subtitulo {
+    color: #575c63;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+  }
+  
+  .checkin-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  
+  .checkin-table th,
+  .checkin-table td {
+    padding: 16px;
+    text-align: center;
+  }
+  
+  .checkin-table thead {
+    background-color: #f1f5f9;
+    font-weight: 600;
+  }
+  
+  .status {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  
+  .status.criada {
+    background-color: #fef9c3;
+    color: #92400e;
+  }
+  
+  .status.check-in {
+    background-color: #dbeafe;
+    color: #1e40af;
+  }
+  
+  .checkin-btn {
+    background: white;
+    color: #0f172a;
+    border: 1px solid #0f172a;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: 0.2s;
+  }
+  
+  .checkin-btn:hover {
+    background-color: #0f172a;
+    color: white;
+  }
+  
+  .checkin-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  .paginacao {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 20px;
+  }
+  
+  .pagina {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background-color: #e2e8f0;
+    color: #0f172a;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  
+  .pagina.ativa {
+    background-color: #0f172a;
+    color: white;
+  }
+  
