@@ -4,7 +4,6 @@ import org.hibernate.annotations.GenericGenerator
 
 @Entity
 @Table(name = "voo")
-
 data class Voo(
     @Id
     @GeneratedValue(generator = "tads-id-generator")
@@ -12,7 +11,7 @@ data class Voo(
         name = "tads-id-generator",
         strategy = "com.tads.airport_system.ms_voo.generator.TadsIdGenerator"
     )
-    val id: Long = 0,
+    val id: String = "", // Alterado para String para permitir IDs alfanuméricos
     val origem: String,
     val destino: String,
     val dataHora: String,
