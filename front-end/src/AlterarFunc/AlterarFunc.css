@@ -3,103 +3,133 @@
 @import '../ListarFunc/ConfirmarDeleteFunc.css';
 
 /* Add additional styles specific to AlterarFunc */
-.form-group {
-  margin-bottom: 15px;
-}
-
-.modal-content {
-  max-width: 550px; /* Make it a bit wider for the form */
-}
-
-.input {
+.editar-func-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
-  padding: 8px 12px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 14px;
-  margin-top: 5px;
-}
-
-.input:disabled {
-  background-color: #f5f5f5;
-  cursor: not-allowed;
-}
-
-.label {
-  display: block;
-  font-weight: 500;
-  font-size: 14px;
-  color: #333;
-}
-
-.container {
+  height: 100%;
+  z-index: 1000;
+  background-color: rgba(15, 23, 42, 0.3);
   display: flex;
-  min-height: 100vh;
-  background-color: #f5f5f5;
-}
-
-.content-wrapper {
-  flex: 1;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  font-family: "Inter", sans-serif;
 }
 
-.card {
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 800px;
-  padding: 30px;
+.editar-func-container {
+  background: #ffffff;
+  padding: 40px;
+  border-radius: 8px;
+  max-width: 520px;
+  width: 90%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.title {
-  color: #1976d2;
-  margin-bottom: 20px;
+.editar-func-titulo {
   text-align: center;
   font-size: 24px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 24px;
 }
 
-.form {
+.editar-func-error {
+  background-color: #fee2e2;
+  color: #991b1b;
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.editar-func-form {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
-.buttons {
+.editar-func-group {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+}
+
+.editar-func-label {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #0f172a;
+}
+
+.editar-func-input {
+  height: 40px;
+  padding: 0 12px;
+  font-size: 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background-color: #f1f5f9;
+  color: #1e293b;
+}
+
+.editar-func-input::placeholder {
+  color: #94a3b8;
+}
+
+.editar-func-input:disabled {
+  background-color: #e2e8f0;
+  color: #64748b;
+  cursor: not-allowed;
+}
+
+.editar-func-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
   margin-top: 20px;
 }
 
-.button {
+.editar-func-cancelar,
+.editar-func-salvar {
   padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
   border: none;
-  border-radius: 4px;
-  font-size: 16px;
   cursor: pointer;
-  background-color: #1976d2;
-  color: white;
+  transition: background-color 0.2s ease;
   min-width: 120px;
 }
 
-.button:hover {
-  background-color: #1565c0;
+.editar-func-cancelar {
+  background-color: #e2e8f0;
+  color: #0f172a;
 }
 
-.cancel-button {
-  background-color: #f44336;
+.editar-func-cancelar:hover:not(:disabled) {
+  background-color: #cbd5e1;
 }
 
-.cancel-button:hover {
-  background-color: #d32f2f;
+.editar-func-salvar {
+  background-color: #0f172a;
+  color: white;
 }
 
-.loading-indicator, .error {
-  text-align: center;
-  padding: 20px;
-  font-size: 18px;
+.editar-func-salvar:hover:not(:disabled) {
+  background-color: #1e293b;
+}
+
+@media (max-width: 480px) {
+  .editar-func-container {
+    padding: 20px;
+  }
+
+  .editar-func-buttons {
+    flex-direction: column;
+  }
+
+  .editar-func-cancelar,
+  .editar-func-salvar {
+    width: 100%;
+  }
 }

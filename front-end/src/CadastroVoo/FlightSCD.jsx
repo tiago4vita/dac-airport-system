@@ -1,6 +1,7 @@
-import React, { useState } from "react";
-import { Plane, LogOut } from "lucide-react";
-import "./FlightSCD.css";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import "./FlightSCD.css"; // Mantendo o CSS personalizado
 
 const calcularMilhas = (valor) => valor * 0.2;
 
@@ -12,75 +13,172 @@ const CadastroVoo = () => {
   const [valor, setValor] = useState("");
   const [poltronas, setPoltronas] = useState("");
 
-const aeroportos = ["GRU - São Paulo", "GIG - Rio de Janeiro", "BSB - Brasília", "CNF - Belo Horizonte"];
+  const [aeroportos, setAeroportos] = useState([]);
+  const [sugestoesOrigem, setSugestoesOrigem] = useState([]);
+  const [sugestoesDestino, setSugestoesDestino] = useState([]);
 
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    axios.get("http://localhost:8080/aeroportos")
+      .then((res) => {
+        const tratados = res.data.map((a) => ({
+          nome: (a[" nome"] || a.nome || "").trim(),
+          codigo: (a.codigo || "").trim().toUpperCase(),
+          cidade: (a.cidade || "").trim(),
+        }));
+        setAeroportos(tratados);
+      })
+      .catch((err) => console.error("Erro ao buscar aeroportos:", err));
+  }, []);
+
+  const filtrar = (input) => {
+    const termo = input.toLowerCase();
+    return aeroportos.filter((a) =>
+      a.nome.toLowerCase().includes(termo) ||
+      a.cidade.toLowerCase().includes(termo) ||
+      a.codigo.toLowerCase().includes(termo)
+    );
+  };
+
+  const handleOrigemChange = (e) => {
+    const value = e.target.value;
+    setOrigem(value);
+    setSugestoesOrigem(value ? filtrar(value) : []);
+  };
+
+  const handleDestinoChange = (e) => {
+    const value = e.target.value;
+    setDestino(value);
+    setSugestoesDestino(value ? filtrar(value) : []);
+  };
+
+  const selecionarOrigem = (texto) => {
+    setOrigem(texto);
+    setSugestoesOrigem([]);
+  };
+
+  const selecionarDestino = (texto) => {
+    setDestino(texto);
+    setSugestoesDestino([]);
+  };
 
   return (
-    <div className="tela-inicial-func">
-      <main className="main-content">
-        <h1>Cadastro de Voo</h1>
-        <h3>Preencha os campos abaixo para criar um novo voo</h3>
-        <form className="box-infos">
-          <label>Código do Voo:</label>
-          <input
-            type="text"
-            value={codigoVoo}
-            onChange={(e) => setCodigoVoo(e.target.value)}
-            required
-          />
+    <div className="cadastro-voo">
+      <div className="cadastro-voo-container">
+        <h1 className="cadastro-voo-titulo">Cadastro de Voo</h1>
 
-          <label>Data/Hora:</label>
-          <input
-            type="datetime-local"
-            value={dataHora}
-            onChange={(e) => setDataHora(e.target.value)}
-            required
-          />
+        <form className="cadastro-voo-form">
+          <div className="cadastro-voo-linha">
+            <label className="cadastro-voo-label">Código do Voo*</label>
+            <input
+              type="text"
+              value={codigoVoo}
+              onChange={(e) => setCodigoVoo(e.target.value)}
+              className="cadastro-voo-input"
+              required
+            />
+          </div>
 
-          <label>Aeroporto Origem:</label>
-          <select value={origem} onChange={(e) => setOrigem(e.target.value)} required>
-            <option value="" disabled>Selecione o aeroporto de origem</option>
-            {aeroportos.map((aeroporto, index) => (
-              <option key={index} value={aeroporto}>{aeroporto}</option>
-            ))}
-          </select>
+          <div className="cadastro-voo-linha">
+            <label className="cadastro-voo-label">Data/Hora*</label>
+            <input
+              type="datetime-local"
+              value={dataHora}
+              onChange={(e) => setDataHora(e.target.value)}
+              className="cadastro-voo-input"
+              required
+            />
+          </div>
 
-          <label>Aeroporto Destino:</label>
-          <select value={destino} onChange={(e) => setDestino(e.target.value)} required>
-            <option value="" disabled>Selecione o aeroporto de destino</option>
-            {aeroportos.map((aeroporto, index) => (
-              <option key={index} value={aeroporto}>{aeroporto}</option>
-            ))}
-          </select>
-          <label>Valor da Passagem (R$):</label>
-          <input
-            type="number"
-            value={valor}
-            onChange={(e) => setValor(e.target.value)}
-            required
-          />
-          <p>Equivalente em Milhas: {valor ? calcularMilhas(valor) : 0}</p>
+          <div className="cadastro-voo-linha-dupla cadastro-voo-linha">
+          <div className="cadastro-voo-col sugestao-wrapper">
+            <label className="cadastro-voo-label">Aeroporto Origem*</label>
+            <input
+              type="text"
+              value={origem}
+              onChange={handleOrigemChange}
+              className="cadastro-voo-input"
+              placeholder="Origem"
+              required
+            />
+            {sugestoesOrigem.length > 0 && (
+              <ul className="sugestoes">
+                {sugestoesOrigem.map((a, i) => (
+                  <li key={i} onClick={() => selecionarOrigem(`${a.nome} (${a.codigo})`)}>
+                    {a.nome} ({a.codigo})
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
 
-          <div style={{ width: "100%" }}></div>
-          
-          <label>Quantidade de Poltronas:</label>
-          <input
-            type="number"
-            value={poltronas}
-            onChange={(e) => setPoltronas(e.target.value)}
-            required
-          />
 
-          <div className="button-container">
-            <button type="button" className="cancelar">
+            <div className="cadastro-voo-col sugestao-wrapper">
+              <label className="cadastro-voo-label">Aeroporto Destino*</label>
+              <input
+                type="text"
+                value={destino}
+                onChange={handleDestinoChange}
+                className="cadastro-voo-input"
+                placeholder="Destino"
+                required
+              />
+              {sugestoesDestino.length > 0 && (
+                <ul className="sugestoes">
+                  {sugestoesDestino.map((a, i) => (
+                    <li key={i} onClick={() => selecionarDestino(`${a.nome} (${a.codigo})`)}>
+                      {a.nome} ({a.codigo})
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </div>
+
+          <div className="cadastro-voo-linha-dupla cadastro-voo-linha">
+            <div className="cadastro-voo-col">
+              <label className="cadastro-voo-label">Valor da Passagem (R$)*</label>
+              <input
+                type="number"
+                value={valor}
+                onChange={(e) => setValor(e.target.value)}
+                className="cadastro-voo-input"
+                required
+              />
+            </div>
+
+            <div className="cadastro-voo-col">
+              <label className="cadastro-voo-label">Milhas Calculadas</label>
+              <input
+                value={valor ? Math.floor(valor / 5) : 0}
+                className="cadastro-voo-input cadastro-disabled"
+                readOnly
+              />
+            </div>
+          </div>
+
+          <div className="cadastro-voo-linha">
+            <label className="cadastro-voo-label">Quantidade de Poltronas*</label>
+            <input
+              type="number"
+              value={poltronas}
+              onChange={(e) => setPoltronas(e.target.value)}
+              className="cadastro-voo-input"
+              required
+            />
+          </div>
+
+          <div className="cadastro-voo-botoes">
+            <button type="button" className="cadastro-voo-cancelar" onClick={() => navigate("/")}>
               Cancelar
             </button>
-            <button type="submit" className="cadastrar">
+            <button type="submit" className="cadastro-voo-cadastrar">
               Cadastrar Voo
             </button>
           </div>
         </form>
-      </main>
+      </div>
     </div>
   );
 };

@@ -1,73 +1,127 @@
-.main-content {
+.cadastro-voo {
+  background-color: #f8fafc; 
   display: flex;
-  flex-direction: column;
   justify-content: center;
-  align-items: center;
-  width: 100%;
-  margin-bottom: 40px;
-}
-
-h1, h3 {
-  text-align: center;
-}
-
-.box-infos {
-  box-sizing: border-box;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
   align-items: flex-start;
-  padding: 24px;
-  gap: 24px 32px;
-  width: 800px;
-  background: #FFFFFF;
-  border: 1px solid #CBD5E1;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.05);
-  border-radius: 8px;
+  padding: 60px 20px;
+  min-height: 100vh;
+  font-family: "Inter", sans-serif;
+}
+
+.cadastro-voo-container {
+  width: 100%;
+  max-width: 800px;
+  background: white;
   position: relative;
 }
 
-.box-infos label,
-.box-infos input,
-.box-infos p {
-  width: 45%;
-  min-width: 300px;
+.cadastro-voo-titulo {
+  text-align: center;
+  font-size: 48px;
+  font-weight: 700;
+  margin-bottom: 40px;
+  color: #0f172a;
 }
-.box-infos .button-container {
+
+.cadastro-voo-form {
+  border-radius: 8px;
+  padding: 40px;
   display: flex;
-  gap: 16px; 
-  width: 100%;
-  margin-top: 20px;
-  justify-content: flex-end; 
+  flex-direction: column;
+  gap: 20px;
 }
 
-.box-infos button {
-  padding: 6px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 14px; 
+.cadastro-voo-linha {
+  display: flex;
+  flex-direction: column;
+}
+
+.cadastro-voo-linha-dupla,
+.cadastro-voo-linha-tripla {
+  flex-direction: row;
+  gap: 16px;
+}
+
+.cadastro-voo-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.cadastro-voo-label {
+  font-size: 14px;
+  margin-bottom: 6px;
+  color: #0f172a;
+  font-weight: 600;
+  font-family: "Inter", sans-serif;
+}
+
+.cadastro-voo-input {
   height: 40px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  padding: 0 10px;
+  background-color: #f1f5f9;
+  font-size: 14px;
+  font-family: "Inter", sans-serif;
+  color: #0f172a;
 }
 
-
-.box-infos label[for="quantidadePoltronas"],
-.box-infos input[type="number"]#quantidadePoltronas {
-  width: 120px;
-  height: 40px; 
-  font-size: 14px; 
-  padding-left: 10px; 
+.cadastro-voo-disabled {
+  background-color: #e2e8f0 !important;
+  color: #334155 !important;
+  cursor: not-allowed;
 }
 
+.cadastro-voo-botoes {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+}
 
-.cancelar {
-  background-color: #ccc; 
-  color: #333; 
+.cadastro-voo-cancelar {
+  background-color: #64748b;
+  color: white;
+  padding: 10px 20px;
   border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
 }
 
-.cadastrar {
+.cadastro-voo-cadastrar {
   background-color: #0f172a;
   color: white;
+  padding: 10px 24px;
   border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
 }
 
+.sugestoes {
+  background: white;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  max-height: 160px;
+  overflow-y: auto;
+  margin-top: 4px;
+  padding: 0;
+  list-style: none;
+  position: absolute;
+  z-index: 10;
+  width: 100%;
+}
+
+.sugestoes li {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.sugestoes li:hover {
+  background-color: #f1f5f9;
+}
+
+.sugestao-wrapper {
+  position: relative;
+}

@@ -82,105 +82,105 @@ const AlterarFunc = ({ funcionario, onClose, onSuccess }) => {
   };
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content">
-        <h2>Alterar Funcionário</h2>
-        
-        {error && <div className="error-message">{error}</div>}
-        
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="nome" className="label">Nome*</label>
-            <input 
-              id="nome" 
-              name="nome" 
-              value={form.nome} 
-              onChange={handleChange} 
-              required 
-              className="input"
+    <div className="editar-func-modal">
+      <div className="editar-func-container">
+        <h2 className="editar-func-titulo">Editar Funcionário</h2>
+  
+        {error && <div className="editar-func-error">{error}</div>}
+  
+        <form onSubmit={handleSubmit} className="editar-func-form">
+          <div className="editar-func-group">
+            <label htmlFor="nome" className="editar-func-label">Nome*</label>
+            <input
+              id="nome"
+              name="nome"
+              value={form.nome}
+              onChange={handleChange}
+              required
+              className="editar-func-input"
               disabled={loading}
             />
           </div>
-          
-          <div className="form-group">
-            <label htmlFor="cpf" className="label">CPF*</label>
-            <input 
-              id="cpf" 
-              name="cpf" 
-              value={form.cpf} 
-              onChange={handleChange} 
-              required 
-              pattern="\d{11}" 
-              title="Digite 11 números do CPF" 
-              className="input"
-              disabled // CPF shouldn't be editable
+  
+          <div className="editar-func-group">
+            <label htmlFor="cpf" className="editar-func-label">CPF*</label>
+            <input
+              id="cpf"
+              name="cpf"
+              value={form.cpf}
+              onChange={handleChange}
+              required
+              pattern="\d{11}"
+              title="Digite 11 números do CPF"
+              className="editar-func-input"
+              disabled
             />
           </div>
-          
-          <div className="form-group">
-            <label htmlFor="email" className="label">E-mail*</label>
-            <input 
-              id="email" 
-              name="email" 
-              type="email" 
-              value={form.email} 
-              onChange={handleChange} 
-              required 
-              className="input"
+  
+          <div className="editar-func-group">
+            <label htmlFor="email" className="editar-func-label">E-mail*</label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              value={form.email}
+              onChange={handleChange}
+              required
+              className="editar-func-input"
               disabled={loading}
             />
           </div>
-          
-          <div className="form-group">
-            <label htmlFor="telefone" className="label">Telefone*</label>
-            <input 
-              id="telefone" 
-              name="telefone" 
-              value={form.telefone} 
-              onChange={handleChange} 
-              required 
-              className="input"
+  
+          <div className="editar-func-group">
+            <label htmlFor="telefone" className="editar-func-label">Telefone*</label>
+            <input
+              id="telefone"
+              name="telefone"
+              value={form.telefone}
+              onChange={handleChange}
+              required
+              className="editar-func-input"
               disabled={loading}
             />
           </div>
-          
-          <div className="form-group">
-            <label htmlFor="status" className="label">Status</label>
+  
+          <div className="editar-func-group">
+            <label htmlFor="status" className="editar-func-label">Status</label>
             <select
               id="status"
               name="status"
               value={form.status}
               onChange={handleChange}
-              className="input"
+              className="editar-func-input"
               disabled={loading}
             >
               <option value="ATIVO">ATIVO</option>
               <option value="INATIVO">INATIVO</option>
             </select>
           </div>
-          
-          <div className="modal-buttons">
-            <button 
-              type="button" 
-              onClick={onClose} 
-              className="cancel-btn"
+  
+          <div className="editar-func-buttons">
+            <button
+              type="button"
+              className="editar-func-cancelar"
+              onClick={onClose}
               disabled={loading}
             >
               Cancelar
             </button>
-            <button 
-              type="submit" 
-              style={{ backgroundColor: '#1976d2', color: 'white' }}
-              className="confirm-btn"
+            <button
+              type="submit"
+              className="editar-func-salvar"
               disabled={loading}
             >
-              {loading ? 'Salvando...' : 'Salvar Alterações'}
+              {loading ? "Salvando..." : "Salvar Alterações"}
             </button>
           </div>
         </form>
       </div>
     </div>
   );
+  
 };
 
 export default AlterarFunc;

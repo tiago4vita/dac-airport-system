@@ -286,92 +286,92 @@ export default function InserirFunc() {
   };
 
   return (
-    <div className="container">
-      <div className="card">
-        <h1 className="title">Adicionar Novo Funcionário</h1>
-        <p className="subtitle">Preencha os dados para cadastrar um novo funcionário no sistema</p>
-        
-        <form onSubmit={handleSubmit} className="form">
-          <div className="form-group">
-            <label htmlFor="nome" className="label">Nome*</label>
-            <input 
-              id="nome" 
-              name="nome" 
-              value={form.nome} 
-              onChange={handleChange} 
-              required 
-              className={`input ${errors.nome ? 'input-error' : ''}`}
-              placeholder="Nome completo"
-              disabled={isSubmitting}
-            />
-            {errors.nome && <span className="error-message">{errors.nome}</span>}
-          </div>
-          
-          <div className="form-group">
-            <label htmlFor="cpf" className="label">CPF*</label>
-            <input 
-              id="cpf" 
-              name="cpf" 
-              value={form.cpf} 
-              onChange={handleFormattedChange} 
-              required 
-              className={`input ${errors.cpf ? 'input-error' : ''}`}
-              placeholder="000.000.000-00"
-              disabled={isSubmitting}
-            />
-            {errors.cpf && <span className="error-message">{errors.cpf}</span>}
-          </div>
-          
-          <div className="form-group">
-            <label htmlFor="email" className="label">E-mail*</label>
-            <input 
-              id="email" 
-              name="email" 
-              type="email" 
-              value={form.email} 
-              onChange={handleChange} 
-              required 
-              className={`input ${errors.email ? 'input-error' : ''}`}
-              placeholder="email@exemplo.com"
-              disabled={isSubmitting}
-            />
-            {errors.email && <span className="error-message">{errors.email}</span>}
-          </div>
-          
-          <div className="form-group">
-            <label htmlFor="telefone" className="label">Telefone*</label>
-            <input 
-              id="telefone" 
-              name="telefone" 
-              value={form.telefone} 
-              onChange={handleFormattedChange} 
-              required 
-              className={`input ${errors.telefone ? 'input-error' : ''}`}
-              placeholder="(00) 00000-0000"
-              disabled={isSubmitting}
-            />
-            {errors.telefone && <span className="error-message">{errors.telefone}</span>}
-          </div>
-          
-          <div className="buttons">
-            <button 
-              type="button" 
-              onClick={handleCancel} 
-              className="button cancel-button"
-              disabled={isSubmitting}
-            >
-              Cancelar
-            </button>
-            <button 
-              type="submit" 
-              className="button submit-button"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? "Adicionando..." : "Adicionar"}
-            </button>
-          </div>
-        </form>
+    <div className="form-func">
+  <div className="form-func-container">
+    <h1 className="form-func-title">Adicionar Novo Funcionário</h1>
+    <p className="form-func-subtitle">Preencha os dados para cadastrar um novo funcionário no sistema</p>
+
+    <form onSubmit={handleSubmit} className="form-func-form">
+      <div className="form-func-group">
+        <label htmlFor="nome" className="form-func-label">Nome*</label>
+        <input
+          id="nome"
+          name="nome"
+          value={form.nome}
+          onChange={handleChange}
+          required
+          className={`form-func-input ${errors.nome ? 'form-func-input-error' : ''}`}
+          placeholder="Nome completo"
+          disabled={isSubmitting}
+        />
+        {errors.nome && <span className="form-func-error">{errors.nome}</span>}
       </div>
-    </div>
+
+      <div className="form-func-group">
+        <label htmlFor="cpf" className="form-func-label">CPF*</label>
+        <input
+          id="cpf"
+          name="cpf"
+          value={form.cpf}
+          onChange={handleFormattedChange}
+          required
+          className={`form-func-input ${errors.cpf ? 'form-func-input-error' : ''}`}
+          placeholder="000.000.000-00"
+          disabled={isSubmitting}
+        />
+        {errors.cpf && <span className="form-func-error">{errors.cpf}</span>}
+      </div>
+
+      <div className="form-func-group">
+        <label htmlFor="email" className="form-func-label">E-mail*</label>
+        <input
+          id="email"
+          name="email"
+          type="email"
+          value={form.email}
+          onChange={handleChange}
+          required
+          className={`form-func-input ${errors.email ? 'form-func-input-error' : ''}`}
+          placeholder="email@exemplo.com"
+          disabled={isSubmitting}
+        />
+        {errors.email && <span className="form-func-error">{errors.email}</span>}
+      </div>
+
+      <div className="form-func-group">
+        <label htmlFor="telefone" className="form-func-label">Telefone*</label>
+        <input
+          id="telefone"
+          name="telefone"
+          value={form.telefone}
+          onChange={handleFormattedChange}
+          required
+          className={`form-func-input ${errors.telefone ? 'form-func-input-error' : ''}`}
+          placeholder="(00) 00000-0000"
+          disabled={isSubmitting}
+        />
+        {errors.telefone && <span className="form-func-error">{errors.telefone}</span>}
+      </div>
+
+      <div className="form-func-buttons">
+        <button
+          type="button"
+          onClick={handleCancel}
+          className="form-func-button cancel"
+          disabled={isSubmitting}
+        >
+          Cancelar
+        </button>
+        <button
+          type="submit"
+          className="form-func-button submit"
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? "Adicionando..." : "Adicionar"}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
   );
 }
