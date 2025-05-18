@@ -6,6 +6,7 @@ const { validateLoginRequest } = require('./middleware/loginValidation');
 const fetch = require('node-fetch');
 const { generateRandomPassword, hashPassword } = require('./utils/passwordUtils');
 const { sendToQueue, connect } = require('./services/rabbitMQService');
+const { generateToken, verifyToken } = require('./utils/jwtUtils');
 
 // Load environment variables
 dotenv.config();
@@ -141,6 +142,54 @@ app.post('/clientes', async (req, res) => {
     });
   }
 });
+
+/* Test JWT endpoint
+app.post('/test-jwt', (req, res) => {
+  try {
+    const { email, password, tipo } = req.body;
+    
+    // Validate input
+    if (!email || !password || !tipo) {
+      return res.status(400).json({
+        error: 'Missing required fields',
+        message: 'Email, password, and tipo are required'
+      });
+    }
+    
+    // Generate token
+    const token = generateToken(email, tipo);
+    
+    // Verify the token
+    const verifiedToken = verifyToken(token);
+    
+    // Log the verification result
+    console.log('Test JWT Verification Result:', JSON.stringify(verifiedToken, null, 2));
+    
+    // Calculate expiration time from JWT payload
+    const expirationDate = new Date(verifiedToken.exp * 1000).toLocaleString();
+    
+    // Return token and decoded information
+    res.status(200).json({
+      access_token: token,
+      token_type: 'bearer',
+      expires_at: expirationDate,
+      decoded: {
+        subject: verifiedToken.sub,
+        role: verifiedToken.role,
+        issuer: verifiedToken.iss,
+        issued_at: new Date(verifiedToken.iat * 1000).toLocaleString(),
+        expires_at: expirationDate
+      }
+    });
+  } catch (error) {
+    console.error('Error in test-jwt endpoint:', error);
+    res.status(500).json({
+      error: 'Internal Server Error',
+      message: error.message
+    });
+  }
+});
+*/
 
 // Route traffic to microservices
 app.use('/service1', createProxyMiddleware(process.env.MICROSERVICE_AUTH_URL));
