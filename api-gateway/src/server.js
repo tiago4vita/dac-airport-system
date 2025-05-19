@@ -22,7 +22,8 @@ app.get('/health', (req, res) => {
   res.status(200).json({ status: 'OK' });
 });
 
-// R02 - LOGIN
+// PERMISSÃO : NENHUMA
+// R02a - LOGIN
 app.post('/login', validateLoginRequest, async (req, res) => {
   try {
     // Create a copy of the request body
@@ -73,6 +74,16 @@ app.post('/login', validateLoginRequest, async (req, res) => {
   }
 });
 
+// PERMISSÃO : TODOS
+// R02b - LOGOUT
+app.post('/logout', async (req, res) => {
+  //TODO: Implementar a lógica para fazer logout
+  //Verificar se o token é válido
+  //Se não for, retornar 401
+  //Se for, retornar 200
+});
+
+// PERMISSÃO : NENHUMA
 // R01 - AUTOCADASTRO
 app.post('/clientes', async (req, res) => {
   try {
@@ -144,8 +155,28 @@ app.post('/clientes', async (req, res) => {
   }
 });
 
+// PERMISSÃO : CLIENTE
 // R03 - TELA INICIAL DE CLIENTE
 app.get('/clientes/:codigoCliente', async (req, res) => {
+  // Get token from Authorization header
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    return res.status(401).json({
+      error: 'Unauthorized',
+      message: 'No authorization token provided'
+    });
+  }
+
+  const token = authHeader.split(' ')[1];
+  
+  // Verify token and check if user type is CLIENTE
+  if (!hasUserType(token, 'CLIENTE')) {
+    return res.status(403).json({
+      error: 'Forbidden',
+      message: 'User must be of type CLIENTE to access this resource'
+    });
+  }
+
   //TODO: Implementar a lógica para buscar o cliente usando saga
   //Verificar se o codigo do cliente é o mesmo do JWT
   //Se não for, retornar 403
@@ -153,6 +184,24 @@ app.get('/clientes/:codigoCliente', async (req, res) => {
 
 // R04 - LISTAR RESERVAS
 app.get('/clientes/:codigoCliente/reservas', async (req, res) => {
+  // Get token from Authorization header
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    return res.status(401).json({
+      error: 'Unauthorized',
+      message: 'No authorization token provided'
+    });
+  }
+
+  const token = authHeader.split(' ')[1];
+  
+  // Verify token and check if user type is CLIENTE
+  if (!hasUserType(token, 'CLIENTE')) {
+    return res.status(403).json({
+      error: 'Forbidden',
+      message: 'User must be of type CLIENTE to access this resource'
+    });
+  }
   //TODO: Implementar a lógica para buscar as reservas do cliente usando saga
   //Verificar se o codigo do cliente é o mesmo do JWT
   //Se não for, retornar 403
@@ -160,6 +209,24 @@ app.get('/clientes/:codigoCliente/reservas', async (req, res) => {
 
 // R05 - COMPRAR MILHAS
 app.put('/clientes/{codigoCliente}/milhas', async (req, res) => {
+  // Get token from Authorization header
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    return res.status(401).json({
+      error: 'Unauthorized',
+      message: 'No authorization token provided'
+    });
+  }
+
+  const token = authHeader.split(' ')[1];
+  
+  // Verify token and check if user type is CLIENTE
+  if (!hasUserType(token, 'CLIENTE')) {
+    return res.status(403).json({
+      error: 'Forbidden',
+      message: 'User must be of type CLIENTE to access this resource'
+    });
+  }
   try {
     const { quantidade } = req.body;
 
@@ -187,6 +254,24 @@ app.put('/clientes/{codigoCliente}/milhas', async (req, res) => {
 
 // R06 - CONSULTAR EXTRATO DE MILHAS
 app.get('/clientes/{codigoCliente}/milhas', async (req, res) => { 
+  // Get token from Authorization header
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    return res.status(401).json({
+      error: 'Unauthorized',
+      message: 'No authorization token provided'
+    });
+  }
+
+  const token = authHeader.split(' ')[1];
+  
+  // Verify token and check if user type is CLIENTE
+  if (!hasUserType(token, 'CLIENTE')) {
+    return res.status(403).json({
+      error: 'Forbidden',
+      message: 'User must be of type CLIENTE to access this resource'
+    });
+  }
   //TODO: Implementar a lógica para buscar as milhas do cliente usando saga
   //Verificar se o codigo do cliente é o mesmo do JWT
   //Se não for, retornar 403
@@ -215,6 +300,24 @@ app.get('/voos', async (req, res) => {
 
 // R07b - CRIAR RESERVA
 app.post('/reservas', async (req, res) => {
+  // Get token from Authorization header
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    return res.status(401).json({
+      error: 'Unauthorized',
+      message: 'No authorization token provided'
+    });
+  }
+
+  const token = authHeader.split(' ')[1];
+  
+  // Verify token and check if user type is CLIENTE
+  if (!hasUserType(token, 'CLIENTE')) {
+    return res.status(403).json({
+      error: 'Forbidden',
+      message: 'User must be of type CLIENTE to access this resource'
+    });
+  }
   try {
     const { 
       codigo_cliente,
@@ -301,6 +404,24 @@ app.post('/reservas', async (req, res) => {
 
 // R08 - CANCELAR RESERVA
 app.delete('/reservas/{codigoReserva}', async (req, res) => {
+  // Get token from Authorization header
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    return res.status(401).json({
+      error: 'Unauthorized',
+      message: 'No authorization token provided'
+    });
+  }
+
+  const token = authHeader.split(' ')[1];
+  
+  // Verify token and check if user type is CLIENTE
+  if (!hasUserType(token, 'CLIENTE')) {
+    return res.status(403).json({
+      error: 'Forbidden',
+      message: 'User must be of type CLIENTE to access this resource'
+    });
+  }
   //TODO: Implementar a lógica para cancelar a reserva usando saga
   //Verificar se o codigo da reserva é o mesmo do JWT
   //Se não for, retornar 403
@@ -320,6 +441,24 @@ app.get('/reservas/{codigoReserva}', async (req, res) => {
 
 // R10a - FAZER CHECK-IN
 app.patch('/reservas/:codigoReserva/estado', async (req, res) => {
+  // Get token from Authorization header
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    return res.status(401).json({
+      error: 'Unauthorized',
+      message: 'No authorization token provided'
+    });
+  }
+
+  const token = authHeader.split(' ')[1];
+  
+  // Verify token and check if user type is CLIENTE
+  if (!hasUserType(token, 'CLIENTE')) {
+    return res.status(403).json({
+      error: 'Forbidden',
+      message: 'User must be of type CLIENTE to access this resource'
+    });
+  }
   try {
     const { estado } = req.body;
     const { codigoReserva } = req.params;
