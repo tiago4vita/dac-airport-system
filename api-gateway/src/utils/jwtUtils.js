@@ -53,7 +53,26 @@ const verifyToken = (token) => {
   }
 };
 
+/**
+ * Check if the user type in the JWT token matches the expected type
+ * @param {string} token - JWT token to verify
+ * @param {string} expectedType - Expected user type/role
+ * @returns {boolean} True if token is valid and user type matches, false otherwise
+ */
+const hasUserType = (token, expectedType) => {
+  // First verify the token is valid
+  const decoded = verifyToken(token);
+  
+  // If token is invalid or role doesn't match, return false
+  if (!decoded || decoded.role !== expectedType) {
+    return false;
+  }
+  
+  return true;
+};
+
 module.exports = {
   generateToken,
-  verifyToken
+  verifyToken,
+  hasUserType
 }; 

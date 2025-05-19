@@ -77,10 +77,39 @@ app.post('/login', validateLoginRequest, async (req, res) => {
 // PERMISSÃO : TODOS
 // R02b - LOGOUT
 app.post('/logout', async (req, res) => {
-  //TODO: Implementar a lógica para fazer logout
-  //Verificar se o token é válido
-  //Se não for, retornar 401
-  //Se for, retornar 200
+  try {
+    // Get token from Authorization header
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({
+        error: 'Unauthorized',
+        message: 'No token provided'
+      });
+    }
+
+    const token = authHeader.split(' ')[1];
+
+    // Verify if token is valid
+    const decodedToken = verifyToken(token);
+    if (!decodedToken) {
+      return res.status(401).json({
+        error: 'Unauthorized', 
+        message: 'Invalid or expired token'
+      });
+    }
+
+    // If we get here, token was valid
+    res.status(200).json({
+      message: 'Successfully logged out'
+    });
+
+  } catch (error) {
+    console.error('Error during logout:', error);
+    res.status(500).json({
+      error: 'Internal Server Error',
+      message: error.message
+    });
+  }
 });
 
 // PERMISSÃO : NENHUMA
@@ -439,7 +468,7 @@ app.get('/reservas/{codigoReserva}', async (req, res) => {
   //campos invalidos retornar 400
 });
 
-// R10a - FAZER CHECK-IN
+// R10a - FAZER CHECK-IN (CLIENTE) / R12 - Alterar estado da Reserva para Embarcado (FUNCIONARIO)
 app.patch('/reservas/:codigoReserva/estado', async (req, res) => {
   // Get token from Authorization header
   const authHeader = req.headers.authorization;
@@ -452,21 +481,32 @@ app.patch('/reservas/:codigoReserva/estado', async (req, res) => {
 
   const token = authHeader.split(' ')[1];
   
-  // Verify token and check if user type is CLIENTE
-  if (!hasUserType(token, 'CLIENTE')) {
+  // Verify token and check if user type is CLIENTE or FUNCIONARIO
+  const decodedToken = verifyToken(token);
+  if (!decodedToken || (decodedToken.role !== 'CLIENTE' && decodedToken.role !== 'FUNCIONARIO')) {
     return res.status(403).json({
       error: 'Forbidden',
-      message: 'User must be of type CLIENTE to access this resource'
+      message: 'User must be of type CLIENTE or FUNCIONARIO to access this resource'
     });
   }
+
   try {
     const { estado } = req.body;
     const { codigoReserva } = req.params;
 
-    if (!estado || estado !== 'CHECK-IN') {
+    // CLIENTE can only set CHECK-IN
+    if (decodedToken.role === 'CLIENTE' && (!estado || estado !== 'CHECK-IN')) {
       return res.status(400).json({
         error: 'Invalid estado',
-        message: 'estado must be "CHECK-IN"'
+        message: 'CLIENTE can only set estado to "CHECK-IN"'
+      });
+    }
+
+    // FUNCIONARIO can only set EMBARCADO
+    if (decodedToken.role === 'FUNCIONARIO' && (!estado || estado !== 'EMBARCADO')) {
+      return res.status(400).json({
+        error: 'Invalid estado',
+        message: 'FUNCIONARIO can only set estado to "EMBARCADO"'
       });
     }
 
@@ -478,6 +518,414 @@ app.patch('/reservas/:codigoReserva/estado', async (req, res) => {
     //se a reserva não existir retornar 404
   } catch (error) {
     console.error('Error updating reservation state:', error);
+    res.status(500).json({
+      error: 'Internal Server Error',
+      message: error.message
+    });
+  }
+});
+
+// R13 - CANCELAMENTO DE VOO / R14 - REALIZAR VOO
+app.patch('/voos/{codigoVoo}/estado', async (req, res) => {
+  // Get token from Authorization header
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    return res.status(401).json({
+      error: 'Unauthorized',
+      message: 'No authorization token provided'
+    });
+  }
+
+  const token = authHeader.split(' ')[1];
+  
+  // Verify token and check if user type is FUNCIONARIO
+  if (!hasUserType(token, 'FUNCIONARIO')) {
+    return res.status(403).json({
+      error: 'Forbidden',
+      message: 'User must be of type FUNCIONARIO to access this resource'
+    });
+  }
+
+  try {
+    const { estado } = req.body;
+    const { codigoVoo } = req.params;
+
+    // FUNCIONARIO can only set CANCELADO or REALIZADO
+    if (!estado || (estado !== 'CANCELADO' && estado !== 'REALIZADO')) {
+      return res.status(400).json({
+        error: 'Invalid estado',
+        message: 'FUNCIONARIO can only set estado to "CANCELADO" or "REALIZADO"'
+      });
+    }
+
+    //TODO: Implementar a lógica para cancelar o voo usando saga
+    //Verificar se o codigo do voo é o mesmo do JWT
+    //Se não for, retornar 403
+    //sem tokens retornar 401
+    //campos invalidos retornar 400
+    //se o voo não existir retornar 404
+  } catch (error) {
+    console.error('Error updating flight state:', error);
+    res.status(500).json({
+      error: 'Internal Server Error',
+      message: error.message
+    });
+  }
+});
+
+// R15a - CRIAR VOO
+app.post('/voos', async (req, res) => {
+  // Get token from Authorization header
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    return res.status(401).json({
+      error: 'Unauthorized',
+      message: 'No authorization token provided'
+    });
+  }
+
+  const token = authHeader.split(' ')[1];
+  
+  // Verify token and check if user type is FUNCIONARIO
+  if (!hasUserType(token, 'FUNCIONARIO')) {
+    return res.status(403).json({
+      error: 'Forbidden',
+      message: 'User must be of type FUNCIONARIO to access this resource'
+    });
+  }
+
+  try {
+    const { 
+      data,
+      valor_passagem,
+      quantidade_poltronas_total,
+      quantidade_poltronas_ocupadas,
+      codigo_aeroporto_origem,
+      codigo_aeroporto_destino
+    } = req.body;
+
+    // Validate required fields
+    if (!data || !valor_passagem || !quantidade_poltronas_total || 
+        !quantidade_poltronas_ocupadas || !codigo_aeroporto_origem || 
+        !codigo_aeroporto_destino) {
+      return res.status(400).json({
+        error: 'Missing required fields',
+        message: 'All fields are required'
+      });
+    }
+
+    // Validate date format and future date
+    const flightDate = new Date(data);
+    if (isNaN(flightDate) || flightDate < new Date()) {
+      return res.status(400).json({
+        error: 'Invalid date',
+        message: 'Date must be valid and in the future'
+      });
+    }
+
+    // Validate numeric values
+    if (typeof valor_passagem !== 'number' || valor_passagem <= 0) {
+      return res.status(400).json({
+        error: 'Invalid valor_passagem',
+        message: 'valor_passagem must be a positive number'
+      });
+    }
+
+    if (!Number.isInteger(quantidade_poltronas_total) || quantidade_poltronas_total <= 0) {
+      return res.status(400).json({
+        error: 'Invalid quantidade_poltronas_total',
+        message: 'quantidade_poltronas_total must be a positive integer'
+      });
+    }
+
+    if (!Number.isInteger(quantidade_poltronas_ocupadas) || quantidade_poltronas_ocupadas < 0) {
+      return res.status(400).json({
+        error: 'Invalid quantidade_poltronas_ocupadas',
+        message: 'quantidade_poltronas_ocupadas must be a non-negative integer'
+      });
+    }
+
+    if (quantidade_poltronas_ocupadas > quantidade_poltronas_total) {
+      return res.status(400).json({
+        error: 'Invalid seat numbers',
+        message: 'quantidade_poltronas_ocupadas cannot be greater than quantidade_poltronas_total'
+      });
+    }
+
+    // Validate airport codes (assuming 3-letter IATA codes)
+    if (!/^[A-Z]{3}$/.test(codigo_aeroporto_origem) || !/^[A-Z]{3}$/.test(codigo_aeroporto_destino)) {
+      return res.status(400).json({
+        error: 'Invalid airport code',
+        message: 'Airport codes must be 3-letter IATA codes'
+      });
+    }
+
+    if (codigo_aeroporto_origem === codigo_aeroporto_destino) {
+      return res.status(400).json({
+        error: 'Invalid airport codes',
+        message: 'Origin and destination airports must be different'
+      });
+    }
+
+    //TODO: Implementar a lógica para criar o voo usando saga
+    //Verificar se o codigo do voo é o mesmo do JWT
+    //Se não for, retornar 403
+    //sem tokens retornar 401
+    //campos invalidos retornar 400
+
+  } catch (error) {
+    console.error('Error creating flight:', error);
+    res.status(500).json({
+      error: 'Internal Server Error',
+      message: error.message
+    });
+  }
+});
+
+//R15b - buscar aeroportos
+app.get('/aeroportos', async (req, res) => {
+  //TODO: Implementar a lógica para buscar os aeroportos no ms-voo usando saga
+  //sem tokens retornar 401
+  //sem aeroportos retornar 204
+});
+
+// R? - BUSCAR VOO POR CODIGO
+app.get('/voos/{codigoVoo}', async (req, res) => {
+  // Get token from Authorization header
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    return res.status(401).json({
+      error: 'Unauthorized',
+      message: 'No authorization token provided'
+    });
+  }
+
+  const token = authHeader.split(' ')[1];
+  
+  // Verify token is valid
+  const decodedToken = verifyToken(token);
+  if (!decodedToken) {
+    return res.status(401).json({
+      error: 'Unauthorized',
+      message: 'Invalid or expired token'
+    });
+  }
+
+  //TODO: Implementar a lógica para buscar o voo no ms-voo usando saga
+  //sem voo retornar 204
+});
+
+//R16 - BUSCAR TODOS OS FUNCIONARIOS
+app.get('/funcionarios', async (req, res) => {
+  // Get token from Authorization header
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    return res.status(401).json({
+      error: 'Unauthorized',
+      message: 'No authorization token provided'
+    });
+  }
+
+  const token = authHeader.split(' ')[1];
+  
+  // Verify token and check if user type is FUNCIONARIO
+  if (!hasUserType(token, 'FUNCIONARIO')) {
+    return res.status(403).json({
+      error: 'Forbidden',
+      message: 'User must be of type FUNCIONARIO to access this resource'
+    });
+  }
+
+  //TODO: Implementar a lógica para buscar todos os funcionarios no ms-func usando saga
+  //sem tokens retornar 401
+  //sem funcionarios retornar 204
+});
+
+//R17 - CRIAR FUNCIONARIO
+app.post('/funcionarios', async (req, res) => {
+  // Get token from Authorization header
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    return res.status(401).json({
+      error: 'Unauthorized',
+      message: 'No authorization token provided'
+    });
+  }
+
+  const token = authHeader.split(' ')[1];
+  
+  // Verify token and check if user type is FUNCIONARIO
+  if (!hasUserType(token, 'FUNCIONARIO')) {
+    return res.status(403).json({
+      error: 'Forbidden',
+      message: 'User must be of type FUNCIONARIO to access this resource'
+    });
+  }
+
+  try {
+    const { cpf, email, nome, telefone, senha } = req.body;
+
+    // Validate required fields
+    if (!cpf || !email || !nome || !telefone || !senha) {
+      return res.status(400).json({
+        error: 'Missing required fields',
+        message: 'All fields are required'
+      });
+    }
+
+    // Validate CPF format (11 digits)
+    if (!/^\d{11}$/.test(cpf)) {
+      return res.status(400).json({
+        error: 'Invalid CPF',
+        message: 'CPF must be 11 digits'
+      });
+    }
+
+    // Validate email format
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return res.status(400).json({
+        error: 'Invalid email',
+        message: 'Email must be in valid format'
+      });
+    }
+
+    // Validate nome is not empty
+    if (!nome.trim()) {
+      return res.status(400).json({
+        error: 'Invalid nome',
+        message: 'Nome cannot be empty'
+      });
+    }
+
+    // Validate telefone format (11 digits)
+    if (!/^\d{11}$/.test(telefone)) {
+      return res.status(400).json({
+        error: 'Invalid telefone',
+        message: 'Telefone must be 11 digits'
+      });
+    }
+
+    // Validate senha is not empty
+    if (!senha.trim()) {
+      return res.status(400).json({
+        error: 'Invalid senha',
+        message: 'Senha cannot be empty'
+      });
+    }
+
+    // Hash the password before sending to service
+    const hashedPassword = hashPassword(senha);
+
+    const funcionarioData = {
+      cpf,
+      email,
+      nome,
+      telefone,
+      senha: hashedPassword
+    };
+
+    //TODO: Implementar a lógica para criar funcionário usando saga
+    //sem tokens retornar 401
+    //campos invalidos retornar 400
+    //se o funcionário já existir retornar 409
+
+  } catch (error) {
+    console.error('Error creating employee:', error);
+    res.status(500).json({
+      error: 'Internal Server Error', 
+      message: error.message
+    });
+  }
+});
+
+//R18 - UPDATE FUNCIONARIO
+app.put('/funcionarios/{codigoFuncionario}', async (req, res) => {
+  // Get token from Authorization header
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    return res.status(401).json({
+      error: 'Unauthorized',
+      message: 'No authorization token provided'
+    });
+  }
+
+  const token = authHeader.split(' ')[1];
+  
+  // Verify token and check if user type is FUNCIONARIO
+  if (!hasUserType(token, 'FUNCIONARIO')) {
+    return res.status(403).json({
+      error: 'Forbidden',
+      message: 'User must be of type FUNCIONARIO to access this resource'
+    });
+  }
+
+  try {
+    const { codigo, cpf, email, nome, telefone, senha } = req.body;
+
+    // Validate required fields
+    if (!codigo || !cpf || !email || !nome || !telefone || !senha) {
+      return res.status(400).json({
+        error: 'Missing required fields',
+        message: 'All fields are required'
+      });
+    }
+
+    // Validate codigo is positive integer
+    if (!Number.isInteger(codigo) || codigo <= 0) {
+      return res.status(400).json({
+        error: 'Invalid codigo',
+        message: 'Codigo must be a positive integer'
+      });
+    }
+
+    // Validate CPF format (11 digits)
+    if (!/^\d{11}$/.test(cpf)) {
+      return res.status(400).json({
+        error: 'Invalid CPF',
+        message: 'CPF must be 11 digits'
+      });
+    }
+
+    // Validate email format
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return res.status(400).json({
+        error: 'Invalid email',
+        message: 'Email must be in valid format'
+      });
+    }
+
+    // Validate nome is not empty
+    if (!nome.trim()) {
+      return res.status(400).json({
+        error: 'Invalid nome',
+        message: 'Nome cannot be empty'
+      });
+    }
+
+    // Validate telefone format (11 digits)
+    if (!/^\d{11}$/.test(telefone)) {
+      return res.status(400).json({
+        error: 'Invalid telefone',
+        message: 'Telefone must be 11 digits'
+      });
+    }
+
+    // Validate senha is not empty
+    if (!senha.trim()) {
+      return res.status(400).json({
+        error: 'Invalid senha',
+        message: 'Senha cannot be empty'
+      });
+    }
+
+    //TODO: Implementar a lógica para atualizar o funcionário ( e ms auth se necessário) usando saga
+    //Se não for, retornar 403
+    //sem tokens retornar 401
+    //campos invalidos retornar 400
+    //se o funcionário não existir retornar 404
+
+  } catch (error) {
+    console.error('Error updating employee:', error);
     res.status(500).json({
       error: 'Internal Server Error',
       message: error.message
