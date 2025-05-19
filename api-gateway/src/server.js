@@ -22,7 +22,7 @@ app.get('/health', (req, res) => {
   res.status(200).json({ status: 'OK' });
 });
 
-// Login endpoint with validation
+// R02 - LOGIN
 app.post('/login', validateLoginRequest, async (req, res) => {
   try {
     // Create a copy of the request body
@@ -73,6 +73,7 @@ app.post('/login', validateLoginRequest, async (req, res) => {
   }
 });
 
+// R01 - AUTOCADASTRO
 app.post('/clientes', async (req, res) => {
   try {
     // Step 1: Call ms-cliente to create the cliente
@@ -143,6 +144,209 @@ app.post('/clientes', async (req, res) => {
   }
 });
 
+// R03 - TELA INICIAL DE CLIENTE
+app.get('/clientes/:codigoCliente', async (req, res) => {
+  //TODO: Implementar a lógica para buscar o cliente usando saga
+  //Verificar se o codigo do cliente é o mesmo do JWT
+  //Se não for, retornar 403
+});
+
+// R04 - LISTAR RESERVAS
+app.get('/clientes/:codigoCliente/reservas', async (req, res) => {
+  //TODO: Implementar a lógica para buscar as reservas do cliente usando saga
+  //Verificar se o codigo do cliente é o mesmo do JWT
+  //Se não for, retornar 403
+});
+
+// R05 - COMPRAR MILHAS
+app.put('/clientes/{codigoCliente}/milhas', async (req, res) => {
+  try {
+    const { quantidade } = req.body;
+
+    // Validate quantidade field
+    if (!quantidade || !Number.isInteger(quantidade) || quantidade <= 0 || quantidade > 10000) {
+      return res.status(400).json({
+        error: 'Invalid quantidade',
+        message: 'Quantidade must be a positive integer between 1 and 10000'
+      });
+    }
+
+    //TODO: Implementar a lógica para atualizar as milhas do cliente usando saga
+    //Verificar se o codigo do cliente é o mesmo do JWT
+    //Se não for, retornar 403
+
+  } catch (error) {
+    console.error('Error updating client miles:', error);
+    res.status(500).json({
+      error: 'Internal Server Error', 
+      message: error.message
+    });
+  }
+});
+
+
+// R06 - CONSULTAR EXTRATO DE MILHAS
+app.get('/clientes/{codigoCliente}/milhas', async (req, res) => { 
+  //TODO: Implementar a lógica para buscar as milhas do cliente usando saga
+  //Verificar se o codigo do cliente é o mesmo do JWT
+  //Se não for, retornar 403
+});
+
+// R07a - BUSCAR VOOS POR DATA, ORIGEM E DESTINO
+app.get('/voos', async (req, res) => {
+  const { data, origem, destino } = req.query;
+
+  // Validate optional query parameters
+  if (data || origem || destino) {
+    // Parameters are present but invalid
+    if ((data && !isValidDate(data)) || 
+        (origem && !isValidAirport(origem)) || 
+        (destino && !isValidAirport(destino))) {
+      return res.status(400).json({
+        error: 'Invalid parameters',
+        message: 'If provided, data, origem and destino must be valid values'
+      });
+    }
+  }
+  //TODO: Implementar a lógica para buscar os voos usando saga
+  //Verificar se a data, origem e destino são válidos
+  //Se não for, retornar 400
+});
+
+// R07b - CRIAR RESERVA
+app.post('/reservas', async (req, res) => {
+  try {
+    const { 
+      codigo_cliente,
+      valor,
+      milhas_utilizadas,
+      quantidade_poltronas,
+      codigo_voo,
+      codigo_aeroporto_origem,
+      codigo_aeroporto_destino
+    } = req.body;
+
+    // Validate required fields
+    if (!codigo_cliente || !valor || !quantidade_poltronas || !codigo_voo || 
+        !codigo_aeroporto_origem || !codigo_aeroporto_destino) {
+      return res.status(400).json({
+        error: 'Missing required fields',
+        message: 'All fields are required except milhas_utilizadas'
+      });
+    }
+
+    // Validate field types and values
+    if (!Number.isInteger(codigo_cliente) || codigo_cliente <= 0) {
+      return res.status(400).json({
+        error: 'Invalid codigo_cliente',
+        message: 'codigo_cliente must be a positive integer'
+      });
+    }
+
+    if (typeof valor !== 'number' || valor <= 0) {
+      return res.status(400).json({
+        error: 'Invalid valor',
+        message: 'valor must be a positive number'
+      });
+    }
+
+    if (milhas_utilizadas && (!Number.isInteger(milhas_utilizadas) || milhas_utilizadas < 0)) {
+      return res.status(400).json({
+        error: 'Invalid milhas_utilizadas',
+        message: 'milhas_utilizadas must be a non-negative integer'
+      });
+    }
+
+    if (!Number.isInteger(quantidade_poltronas) || quantidade_poltronas <= 0) {
+      return res.status(400).json({
+        error: 'Invalid quantidade_poltronas',
+        message: 'quantidade_poltronas must be a positive integer'
+      });
+    }
+
+    if (typeof codigo_voo !== 'string' || !codigo_voo.trim()) {
+      return res.status(400).json({
+        error: 'Invalid codigo_voo',
+        message: 'codigo_voo must be a non-empty string'
+      });
+    }
+
+    if (typeof codigo_aeroporto_origem !== 'string' || codigo_aeroporto_origem.length !== 3) {
+      return res.status(400).json({
+        error: 'Invalid codigo_aeroporto_origem',
+        message: 'codigo_aeroporto_origem must be a 3-letter airport code'
+      });
+    }
+
+    if (typeof codigo_aeroporto_destino !== 'string' || codigo_aeroporto_destino.length !== 3) {
+      return res.status(400).json({
+        error: 'Invalid codigo_aeroporto_destino',
+        message: 'codigo_aeroporto_destino must be a 3-letter airport code'
+      });
+    }
+
+    //TODO: Implementar a lógica para criar a reserva usando saga
+    //Verificar se o codigo do cliente é o mesmo do JWT
+    //Se não for, retornar 403
+    //sem tokens retornar 401
+    //campos invalidos retornar 400
+  } catch (error) {
+    console.error('Error searching flights:', error);
+    res.status(500).json({
+      error: 'Internal Server Error',
+      message: error.message
+    });
+  }
+}); 
+
+// R08 - CANCELAR RESERVA
+app.delete('/reservas/{codigoReserva}', async (req, res) => {
+  //TODO: Implementar a lógica para cancelar a reserva usando saga
+  //Verificar se o codigo da reserva é o mesmo do JWT
+  //Se não for, retornar 403
+  //sem tokens retornar 401
+  //campos invalidos retornar 400
+  //se a reserva não existir retornar 404
+});
+
+// R09 - BUSCAR RESERVA
+app.get('/reservas/{codigoReserva}', async (req, res) => {
+  //TODO: Implementar a lógica para buscar a reserva usando saga
+  //Verificar se o codigo da reserva é o mesmo do JWT
+  //Se não for, retornar 403
+  //sem tokens retornar 401
+  //campos invalidos retornar 400
+});
+
+// R10a - FAZER CHECK-IN
+app.patch('/reservas/:codigoReserva/estado', async (req, res) => {
+  try {
+    const { estado } = req.body;
+    const { codigoReserva } = req.params;
+
+    if (!estado || estado !== 'CHECK-IN') {
+      return res.status(400).json({
+        error: 'Invalid estado',
+        message: 'estado must be "CHECK-IN"'
+      });
+    }
+
+    //TODO: Implementar a lógica para atualizar o estado da reserva usando saga
+    //Verificar se o codigo de cliente no jwt é o mesmo do codigo de cliente da reserva
+    //Se não for, retornar 403
+    //sem tokens retornar 401
+    //campos invalidos retornar 400
+    //se a reserva não existir retornar 404
+  } catch (error) {
+    console.error('Error updating reservation state:', error);
+    res.status(500).json({
+      error: 'Internal Server Error',
+      message: error.message
+    });
+  }
+});
+
+
 /* Test JWT endpoint
 app.post('/test-jwt', (req, res) => {
   try {
@@ -191,23 +395,8 @@ app.post('/test-jwt', (req, res) => {
 });
 */
 
-// Route traffic to microservices
-app.use('/service1', createProxyMiddleware(process.env.MICROSERVICE_AUTH_URL));
-app.use('/service2', createProxyMiddleware(process.env.MICROSERVICE2_URL));
-
-// Connect to RabbitMQ on startup
-(async () => {
-  try {
-    await connect();
-    console.log('Connected to RabbitMQ');
-  } catch (error) {
-    console.error('Failed to connect to RabbitMQ:', error);
-    // You might want to implement retry logic here
-  }
-})();
-
 // Define the port
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 app.listen(PORT, () => {
   console.log(`API Gateway running on port ${PORT}`);
