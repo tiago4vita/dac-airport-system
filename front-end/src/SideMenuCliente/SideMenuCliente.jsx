@@ -1,11 +1,15 @@
 import React from "react";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { Plane, LogOut } from "lucide-react";
+import axios from "axios";
+import { useAuth } from "../AuthContext";
 import "./SideMenuCliente.css";
 
 export const SideMenuCliente = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { user, logout } = useAuth();
+  const token = localStorage.getItem("token");
 
   const menuItems = [
     { label: "Página Inicial", path: "/homepageC" },
@@ -15,6 +19,21 @@ export const SideMenuCliente = () => {
     { label: "Extrato de Milhas", path: "/extrato" },
     { label: "Check-in", path: "/checkin" },
   ];
+
+  const handleLogout = async () => {
+    try {
+      await axios.post(
+        "http://localhost:8080/logout",
+        { login: user?.usuario?.email },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+    } catch (err) {
+      console.warn("Erro ao fazer logout no backend:", err);
+    } finally {
+      logout();
+      navigate("/");
+    }
+  };
 
   return (
     <div className="tela-inicial">
@@ -41,7 +60,8 @@ export const SideMenuCliente = () => {
             })}
           </nav>
         </div>
-        <button className="logout" onClick={() => navigate("/")}>
+
+        <button className="logout" onClick={handleLogout}>
           <LogOut className="icone-logout" /> Log Out
         </button>
       </aside>
