@@ -92,20 +92,6 @@ services:
     networks:
       - airport-network
 
-  ms-reserva:
-    build:
-      context: ./services/ms-reserva/airport-system.ms-reserva
-      dockerfile: Dockerfile
-    ports:
-      - "8082:8082"
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-reserva:5434/reserva_db
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=postgres
-    depends_on:
-      - postgres-reserva
-    networks:
-      - airport-network
 
   rabbitmq:
     image: rabbitmq:3-management
