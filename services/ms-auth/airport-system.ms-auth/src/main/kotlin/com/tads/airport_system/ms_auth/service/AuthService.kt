@@ -1,30 +1,36 @@
 package com.tads.airport_system.ms_auth.service
 
+import com.tads.airport_system.ms_auth.dto.LoginResultDTO
+import com.tads.airport_system.ms_auth.model.Usuario
 import com.tads.airport_system.ms_auth.repository.UsuarioRepository
+import org.springframework.stereotype.Service
+import org.slf4j.LoggerFactory
 
 @Service
 class AuthService(
     private val usuarioRepository: UsuarioRepository
 ) {
+    private val logger = LoggerFactory.getLogger(AuthService::class.java)
+    
     fun authenticate(login: String, senha: String): Boolean {
         val usuario = usuarioRepository.findByEmail(login)
         
         if (usuario == null) {
-            println("User not found: $login")
+            logger.info("User not found: $login")
             return false
         }
         
         if (!usuario.ativo) {
-            println("User is inactive: $login")
+            logger.info("User is inactive: $login")
             return false
         }
         
         if (usuario.senha != senha) {
-            println("Password mismatch for user: $login")
+            logger.info("Password mismatch for user: $login")
             return false
         }
         
-        println("User authenticated successfully: $login")
+        logger.info("User authenticated successfully: $login")
         return true
     }
 } 
