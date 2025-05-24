@@ -5,6 +5,26 @@ import { useNavigate } from "react-router-dom";
 import vector from "../assets/vector.svg";
 import "./AutoCadastro.css";
 
+// Validador de CPF
+function validarCPF(cpf) {
+  cpf = cpf.replace(/[^\d]+/g, "");
+  if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
+
+  let soma = 0;
+  for (let i = 0; i < 9; i++) soma += parseInt(cpf.charAt(i)) * (10 - i);
+  let resto = (soma * 10) % 11;
+  if (resto === 10 || resto === 11) resto = 0;
+  if (resto !== parseInt(cpf.charAt(9))) return false;
+
+  soma = 0;
+  for (let i = 0; i < 10; i++) soma += parseInt(cpf.charAt(i)) * (11 - i);
+  resto = (soma * 10) % 11;
+  if (resto === 10 || resto === 11) resto = 0;
+  if (resto !== parseInt(cpf.charAt(10))) return false;
+
+  return true;
+}
+
 export const Autocadastro = () => {
   const {
     register,
@@ -26,6 +46,7 @@ export const Autocadastro = () => {
             setValue("rua", data.logradouro);
             setValue("cidade", data.localidade);
             setValue("estado", data.uf);
+            setValue("bairro", data.bairro);
           } else {
             alert("CEP não encontrado");
           }
@@ -33,10 +54,42 @@ export const Autocadastro = () => {
     }
   };
 
-  const onSubmit = (data) => {
-    console.log("Cliente cadastrado:", data);
-    alert("Cadastro realizado com sucesso! Verifique sua caixa de e-mail");
-    navigate("/");
+  const onSubmit = async (data) => {
+    const cliente = {
+      cpf: data.cpf.replace(/\D/g, ""),
+      email: data.email,
+      nome: data.nome,
+      saldo_milhas: 0,
+      endereco: {
+        cep: data.cep.replace(/\D/g, ""),
+        uf: data.estado,
+        cidade: data.cidade,
+        bairro: data.bairro || "",
+        rua: data.rua,
+        numero: data.numero,
+        complemento: data.complemento || "",
+      },
+    };
+
+    try {
+      const response = await fetch("http://localhost:8080/clientes", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(cliente),
+      });
+
+      if (response.ok) {
+        alert("Cadastro realizado com sucesso! Verifique sua caixa de e-mail");
+        navigate("/");
+      } else {
+        alert("Erro ao cadastrar cliente");
+      }
+    } catch (error) {
+      console.error("Erro na requisição:", error);
+      alert("Erro de conexão com o servidor");
+    }
   };
 
   return (
@@ -53,6 +106,34 @@ export const Autocadastro = () => {
               placeholder="Nome completo"
               required
             />
+          </div>
+
+          <div className="cadastro-linha">
+            <label className="cadastro-label">CPF*</label>
+            <Controller
+              name="cpf"
+              control={control}
+              rules={{
+                required: "CPF é obrigatório",
+                validate: (value) =>
+                  validarCPF(value) || "CPF inválido",
+              }}
+              render={({ field: { onChange, onBlur, value, ref } }) => (
+                <IMaskInput
+                  mask="000.000.000-00"
+                  value={value}
+                  onAccept={(val) => onChange(val)}
+                  onBlur={onBlur}
+                  inputRef={ref}
+                  className="cadastro-input"
+                  placeholder="000.000.000-00"
+                  required
+                />
+              )}
+            />
+            {errors.cpf && (
+              <span className="cadastro-error">{errors.cpf.message}</span>
+            )}
           </div>
 
           <div className="cadastro-linha">
@@ -131,6 +212,15 @@ export const Autocadastro = () => {
                 readOnly
               />
             </div>
+          </div>
+
+          <div className="cadastro-linha">
+            <label className="cadastro-label">Bairro</label>
+            <input
+              {...register("bairro")}
+              className="cadastro-input"
+              placeholder="Centro"
+            />
           </div>
 
           <div className="cadastro-linha">

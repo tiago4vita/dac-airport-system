@@ -3,12 +3,15 @@ import "./Login.css";
 import vector from "../assets/vector.svg";
 import group4174 from "../assets/group-1000004174.png";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../AuthContext";
+import axios from "axios";
 
 export const Login = () => {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [emailError, setEmailError] = useState("");
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   useEffect(() => {
     setEmail("");
@@ -36,16 +39,26 @@ export const Login = () => {
     }
 
     try {
-      const response = await fetch(
-        `http://localhost:8080/usuarios?login=${email}&senha=${senha}`
-      );
+      const response = await axios.get("http://localhost:8080/usuarios", {
+        params: {
+          login: email,
+          senha: senha,
+        },
+      });
 
-      const data = await response.json();
+      if (response.data.length > 0) {
+        const usuario = response.data[0];
+        login(usuario);
 
-      if (data.length > 0) {
-        navigate("/homepageC");
+        if (usuario.tipo === "CLIENTE") {
+          navigate("/homepageC");
+        } else if (usuario.tipo === "FUNCIONARIO") {
+          navigate("/homepageF");
+        } else {
+          alert("Tipo de usuário inválido.");
+        }
       } else {
-        alert("Login inválido. Verifique suas credenciais.");
+        alert("Credenciais inválidas.");
       }
     } catch (error) {
       console.error("Erro ao fazer login:", error);
