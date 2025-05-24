@@ -13,7 +13,7 @@ import async.coroutines.CoroutineScope
 
 
 @Service
-class Saga(
+class AutoCadastroSaga(
     private val rabbit: RabbitUtils,
     @Qualifier("sagaRepository") private val sagaRepository: SagaRepository,
     private val exchange: DirectExchange,
@@ -22,16 +22,34 @@ class Saga(
 
     suspend fun executeSaga(clienteCadastro: ClienteCadastro): String = coroutineScope {
             val gson = Gson()
-            val requestCliente = async { rabbitTemplate.convertAndSend(exchange.name, "routingkeyclient", gson.toJson(clienteCadastro)) }
+            val requestCliente = async { rabbitTemplate.convertAndSend(exchange.name, "cliente", gson.toJson(clienteCadastro)) }
             val responseCliente = requestCliente.await()
 
             val cliente = gson.fromJson(responseCliente, ClienteOutputDTO::class.java)   
-            val inputCadastro = ClienteCadastro(cliente.nome, cliente.cpf, cliente.email, cliente.telefone, cliente.endereco)
+            val inputCadastro = UsuarioInputDTO(cliente.codigo, cliente.email, cliente.senha, UsuarioRole.CLIENTE))
         
+            val requestAuth = async { rabbitTemplate.convertAndSend(exchange.name, "auth", gson.toJson(inputCadastro))}
+            val responseAuth = requestAuth.await()
             processResponse(responseCliente, inputCadastro)
         }
 
+    private suspend fun asyncSendAndReceive(
+        exchange: DirectExchange,
+        routingkey: String,
+        message: String
+    ): String {
+        return withContext(Dispatchers.IO) {
+            rabbitTemplate.convertSendAndReceive(exchange, routingkey, message) as String
+        }
 
+    }
+
+    private fun processResponse(response: String, inputCadastro: UsuarioInputDTO): String {
+        val gson = Gson()
+        val cliente = gson.fromJson(response, ClienteOutputDTO::class.java)
+        val usuario = UsuarioInputDTO(cliente.codigo, cliente.email, cliente.senha, UsuarioRole.CLIENTE)
+        return usuario
+    }
 
 
 

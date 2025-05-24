@@ -1,6 +1,10 @@
 package com.tads.airport_system.ms_auth.service
 
 import com.tads.airport_system.ms_auth.repository.UsuarioRepository
+import org.springframework.stereotype.Service
+import com.tads.airport_system.ms_auth.model.Usuario
+import org.springframework.amqp.rabbit.core.RabbitTemplate
+import org.springframework.amqp.core.DirectExchange
 
 @Service
 class AuthService(
@@ -26,5 +30,16 @@ class AuthService(
         
         println("User authenticated successfully: $login")
         return true
+    }
+
+    private suspend fun asyncSendAndReceive(
+        exchange: DirectExchange,
+        routingkey: String,
+        message: String
+    ): String {
+        return withContext(Dispatchers.IO) {
+            rabbitTemplate.convertSendAndReceive(exchange, routingkey, message) as String
+        }
+
     }
 } 
