@@ -1,6 +1,6 @@
-package com.tads.airport_system.ms_voo.repository.VooRepository
+package com.example.airport_system.ms_voo.repository
 
-import com.tads.airport_system.ms_voo.model.Voo
+import com.example.airport_system.ms_voo.model.Voo
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
@@ -10,4 +10,5 @@ interface VooRepository : JpaRepository<Voo, String> {
     fun findByOrigem(origem: String): List<Voo>
     fun findByDestino(destino: String): List<Voo>
     fun findByDataHora(dataHora: String): List<Voo>
+
 }
