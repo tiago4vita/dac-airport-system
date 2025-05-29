@@ -1,3 +1,4 @@
+// BuscarVoos.jsx
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -14,7 +15,12 @@ export const BuscarVoos = () => {
   const [erro, setErro] = useState("");
 
   useEffect(() => {
-    axios.get("http://localhost:8080/aeroportos")
+    const token = sessionStorage.getItem("token");
+      axios.get("http://localhost:8080/aeroportos", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((res) => {
         const tratados = res.data.map((a) => ({
           nome: (a[" nome"] || a.nome || "").trim(),
@@ -64,29 +70,33 @@ export const BuscarVoos = () => {
     const destinoCodigo = extrairCodigo(destino);
 
     try {
-      const res = await axios.get("http://localhost:8080/voos");
-      const voosFiltrados = res.data.filter(
-        (voo) =>
-          (!origemCodigo || voo.aeroporto_origem.codigo === origemCodigo) &&
-          (!destinoCodigo || voo.aeroporto_destino.codigo === destinoCodigo)
-      );
+      const params = new URLSearchParams();
+      if (origemCodigo) params.set("origem", origemCodigo);
+      if (destinoCodigo) params.set("destino", destinoCodigo);
 
-      if (voosFiltrados.length === 0) {
-        setErro("Nenhum voo disponível para essa rota.");
-      } else {
-        setErro("");
-        navigate("/buscar-voos/escolher-voo", {
-          state: {
-            origem: origemCodigo || null,
-            destino: destinoCodigo || null,
-          },
-        });
+      let url = "http://localhost:8080/voos";
+      if (params.toString()) {
+        url += `?${params.toString()}`;
       }
+
+      const res = await axios.get(url);
+      const voos = res.data;
+
+      if (!voos.length) {
+        setErro("Nenhum voo disponível para essa rota.");
+        return;
+      }
+
+      setErro("");
+      navigate("/buscar-voos/escolher-voo", {
+        state: { voosFiltrados: voos },
+      });
     } catch (error) {
       console.error("Erro ao buscar voos:", error);
       setErro("Erro ao buscar voos. Tente novamente.");
     }
   };
+
 
   return (
     <div className="buscar-voos">

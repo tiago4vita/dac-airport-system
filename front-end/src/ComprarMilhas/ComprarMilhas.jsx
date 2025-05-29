@@ -7,21 +7,42 @@ export const ComprarMilhas = () => {
   const [cliente, setCliente] = useState(null);
   const [quantidade, setQuantidade] = useState(0);
   const valorMilha = 5;
-  const codigoCliente = 1010;
   const navigate = useNavigate();
 
+  const token = sessionStorage.getItem("token");
+  const codigoCliente = sessionStorage.getItem("codigo");
+
+  const api = axios.create({
+    baseURL: "http://localhost:8080",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
   useEffect(() => {
-    axios.get(`http://localhost:8080/clientes?codigo=${codigoCliente}`).then((res) => {
-      setCliente(res.data[0]);
-    });
+    api.get(`/clientes/${codigoCliente}`)
+      .then((res) => setCliente(res.data))
+      .catch((err) => {
+        console.error("Erro ao buscar cliente:", err);
+        alert("Erro ao buscar dados do cliente.");
+      });
   }, []);
 
   const total = quantidade * valorMilha;
   const dataHoje = new Date().toLocaleDateString("pt-BR");
 
-  const handleCompra = () => {
-    // Aqui você pode fazer lógica de POST ou PATCH no futuro, se desejar salvar a compra
-    navigate("/extrato");
+  const handleCompra = async () => {
+    try {
+      await api.put(`/clientes/${codigoCliente}/milhas`, {
+        quantidade: quantidade,
+      });
+
+      alert("Milhas compradas com sucesso!");
+      navigate("/extrato");
+    } catch (error) {
+      console.error("Erro ao comprar milhas:", error);
+      alert("Erro ao processar a compra.");
+    }
   };
 
   return (

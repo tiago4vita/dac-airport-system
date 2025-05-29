@@ -15,15 +15,22 @@ export const Reservar = () => {
   const [cliente, setCliente] = useState(null);
   const [voo, setVoo] = useState(null);
 
-  const codigoCliente = 1010;
-  const valorMilha = 5;
+  const token = sessionStorage.getItem("token");
+  const codigoCliente = sessionStorage.getItem("codigo"); // obtido no login
+
+  const api = axios.create({
+    baseURL: "http://localhost:8080",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 
   useEffect(() => {
-    axios.get(`http://localhost:8080/clientes?codigo=${codigoCliente}`)
-      .then((res) => setCliente(res.data[0]));
+    api.get(`/clientes/${codigoCliente}`)
+      .then((res) => setCliente(res.data));
 
-    axios.get(`http://localhost:8080/voos?codigo=${codigo}`)
-      .then((res) => setVoo(res.data[0]));
+    api.get(`/voo/${codigo}`)
+      .then((res) => setVoo(res.data));
   }, [codigo]);
 
   const atualizarAssentos = (qtd) => {
@@ -34,10 +41,25 @@ export const Reservar = () => {
     setAssentos(novos);
   };
 
-  const handleConfirmar = () => {
+  const handleConfirmar = async () => {
     const confirmar = window.confirm("Deseja confirmar a reserva?");
-    if (confirmar) {
+    if (!confirmar || !cliente || !voo) return;
+
+    try {
+      await api.post("/reservas", {
+        codigo_cliente: cliente.codigo,
+        valor: total,
+        milhas_utilizadas: milhasUsadas,
+        quantidade_poltronas: quantidade,
+        codigo_voo: voo.codigo,
+        codigo_aeroporto_origem: voo.aeroporto_origem.codigo,
+        codigo_aeroporto_destino: voo.aeroporto_destino.codigo,
+      });
+
       navigate("/homepageC");
+    } catch (error) {
+      console.error("Erro ao confirmar reserva:", error);
+      alert("Erro ao criar reserva. Tente novamente.");
     }
   };
 
@@ -46,8 +68,9 @@ export const Reservar = () => {
   const saldoMilhas = cliente?.saldoMilhas ?? 0;
   const valorPorPassagem = voo.valor_passagem;
   const subtotal = valorPorPassagem * quantidade;
+  const valorMilha = 5;
   const maximoMilhasPermitido = Math.floor(subtotal / valorMilha);
-    const milhasUsadas = usarMilhas
+  const milhasUsadas = usarMilhas
     ? Math.min(milhas, saldoMilhas, maximoMilhasPermitido)
     : 0;
   const desconto = milhasUsadas * valorMilha;
@@ -55,7 +78,7 @@ export const Reservar = () => {
 
   const dataVoo = new Date(voo.data);
   const dataStr = dataVoo.toLocaleDateString("pt-BR");
-  const horaStr = dataVoo.toLocaleTimeString("pt-BR", { hour: '2-digit', minute: '2-digit' });
+  const horaStr = dataVoo.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
 
   const assentosPreenchidos = assentos.every(a => a.coluna && a.fileira);
 
@@ -141,30 +164,29 @@ export const Reservar = () => {
             <p>Seu saldo de Milhas: <strong>{saldoMilhas}</strong></p>
 
             <label className="checkbox-container-reservar">
-            <input
+              <input
                 type="checkbox"
                 checked={usarMilhas}
                 onChange={(e) => {
-                setUsarMilhas(e.target.checked);
-                if (!e.target.checked) setMilhas(0);
+                  setUsarMilhas(e.target.checked);
+                  if (!e.target.checked) setMilhas(0);
                 }}
-            />
-            <span>Usar Milhas</span>
+              />
+              <span>Usar Milhas</span>
             </label>
 
-
             <input
-            type="number"
-            disabled={!usarMilhas}
-            value={milhas}
-            min={0}
-            max={Math.min(saldoMilhas, maximoMilhasPermitido)}
-            onChange={(e) => {
+              type="number"
+              disabled={!usarMilhas}
+              value={milhas}
+              min={0}
+              max={Math.min(saldoMilhas, maximoMilhasPermitido)}
+              onChange={(e) => {
                 const input = Number(e.target.value);
                 const limite = Math.min(saldoMilhas, maximoMilhasPermitido);
                 setMilhas(Math.min(input, limite));
-            }}
-            placeholder="Quantidade de Milhas"
+              }}
+              placeholder="Quantidade de Milhas"
             />
           </div>
 

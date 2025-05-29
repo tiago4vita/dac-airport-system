@@ -19,8 +19,17 @@ const CadastroVoo = () => {
 
   const navigate = useNavigate();
 
+  const token = sessionStorage.getItem("token");
+
+  const api = axios.create({
+    baseURL: "http://localhost:8080",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
   useEffect(() => {
-    axios.get("http://localhost:8080/aeroportos")
+    api.get("/aeroportos")
       .then((res) => {
         const tratados = res.data.map((a) => ({
           nome: (a[" nome"] || a.nome || "").trim(),
@@ -92,27 +101,26 @@ const CadastroVoo = () => {
           </div>
 
           <div className="cadastro-voo-linha-dupla cadastro-voo-linha">
-          <div className="cadastro-voo-col sugestao-wrapper">
-            <label className="cadastro-voo-label">Aeroporto Origem*</label>
-            <input
-              type="text"
-              value={origem}
-              onChange={handleOrigemChange}
-              className="cadastro-voo-input"
-              placeholder="Origem"
-              required
-            />
-            {sugestoesOrigem.length > 0 && (
-              <ul className="sugestoes">
-                {sugestoesOrigem.map((a, i) => (
-                  <li key={i} onClick={() => selecionarOrigem(`${a.nome} (${a.codigo})`)}>
-                    {a.nome} ({a.codigo})
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-
+            <div className="cadastro-voo-col sugestao-wrapper">
+              <label className="cadastro-voo-label">Aeroporto Origem*</label>
+              <input
+                type="text"
+                value={origem}
+                onChange={handleOrigemChange}
+                className="cadastro-voo-input"
+                placeholder="Origem"
+                required
+              />
+              {sugestoesOrigem.length > 0 && (
+                <ul className="sugestoes">
+                  {sugestoesOrigem.map((a, i) => (
+                    <li key={i} onClick={() => selecionarOrigem(`${a.nome} (${a.codigo})`)}>
+                      {a.nome} ({a.codigo})
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
 
             <div className="cadastro-voo-col sugestao-wrapper">
               <label className="cadastro-voo-label">Aeroporto Destino*</label>

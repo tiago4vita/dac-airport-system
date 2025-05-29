@@ -1,9 +1,22 @@
 import React from "react";
-import "./CheckinModal.css"; 
+import axios from "axios";
+import "./CheckinModal.css";
 import alertaIcon from "../assets/alerta.svg";
 
-export const CheckinModal = ({ isOpen, onConfirm, onCancel }) => {
+export const CheckinModal = ({ isOpen, onConfirm, onCancel, reserva }) => {
   if (!isOpen) return null;
+
+  const handleConfirmar = async () => {
+    try {
+      await axios.patch(`http://localhost:8080/reservas/${reserva.codigo}/estado`, {
+        estado: "CHECK-IN"
+      });
+      onConfirm();
+    } catch (error) {
+      console.error("Erro ao fazer check-in:", error);
+      alert("Erro ao realizar o check-in.");
+    }
+  };
 
   return (
     <div className="overlay">
@@ -13,7 +26,7 @@ export const CheckinModal = ({ isOpen, onConfirm, onCancel }) => {
         <p>Apenas confirme caso os horários e local de embarque/desembarque estejam corretos</p>
         <div className="botoes">
           <button className="botao-nao" onClick={onCancel}>Não</button>
-          <button className="botao-sim" onClick={onConfirm}>Sim</button>
+          <button className="botao-sim" onClick={handleConfirmar}>Sim</button>
         </div>
       </div>
     </div>

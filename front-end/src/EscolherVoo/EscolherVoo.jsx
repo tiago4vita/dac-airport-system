@@ -12,22 +12,30 @@ export const EscolherVoo = () => {
   const diasPorPagina = 7;
 
   useEffect(() => {
-    fetch("http://localhost:8080/voos")
-      .then((res) => res.json())
-      .then((data) => {
-        const origem = state?.origem?.trim();
-        const destino = state?.destino?.trim();
+    const buscarVoos = async () => {
+      try {
+        const origem = state?.origem;
+        const destino = state?.destino;
 
-        const filtrados = data.filter((voo) => {
-          const origemOk = !origem || voo.aeroporto_origem.codigo === origem;
-          const destinoOk = !destino || voo.aeroporto_destino.codigo === destino;
-          return origemOk && destinoOk;
-        });
+        const params = new URLSearchParams();
+        if (origem) params.append("origem", origem);
+        if (destino) params.append("destino", destino);
 
-        setVoos(filtrados);
+        let url = "http://localhost:8080/voos";
+        if (params.toString()) {
+          url += "?" + params.toString();
+        }
+
+        const res = await fetch(url);
+        const data = await res.json();
+
+        // Suporta ambos formatos de resposta: lista ou objeto com "voos"
+        const listaVoos = Array.isArray(data) ? data : data.voos || [];
+
+        setVoos(listaVoos);
 
         const datasUnicas = Array.from(
-          new Set(filtrados.map((v) => new Date(v.data).toDateString()))
+          new Set(listaVoos.map((v) => new Date(v.data).toDateString()))
         ).map((d) => new Date(d));
 
         datasUnicas.sort((a, b) => a - b);
@@ -37,10 +45,12 @@ export const EscolherVoo = () => {
           setDataSelecionada(datasUnicas[0]);
           setPaginaDatas(0);
         }
-      })
-      .catch((err) => {
-        console.error("Erro ao buscar voos:", err);
-      });
+      } catch (error) {
+        console.error("Erro ao buscar voos:", error);
+      }
+    };
+
+    buscarVoos();
   }, [state]);
 
   const datasPaginadas = datas.slice(
@@ -57,13 +67,10 @@ export const EscolherVoo = () => {
   });
 
   const handleSelecionarVoo = (codigoVoo) => {
-    // Verifica se o código do voo existe
     if (!codigoVoo) {
       console.error("Código do voo não encontrado");
       return;
     }
-    
-    // Navega para a página de reserva com o código do voo
     navigate(`/buscar-voos/escolher-voo/reservar/${codigoVoo}`);
   };
 

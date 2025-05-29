@@ -1,9 +1,20 @@
 import React from "react";
-import "./ModalCancela.css"; 
+import axios from "axios";
+import "./ModalCancela.css";
 import alertaIcon from "../assets/alerta.svg";
 
-export const ModalCancela = ({ isOpen, onConfirm, onCancel }) => {
+export const ModalCancela = ({ isOpen, onConfirm, onCancel, reserva }) => {
   if (!isOpen) return null;
+
+  const handleCancelar = async () => {
+    try {
+      await axios.delete(`http://localhost:8080/reservas/${reserva.codigo}`);
+      onConfirm();
+    } catch (error) {
+      console.error("Erro ao cancelar reserva:", error);
+      alert("Erro ao cancelar reserva.");
+    }
+  };
 
   return (
     <div className="overlay">
@@ -13,7 +24,7 @@ export const ModalCancela = ({ isOpen, onConfirm, onCancel }) => {
         <p>Ao cancelar a reserva você perderá seu assento e suas milhas retornarão à sua carteira</p>
         <div className="botoes">
           <button className="botao-nao" onClick={onCancel}>Não</button>
-          <button className="botao-sim" onClick={onConfirm}>Sim</button>
+          <button className="botao-sim" onClick={handleCancelar}>Sim</button>
         </div>
       </div>
     </div>

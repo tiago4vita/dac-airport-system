@@ -11,16 +11,35 @@ export const Checkin = () => {
   const [itensPorPagina, setItensPorPagina] = useState(10);
   const navigate = useNavigate();
 
+  const token = sessionStorage.getItem("token");
+  const codigoCliente = sessionStorage.getItem("codigo");
+
+  const api = axios.create({
+    baseURL: "http://localhost:8080",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
   useEffect(() => {
-    axios.get("http://localhost:8080/reservas?codigo_cliente=1010").then((res) => {
-      const agora = new Date();
-      const dentro48h = res.data.filter((reserva) => {
-        const dataVoo = new Date(reserva.voo?.data);
-        const em48h = (dataVoo - agora) / (1000 * 60 * 60) <= 48;
-        return reserva.estado.toLowerCase() === "criada" && em48h;
-      });
-      setReservas(dentro48h);
-    });
+    const buscarReservas = async () => {
+      try {
+        const res = await api.get(`/clientes/${codigoCliente}/reservas`);
+        const agora = new Date();
+
+        const dentro48h = res.data.filter((reserva) => {
+          const dataVoo = new Date(reserva.voo?.data);
+          const em48h = (dataVoo - agora) / (1000 * 60 * 60) <= 48;
+          return reserva.estado.toLowerCase() === "criada" && em48h;
+        });
+
+        setReservas(dentro48h);
+      } catch (err) {
+        console.error("Erro ao buscar reservas para check-in", err);
+      }
+    };
+
+    buscarReservas();
   }, []);
 
   const totalPaginas = Math.ceil(reservas.length / itensPorPagina);
