@@ -64,9 +64,25 @@ services:
     networks:
       - airport-network
 
+  ms-voo:
+    build:
+      context: ./services/ms-voo
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8082"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-cliente:5432/voo_db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+    depends_on:
+      - mongodb
+      - rabbitmq
+    networks:
+      - airport-network
+
   ms-cliente:
     build:
-      context: ./services/ms-cliente/airport-system.ms-cliente
+      context: ./services/ms-cliente
       dockerfile: Dockerfile
     ports:
       - "8081:8081"
@@ -74,8 +90,13 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-cliente:5432/cliente_db
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
+      - SPRING_RABBITMQ_USERNAME=user
+      - SPRING_RABBITMQ_PASSWORD=password
     depends_on:
       - postgres-cliente
+      - rabbitmq
     networks:
       - airport-network
 
@@ -98,24 +119,8 @@ services:
       - "5672:5672"  # AMQP port
       - "15672:15672"  # Management UI
     environment:
-      - RABBITMQ_DEFAULT_USER=guest
-      - RABBITMQ_DEFAULT_PASS=guest
-    networks:
-      - airport-network
-
-  ms-voo:
-    build:
-      context: ./services/ms-voo
-      dockerfile: Dockerfile
-    ports:
-      - "8082:8082"
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-cliente:5432/voo_db
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=postgres
-    depends_on:
-      - mongodb
-      - rabbitmq
+      - RABBITMQ_DEFAULT_USER=user
+      - RABBITMQ_DEFAULT_PASS=password
     networks:
       - airport-network
 
@@ -125,4 +130,4 @@ networks:
 
 volumes:
   mongodb_data:
-  postgres_cliente_data: 
+  postgres_cliente_data:
