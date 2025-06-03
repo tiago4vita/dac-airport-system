@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface TransicaoMilhasRepository {
 
-    List<TransacaoMilhas> findByClienteCpfOrderByDataHoraDesc(String cpf);
+    List<TransacaoMilhas> findByClienteIdOrderByDataHoraDesc(String id);
 }

@@ -19,7 +19,8 @@ public class ClienteService {
 
     @Transactional
     public Cliente createCliente(ClienteDTO clienteDTO) {
-        if (clienteRepository.existsById(clienteDTO.getCpf())) {
+
+        if (clienteRepository.existsByCpf(clienteDTO.getCpf())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT,
                     "Cliente com CPF " + clienteDTO.getCpf() + " já existe");
         }

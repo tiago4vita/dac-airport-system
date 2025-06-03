@@ -6,35 +6,36 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 public class TransacaoMilhas {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    
+    private Long codigo;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cliente_cpf", nullable = false)
+    @JoinColumn(name = "cliente_codigo", nullable = false)
     private Cliente cliente;
-    
+
     @Column(name = "data_hora", nullable = false)
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     private LocalDateTime dataHora = LocalDateTime.now();
-    
+
     @Column(nullable = false)
     private Long quantidade;
-    
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private TipoTransacao tipo;
-    
+
     @Column(nullable = false)
     private String descricao;
-    
+
     public enum TipoTransacao {
         ENTRADA, SAIDA;
     }
-    
-    public TransacaoMilhas() {}
-    
+
+    public TransacaoMilhas() {
+    }
+
     public TransacaoMilhas(Cliente cliente, Long quantidade, TipoTransacao tipo, String descricao) {
         this.cliente = cliente;
         this.quantidade = quantidade;
@@ -43,12 +44,12 @@ public class TransacaoMilhas {
         this.dataHora = LocalDateTime.now();
     }
 
-    public Long getId() {
-        return id;
+    public Long getCodigo() {
+        return codigo;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setCodigo(Long id) {
+        this.codigo = codigo;
     }
 
     public Cliente getCliente() {

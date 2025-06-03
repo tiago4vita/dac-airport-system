@@ -3,10 +3,7 @@ package airportsystem.mscliente.model;
 
 import airportsystem.mscliente.dto.EnderecoDTO;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
@@ -16,10 +13,13 @@ import java.util.Objects;
 @Entity
 @Table(name = "clientes")
 public class Cliente {
-
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(unique = true)
+    private String codigo;
+
     @CPF(message = "CPF inválido")
-    @Column(length = 11)
+    @Column(length = 11, unique = true)
     private String cpf;
 
     @NotBlank(message = "Nome é obrigatório")
@@ -65,22 +65,6 @@ public class Cliente {
 
     // Construtor default
     public Cliente() {}
-
-    // Construtor com todos os campos
-    public Cliente(String cpf, String nome, String email, String rua, String numero, String complemento, String bairro, String cep, String cidade, String uf) {
-        this.cpf = cpf;
-        this.nome = nome;
-        this.email = email;
-        this.rua = rua;
-        this.numero = numero;
-        this.complemento = complemento;
-        this.bairro = bairro;
-        this.cep = cep;
-        this.cidade = cidade;
-        this.uf = uf;
-        this.milhas = 0L;
-        this.dataCriacao = LocalDateTime.now();
-    }
 
     public Cliente(String cpf, String nome, String email, EnderecoDTO endereco) {
         this.cpf = cpf;
@@ -202,21 +186,12 @@ public class Cliente {
         this.dataAtualizacao = dataAtualizacao;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Cliente cliente = (Cliente) o;
-        return cpf.equals(cliente.cpf);
+    // Add getter and setter for id
+    public String getCodigo() {
+        return codigo;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(cpf);
-    }
-
-    @Override
-    public String toString() {
-        return "Cliente{" + "cpf=" + cpf + ", nome=" + nome + ", email=" + email + ", rua=" + rua + ", numero=" + numero + ", complemento=" + complemento + ", bairro=" + bairro + ", cep=" + cep + ", cidade=" + cidade + ", uf=" + uf + ", milhas=" + milhas + ", dataCriacao=" + dataCriacao + ", dataAtualizacao=" + dataAtualizacao + '}';
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
     }
 }

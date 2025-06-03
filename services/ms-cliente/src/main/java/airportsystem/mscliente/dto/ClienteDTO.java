@@ -4,6 +4,7 @@ import airportsystem.mscliente.model.CPF;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import org.springframework.data.annotation.Id;
 
 import java.util.Objects;
 
