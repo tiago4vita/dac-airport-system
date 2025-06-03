@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Wallet } from "lucide-react";
 import { SaldoMilhas } from "../SaldoMilhas/SaldoMilhas";
 import "./ExtratoMilhas.css";
 
@@ -9,6 +8,16 @@ export const Extrato = () => {
   const [transacoes, setTransacoes] = useState([]);
   const [paginaAtual, setPaginaAtual] = useState(1);
   const [itensPorPagina, setItensPorPagina] = useState(10);
+
+  const token = sessionStorage.getItem("token");
+  const codigoCliente = sessionStorage.getItem("codigo");
+
+  const api = axios.create({
+    baseURL: "http://localhost:8080",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 
   useEffect(() => {
     const calcularItensPorAltura = () => {
@@ -23,15 +32,15 @@ export const Extrato = () => {
   }, []);
 
   useEffect(() => {
-    const codigoCliente = 1010;
-
-    axios.get(`http://localhost:8080/clientes?codigo=${codigoCliente}`).then((res) => {
-      setCliente(res.data[0]);
-    });
-
-    axios.get(`http://localhost:8080/transacoes?codigo_cliente=${codigoCliente}`).then((res) => {
-      setTransacoes(res.data);
-    });
+    api.get(`/clientes/${codigoCliente}/milhas`)
+      .then((res) => {
+        setCliente({ saldoMilhas: res.data.saldo_milhas });
+        setTransacoes(res.data.transacoes || []);
+      })
+      .catch((err) => {
+        console.error("Erro ao buscar extrato de milhas:", err);
+        alert("Erro ao carregar extrato.");
+      });
   }, []);
 
   const totalPaginas = Math.ceil(transacoes.length / itensPorPagina);
@@ -39,8 +48,7 @@ export const Extrato = () => {
   const transacoesPaginadas = transacoes.slice(inicio, inicio + itensPorPagina);
 
   const formatarDescricao = (transacao) => {
-    if (transacao.tipo === "ENTRADA") return "COMPRA DE MILHAS";
-    return `${transacao.origem} → ${transacao.destino}`;
+    return transacao.descricao || "-";
   };
 
   return (
@@ -62,14 +70,14 @@ export const Extrato = () => {
           <tbody>
             {transacoesPaginadas.map((transacao, index) => (
               <tr key={index}>
-                <td style={{ color: transacao.tipo === "SAÍDA" ? "red" : "green", fontWeight: "bold" }}>
+                <td style={{ color: transacao.tipo === "SAIDA" ? "red" : "green", fontWeight: "bold" }}>
                   {transacao.tipo}
                 </td>
                 <td>{transacao.codigo_reserva || "------"}</td>
                 <td>{new Date(transacao.data).toLocaleDateString("pt-BR")}</td>
-                <td>{transacao.milhas}</td>
+                <td>{transacao.quantidade_milhas}</td>
                 <td>
-                  {transacao.valor.toLocaleString("pt-BR", {
+                  {transacao.valor_reais.toLocaleString("pt-BR", {
                     style: "currency",
                     currency: "BRL"
                   })}

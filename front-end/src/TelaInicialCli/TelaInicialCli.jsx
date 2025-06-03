@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Wallet } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { ModalCancela } from "../ModalCancela/ModalCancela";
 import { SaldoMilhas } from "../SaldoMilhas/SaldoMilhas";
@@ -14,6 +13,16 @@ export const TelaInicialCli = () => {
   const [reservaSelecionada, setReservaSelecionada] = useState(null);
   const navigate = useNavigate();
 
+  const token = sessionStorage.getItem("token");
+  const codigoCliente = sessionStorage.getItem("codigo");
+
+  const api = axios.create({
+    baseURL: "http://localhost:8080",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
   useEffect(() => {
     const calcularItensPorAltura = () => {
       const altura = window.innerHeight;
@@ -26,15 +35,18 @@ export const TelaInicialCli = () => {
     setItensPorPagina(calcularItensPorAltura());
   }, []);
 
-  const carregarDados = () => {
-    const codigoCliente = 1010;
-    axios.get(`http://localhost:8080/clientes?codigo=${codigoCliente}`).then((res) => {
-      setCliente(res.data[0]);
-    });
+  const carregarDados = async () => {
+    if (!codigoCliente || !token) return;
 
-    axios.get(`http://localhost:8080/reservas?codigo_cliente=${codigoCliente}`).then((res) => {
-      setReservas(res.data);
-    });
+    try {
+      const clienteRes = await api.get(`/clientes/${codigoCliente}`);
+      setCliente(clienteRes.data);
+
+      const reservasRes = await api.get(`/clientes/${codigoCliente}/reservas`);
+      setReservas(reservasRes.data);
+    } catch (error) {
+      console.error("Erro ao carregar dados:", error);
+    }
   };
 
   useEffect(() => {
@@ -49,8 +61,18 @@ export const TelaInicialCli = () => {
     setReservaSelecionada(reserva);
   };
 
-  const confirmarCancelamento = () => {
-    setReservaSelecionada(null);
+  const confirmarCancelamento = async () => {
+    if (!reservaSelecionada) return;
+
+    try {
+      await api.patch(`/reservas/${reservaSelecionada.codigo}/estado`, {
+        estado: "CANCELADA",
+      });
+      carregarDados(); // atualiza lista após cancelamento
+      setReservaSelecionada(null);
+    } catch (error) {
+      console.error("Erro ao cancelar reserva:", error);
+    }
   };
 
   return (

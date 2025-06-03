@@ -13,9 +13,20 @@ export const ConfirmacaoEmbarque = () => {
   const [reserva, setReserva] = useState(null);
   const [erro, setErro] = useState(null);
 
-  const buscarReserva = () => {
-    axios.get(`http://localhost:8080/reservas?codigo=${codigoReserva}`).then((res) => {
-      const encontrada = res.data[0];
+  const token = sessionStorage.getItem("token");
+
+  const api = axios.create({
+    baseURL: "http://localhost:8080",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const buscarReserva = async () => {
+    try {
+      const res = await api.get(`/reservas/${codigoReserva}`);
+      const encontrada = res.data;
+
       if (!encontrada) {
         setErro("Reserva não encontrada.");
         setReserva(null);
@@ -26,7 +37,22 @@ export const ConfirmacaoEmbarque = () => {
         setReserva(encontrada);
         setErro(null);
       }
-    });
+    } catch (error) {
+      setErro("Erro ao buscar reserva.");
+      setReserva(null);
+    }
+  };
+
+  const confirmarEmbarque = async () => {
+    try {
+      await api.patch(`/reservas/${reserva.codigo}/estado`, {
+        estado: "EMBARCADA",
+      });
+      navigate("/homepageF");
+    } catch (error) {
+      alert("Erro ao confirmar embarque.");
+      console.error(error);
+    }
   };
 
   const voo = reserva?.voo;
@@ -113,9 +139,9 @@ export const ConfirmacaoEmbarque = () => {
 
             <div className="acoes">
               <button className="cancel-reserva-button" onClick={() => navigate("/homepageF")}>
-                Cancelar
+                Voltar
               </button>
-              <button className="checkin-button" onClick={() => navigate("/homepageF")}>
+              <button className="checkin-button" onClick={confirmarEmbarque}>
                 Confirmar Embarque
               </button>
             </div>

@@ -9,10 +9,19 @@ export const VerReserva = () => {
   const [reserva, setReserva] = useState(null);
   const navigate = useNavigate();
 
+  const token = sessionStorage.getItem("token");
+
+  const api = axios.create({
+    baseURL: "http://localhost:8080",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
   useEffect(() => {
-    axios
-      .get(`http://localhost:8080/reservas?codigo=${codigo}`)
-      .then((res) => setReserva(res.data[0]));
+    api.get(`/reservas/${codigo}`)
+      .then((res) => setReserva(res.data))
+      .catch((err) => console.error("Erro ao buscar reserva:", err));
   }, [codigo]);
 
   if (!reserva) return <div>Carregando...</div>;
@@ -102,7 +111,6 @@ export const VerReserva = () => {
         </div>
       </div>
 
-      {/* Container normal do voo (não clicável) */}
       <div className="flight-info">
         <div className="flight-location">
           <MapPin className="icon" />

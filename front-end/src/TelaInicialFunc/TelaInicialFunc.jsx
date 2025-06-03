@@ -15,6 +15,15 @@ export const TelaInicialFunc = () => {
   const [modalConfirmacaoAberto, setModalConfirmacaoAberto] = useState(false);
   const navigate = useNavigate();
 
+  const token = sessionStorage.getItem("token");
+
+  const api = axios.create({
+    baseURL: "http://localhost:8080",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
   useEffect(() => {
     const calcularItensPorAltura = () => {
       const altura = window.innerHeight;
@@ -28,12 +37,23 @@ export const TelaInicialFunc = () => {
   }, []);
 
   useEffect(() => {
-    axios.get("http://localhost:8080/voos").then((res) => {
-      const filtrados = res.data.filter((voo) =>
-        voo.estado?.toLowerCase() === "criada"
-      );
-      setVoos(filtrados);
-    });
+    const buscarVoos = async () => {
+      const hoje = new Date();
+      const dataInicio = hoje.toISOString().split("T")[0];
+      const dataFim = new Date(hoje.getTime() + 48 * 60 * 60 * 1000)
+        .toISOString()
+        .split("T")[0];
+
+      try {
+        const res = await api.get(`/voos?data=${dataInicio}&data-fim=${dataFim}`);
+        const filtrados = res.data.filter((voo) => voo.estado?.toLowerCase() === "criada");
+        setVoos(filtrados);
+      } catch (err) {
+        console.error("Erro ao buscar voos:", err);
+      }
+    };
+
+    buscarVoos();
   }, []);
 
   const totalPaginas = Math.ceil(voos.length / itensPorPagina);
@@ -50,18 +70,30 @@ export const TelaInicialFunc = () => {
     setModalConfirmacaoAberto(true);
   };
 
-  const confirmarCancelamento = () => {
-    console.log("Cancelar voo:", vooSelecionado?.codigo);
-    setModalCancelamentoAberto(false);
-    setVooSelecionado(null);
-    // Atualizar backend se necessário
+  const confirmarCancelamento = async () => {
+    try {
+      await api.patch(`/voos/${vooSelecionado.codigo}/estado`, {
+        estado: "CANCELADO",
+      });
+      setModalCancelamentoAberto(false);
+      setVooSelecionado(null);
+      window.location.reload();
+    } catch (err) {
+      console.error("Erro ao cancelar voo:", err);
+    }
   };
 
-  const confirmarRealizacao = () => {
-    console.log("Confirmar voo:", vooSelecionado?.codigo);
-    setModalConfirmacaoAberto(false);
-    setVooSelecionado(null);
-    // Atualizar backend se necessário
+  const confirmarRealizacao = async () => {
+    try {
+      await api.patch(`/voos/${vooSelecionado.codigo}/estado`, {
+        estado: "REALIZADO",
+      });
+      setModalConfirmacaoAberto(false);
+      setVooSelecionado(null);
+      window.location.reload();
+    } catch (err) {
+      console.error("Erro ao confirmar voo:", err);
+    }
   };
 
   return (
