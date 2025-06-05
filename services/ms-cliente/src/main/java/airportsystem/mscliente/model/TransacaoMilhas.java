@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "transacoes_milhas")
 public class TransacaoMilhas {
 
     @Id
@@ -20,6 +22,9 @@ public class TransacaoMilhas {
     private LocalDateTime dataHora = LocalDateTime.now();
 
     @Column(nullable = false)
+    private Long valorReais;
+
+    @Column(nullable = false)
     private Long quantidade;
 
     @Enumerated(EnumType.STRING)
@@ -28,6 +33,9 @@ public class TransacaoMilhas {
 
     @Column(nullable = false)
     private String descricao;
+    
+    @Column
+    private String codigoReserva;
 
     public enum TipoTransacao {
         ENTRADA, SAIDA;
@@ -39,8 +47,19 @@ public class TransacaoMilhas {
     public TransacaoMilhas(Cliente cliente, Long quantidade, TipoTransacao tipo, String descricao) {
         this.cliente = cliente;
         this.quantidade = quantidade;
+        this.valorReais = quantidade * 5;
         this.tipo = tipo;
         this.descricao = descricao;
+        this.dataHora = LocalDateTime.now();
+    }
+    
+    public TransacaoMilhas(Cliente cliente, Long quantidade, Long valorReais, TipoTransacao tipo, String descricao, String codigoReserva) {
+        this.cliente = cliente;
+        this.quantidade = quantidade;
+        this.valorReais = valorReais;
+        this.tipo = tipo;
+        this.descricao = descricao;
+        this.codigoReserva = codigoReserva;
         this.dataHora = LocalDateTime.now();
     }
 
@@ -68,6 +87,10 @@ public class TransacaoMilhas {
         this.dataHora = dataHora;
     }
 
+    public void setValorReais(Long valorReais) { this.valorReais = valorReais; }
+
+    public Long getValorReais() { return this.valorReais; }
+
     public Long getQuantidade() {
         return quantidade;
     }
@@ -91,5 +114,12 @@ public class TransacaoMilhas {
     public void setDescricao(String descricao) {
         this.descricao = descricao;
     }
-
+    
+    public String getCodigoReserva() {
+        return codigoReserva;
+    }
+    
+    public void setCodigoReserva(String codigoReserva) {
+        this.codigoReserva = codigoReserva;
+    }
 }
