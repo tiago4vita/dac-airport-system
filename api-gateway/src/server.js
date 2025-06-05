@@ -328,6 +328,7 @@ app.get('/voos', async (req, res) => {
 });
 
 // R07b - CRIAR RESERVA
+// TO-DO criar codigo de reserva aqui (tiago)
 app.post('/reservas', async (req, res) => {
   // Get token from Authorization header
   const authHeader = req.headers.authorization;
