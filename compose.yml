@@ -104,6 +104,22 @@ services:
     networks:
       - airport-network
 
+  ms-voo:
+    build:
+      context: ./services/ms-voo
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8082"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-cliente:5432/voo_db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+    depends_on:
+      - mongodb
+      - rabbitmq
+    networks:
+      - airport-network
+
 networks:
   airport-network:
     driver: bridge
