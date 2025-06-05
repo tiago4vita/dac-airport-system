@@ -28,9 +28,9 @@ class AutoCadastroSaga(
             val cliente = gson.fromJson(responseCliente, ClienteOutputDTO::class.java)   
             val inputCadastro = UsuarioInputDTO(cliente.codigo, cliente.email, cliente.senha, UsuarioRole.CLIENTE))
         
-            val requestAuth = async { rabbitTemplate.convertAndSend(exchange.name, "auth", gson.toJson(inputCadastro))}
-            val responseAuth = requestAuth.await()
-            processResponse(responseCliente, inputCadastro)
+            // val requestAuth = async { rabbitTemplate.convertAndSend(exchange.name, "auth", gson.toJson(inputCadastro))}
+            // val responseAuth = requestAuth.await()
+            // processResponse(responseCliente, inputCadastro)
         }
 
     private suspend fun asyncSendAndReceive(
