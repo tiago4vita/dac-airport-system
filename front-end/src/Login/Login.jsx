@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./Login.css";
 import vector from "../assets/vector.svg";
 import group4174 from "../assets/group-1000004174.png";
@@ -10,59 +10,60 @@ export const Login = () => {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [emailError, setEmailError] = useState("");
+  const [loginError, setLoginError] = useState("");
   const navigate = useNavigate();
   const { login } = useAuth();
-
-  useEffect(() => {
-    setEmail("");
-    setSenha("");
-  }, []);
 
   const handleEmailChange = (e) => {
     const value = e.target.value;
     setEmail(value);
 
     const regex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i;
-    if (!regex.test(value)) {
-      setEmailError("Digite um email válido");
-    } else {
-      setEmailError("");
-    }
+    setEmailError(!regex.test(value) ? "Digite um email válido" : "");
   };
 
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
 
     if (emailError || !email || !senha) {
-      alert("Preencha todos os campos corretamente.");
+      setLoginError("Preencha todos os campos corretamente.");
       return;
     }
 
     try {
-      const response = await axios.get("http://localhost:8080/usuarios", {
-        params: {
-          login: email,
-          senha: senha,
-        },
+      const response = await axios.post("http://localhost:3000/login", {
+        login: email,
+        senha: senha,
       });
 
-      if (response.data.length > 0) {
-        const usuario = response.data[0];
-        login(usuario);
+      const { access_token, usuario, tipo } = response.data;
 
-        if (usuario.tipo === "CLIENTE") {
+      if (access_token && usuario && tipo) {
+        const usuarioCompleto = {
+          ...usuario,
+          tipo,
+          access_token,
+        };
+
+        login(usuarioCompleto);
+
+        if (tipo === "CLIENTE") {
           navigate("/homepageC");
-        } else if (usuario.tipo === "FUNCIONARIO") {
+        } else if (tipo === "FUNCIONARIO") {
           navigate("/homepageF");
         } else {
-          alert("Tipo de usuário inválido.");
+          setLoginError("Tipo de usuário inválido.");
         }
       } else {
-        alert("Credenciais inválidas.");
+        setLoginError("Resposta inválida do servidor.");
       }
     } catch (error) {
-      console.error("Erro ao fazer login:", error);
-      alert("Erro ao conectar com o servidor.");
+      if (error.response && error.response.status === 401) {
+        setLoginError("Email ou senha incorretos.");
+      } else {
+        console.error("Erro ao fazer login:", error);
+        setLoginError("Erro ao conectar com o servidor.");
+      }
     }
   };
 
@@ -72,11 +73,7 @@ export const Login = () => {
         <h1 className="text-wrapper-login">Login</h1>
 
         <div className="group-image-wrapper-login">
-          <img
-            className="group-image"
-            src={group4174}
-            alt="Ilustração do sistema"
-          />
+          <img className="group-image" src={group4174} alt="Ilustração do sistema" />
         </div>
 
         <form className="form-login" onSubmit={handleLoginSubmit}>
@@ -104,6 +101,8 @@ export const Login = () => {
               required
             />
           </div>
+
+          {loginError && <p className="error-message">{loginError}</p>}
 
           <p className="n-o-possui-uma-conta">
             <span>Não possui uma conta? </span>
