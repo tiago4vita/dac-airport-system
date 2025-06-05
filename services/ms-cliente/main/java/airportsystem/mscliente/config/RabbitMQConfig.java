@@ -13,15 +13,16 @@ public class RabbitMQConfig {
     public Queue clienteCriarQueue() { return new Queue("cliente.criar", true); }
 
     @Bean
-    public Queue clienteBuscarQueue() {
-        return new Queue("cliente.buscar", true);
-    }
+    public Queue clienteBuscarQueue() { return new Queue("cliente.buscar", true); }
 
     @Bean
     public Queue clienteSomarMilhasQueue() { return new Queue("cliente.somar-milhas", true); }
 
     @Bean
     public Queue clienteGastarMilhasQueue() { return new Queue("cliente.gastar-milhas", true); }
+
+    @Bean
+    public Queue clienteBuscarExtratoMilhasQueue() { return new Queue("cliente.buscar-extrato-milhas", true); }
 
     @Bean
     public Queue retornoQueue() {
