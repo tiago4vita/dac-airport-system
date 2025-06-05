@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../../api/axiosInstance"; 
 import { SaldoMilhas } from "../SaldoMilhas/SaldoMilhas";
 import "./ExtratoMilhas.css";
 
@@ -9,15 +9,7 @@ export const Extrato = () => {
   const [paginaAtual, setPaginaAtual] = useState(1);
   const [itensPorPagina, setItensPorPagina] = useState(10);
 
-  const token = sessionStorage.getItem("token");
   const codigoCliente = sessionStorage.getItem("codigo");
-
-  const api = axios.create({
-    baseURL: "http://localhost:8080",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
 
   useEffect(() => {
     const calcularItensPorAltura = () => {

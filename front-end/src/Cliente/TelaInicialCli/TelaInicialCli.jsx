@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { ModalCancela } from "../ModalCancela/ModalCancela";
 import { SaldoMilhas } from "../SaldoMilhas/SaldoMilhas";
+import api from "../../api/axiosInstance";
 import "./TelaInicialCli.css";
 
 export const TelaInicialCli = () => {
@@ -13,15 +13,7 @@ export const TelaInicialCli = () => {
   const [reservaSelecionada, setReservaSelecionada] = useState(null);
   const navigate = useNavigate();
 
-  const token = sessionStorage.getItem("token");
   const codigoCliente = sessionStorage.getItem("codigo");
-
-  const api = axios.create({
-    baseURL: "http://localhost:8080",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
 
   useEffect(() => {
     const calcularItensPorAltura = () => {
@@ -36,7 +28,7 @@ export const TelaInicialCli = () => {
   }, []);
 
   const carregarDados = async () => {
-    if (!codigoCliente || !token) return;
+    if (!codigoCliente) return;
 
     try {
       const clienteRes = await api.get(`/clientes/${codigoCliente}`);
@@ -68,7 +60,7 @@ export const TelaInicialCli = () => {
       await api.patch(`/reservas/${reservaSelecionada.codigo}/estado`, {
         estado: "CANCELADA",
       });
-      carregarDados(); // atualiza lista após cancelamento
+      carregarDados();
       setReservaSelecionada(null);
     } catch (error) {
       console.error("Erro ao cancelar reserva:", error);

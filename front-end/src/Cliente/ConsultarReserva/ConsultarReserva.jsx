@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { MapPin, ArrowRight, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { ModalCancela } from "../ModalCancela/ModalCancela";
 import { CheckinModal } from "../CheckinModal/CheckinModal";
+import api from "../../api/axiosInstance"; 
 import "./ConsultarReserva.css";
 
 export const Consulta = () => {
@@ -14,15 +14,7 @@ export const Consulta = () => {
   const [reservaParaCheckin, setReservaParaCheckin] = useState(null);
   const navigate = useNavigate();
 
-  const token = sessionStorage.getItem("token");
   const codigoCliente = sessionStorage.getItem("codigo");
-
-  const api = axios.create({
-    baseURL: "http://localhost:8080",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
 
   const buscarReserva = async () => {
     setErro(null);
@@ -212,7 +204,7 @@ export const Consulta = () => {
             onConfirm={async () => {
               try {
                 await api.patch(`/reservas/${reservaParaCheckin.codigo}/estado`, {
-                  estado: "CHECK-IN"
+                  estado: "CHECK-IN",
                 });
                 setReservaParaCheckin(null);
                 navigate("/homepageC");
