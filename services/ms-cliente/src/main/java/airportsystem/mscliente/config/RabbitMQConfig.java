@@ -10,14 +10,15 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMQConfig {
 
     @Bean
-    public Queue clienteCriarQueue() {
-        return new Queue("cliente.criar", true);
-    }
+    public Queue clienteCriarQueue() { return new Queue("cliente.criar", true); }
 
     @Bean
     public Queue clienteBuscarQueue() {
         return new Queue("cliente.buscar", true);
     }
+
+    @Bean
+    public Queue clienteSomarMilhasQueue() { return new Queue("cliente.somar-milhas", true); }
 
     @Bean
     public Queue retornoQueue() {
