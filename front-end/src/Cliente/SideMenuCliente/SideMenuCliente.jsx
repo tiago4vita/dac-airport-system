@@ -2,19 +2,22 @@ import React from "react";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { Plane, LogOut } from "lucide-react";
 import axios from "axios";
-import { useAuth } from "../AuthContext";
-import "./SideMenuFunc.css";
+import { useAuth } from "../../AuthContext";
+import "./SideMenuCliente.css";
 
-export const SideMenuFunc = () => {
+export const SideMenuCliente = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, logout } = useAuth();
   const token = localStorage.getItem("token");
 
   const menuItems = [
-    { label: "Página Inicial", path: "/homepageF" },
-    { label: "Cadastro de Voo", path: "/cadastrovoo" },
-    { label: "Lista de Funcionários", path: "/listarfunc" },
+    { label: "Página Inicial", path: "/homepageC" },
+    { label: "Reservar", path: "/buscar-voos" },
+    { label: "Consultar Reserva", path: "/consulta" },
+    { label: "Comprar Milhas", path: "/compra" },
+    { label: "Extrato de Milhas", path: "/extrato" },
+    { label: "Check-in", path: "/checkin" },
   ];
 
   const handleLogout = async () => {
@@ -25,7 +28,7 @@ export const SideMenuFunc = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
     } catch (err) {
-      console.warn("Falha ao comunicar logout:", err);
+      console.warn("Erro ao fazer logout no backend:", err);
     } finally {
       logout();
       navigate("/");
