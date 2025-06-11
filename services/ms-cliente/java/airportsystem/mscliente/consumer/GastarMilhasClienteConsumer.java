@@ -53,10 +53,29 @@ public class GastarMilhasClienteConsumer {
             String aeroportoDestino = jsonNode.get("codigo_aeroporto_destino").asText();
             Long clienteMilhasUtilizadas = jsonNode.get("milhas_utilizadas").asLong();
             
-            
             Optional<Cliente> clienteEncontrado = buscarClientePorCodigo(clienteCodigo);
 
-            if (clienteEncontrado.isPresent() && clienteMilhasUtilizadas <= clienteEncontrado.get().getMilhas()) {
+            if (!clienteEncontrado.isPresent()) {
+                // Cliente não encontrado
+                System.err.println("Cliente com CODIGO " + clienteCodigo + " não encontrado");
+                
+                // Prepare error response
+                response.put("success", false);
+                response.put("message", "Cliente com código " + clienteCodigo + " não encontrado");
+                response.put("errorType", "NOT_FOUND");
+            } 
+            else if (clienteMilhasUtilizadas > clienteEncontrado.get().getMilhas()) {
+                // Cliente encontrado mas com milhas insuficientes
+                System.err.println("Cliente com CODIGO " + clienteCodigo + " não possui saldo suficiente de milhas");
+                System.err.println("Saldo: " + clienteEncontrado.get().getMilhas() + " Milhas necessárias: " + clienteMilhasUtilizadas);
+                
+                // Prepare error response
+                response.put("success", false);
+                response.put("message", "Cliente com código " + clienteCodigo + " não possui saldo suficiente de milhas");
+                response.put("errorType", "INSUFFICIENT_MILES");
+            }
+            else {
+                // Cliente encontrado e com milhas suficientes
                 Cliente cliente = clienteEncontrado.get();
 
                 System.out.println("Cliente encontrado via RabbitMQ: (" + cliente.getNome() + ") com CODIGO: " + cliente.getCodigo());
@@ -86,22 +105,6 @@ public class GastarMilhasClienteConsumer {
                 response.put("codigo", cliente.getCodigo());
                 response.put("saldo_milhas", cliente.getMilhas());
                 response.put("message", "Milhas adicionada com sucesso!");
-            }
-            if (clienteMilhasUtilizadas > clienteEncontrado.get().getMilhas()) {
-                System.err.println("Cliente com CODIGO " + clienteCodigo + " não possui saldo suficiente de milhas");
-                System.err.println("Saldo: " + clienteEncontrado.get().getMilhas() + " Milhas necessárias: " + clienteMilhasUtilizadas);
-                // Prepare error response
-                response.put("success", false);
-                response.put("message", "Cliente com código " + clienteCodigo + " não possui saldo suficiente de milhas");
-                response.put("errorType", "INSUFFICIENT_MILES");
-            }
-            else {
-                System.err.println("Cliente com CODIGO " + clienteCodigo + " não encontrado");
-
-                // Prepare error response
-                response.put("success", false);
-                response.put("message", "Cliente com código " + clienteCodigo + " não encontrado");
-                response.put("errorType", "NOT_FOUND");
             }
         } catch (Exception e) {
             System.err.println("Erro ao realizar transação milhas: " + e.getMessage());
