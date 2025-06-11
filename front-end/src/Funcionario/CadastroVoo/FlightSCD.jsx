@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "./FlightSCD.css"; // Mantendo o CSS personalizado
+import "./FlightSCD.css"; 
 
 const calcularMilhas = (valor) => valor * 0.2;
 

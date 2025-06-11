@@ -1,22 +1,22 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState } from "react";
 
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
-    const storedUser = localStorage.getItem("usuario");
+    const storedUser = sessionStorage.getItem("usuario");
     return storedUser ? JSON.parse(storedUser) : null;
   });
 
   const login = (userData) => {
-    localStorage.setItem("token", userData.access_token);
-    localStorage.setItem("usuario", JSON.stringify(userData));
+    sessionStorage.setItem("token", userData.access_token);
+    sessionStorage.setItem("usuario", JSON.stringify(userData));
     setUser(userData);
   };
 
   const logout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("usuario");
+    sessionStorage.removeItem("token");
+    sessionStorage.removeItem("usuario");
     setUser(null);
   };
 

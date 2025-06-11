@@ -1,15 +1,14 @@
 import React from "react";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { Plane, LogOut } from "lucide-react";
-import axios from "axios";
-import { useAuth } from "../AuthContext";
+import api from "../../api/axiosInstance"; 
+import { useAuth } from "../../AuthContext";
 import "./SideMenuCliente.css";
 
 export const SideMenuCliente = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, logout } = useAuth();
-  const token = localStorage.getItem("token");
 
   const menuItems = [
     { label: "Página Inicial", path: "/homepageC" },
@@ -22,11 +21,9 @@ export const SideMenuCliente = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.post(
-        "http://localhost:8080/logout",
-        { login: user?.usuario?.email },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      await api.post("/logout", {
+        login: user?.usuario?.email,
+      });
     } catch (err) {
       console.warn("Erro ao fazer logout no backend:", err);
     } finally {

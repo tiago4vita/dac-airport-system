@@ -2,7 +2,7 @@ import React from "react";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { Plane, LogOut } from "lucide-react";
 import axios from "axios";
-import { useAuth } from "../AuthContext";
+import { useAuth } from "../../AuthContext";
 import "./SideMenuFunc.css";
 
 export const SideMenuFunc = () => {

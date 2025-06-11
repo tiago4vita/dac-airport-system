@@ -1,5 +1,5 @@
 import React from "react";
-import axios from "axios";
+import api from "../api/axiosInstance"; 
 import "./ModalCancela.css";
 import alertaIcon from "../assets/alerta.svg";
 
@@ -8,7 +8,7 @@ export const ModalCancela = ({ isOpen, onConfirm, onCancel, reserva }) => {
 
   const handleCancelar = async () => {
     try {
-      await axios.delete(`http://localhost:8080/reservas/${reserva.codigo}`);
+      await api.delete(`/reservas/${reserva.codigo}`); 
       onConfirm();
     } catch (error) {
       console.error("Erro ao cancelar reserva:", error);

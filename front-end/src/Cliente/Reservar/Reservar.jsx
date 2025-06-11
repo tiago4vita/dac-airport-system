@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
+import api from "../../api/axiosInstance"; 
 import "./Reservar.css";
 import imagemAssentos from "../assets/image-1.png";
 
@@ -15,15 +15,7 @@ export const Reservar = () => {
   const [cliente, setCliente] = useState(null);
   const [voo, setVoo] = useState(null);
 
-  const token = sessionStorage.getItem("token");
-  const codigoCliente = sessionStorage.getItem("codigo"); // obtido no login
-
-  const api = axios.create({
-    baseURL: "http://localhost:8080",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const codigoCliente = sessionStorage.getItem("codigo");
 
   useEffect(() => {
     api.get(`/clientes/${codigoCliente}`)

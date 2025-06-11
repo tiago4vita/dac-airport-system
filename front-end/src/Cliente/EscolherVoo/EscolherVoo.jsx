@@ -26,10 +26,15 @@ export const EscolherVoo = () => {
           url += "?" + params.toString();
         }
 
-        const res = await fetch(url);
+        const token = sessionStorage.getItem("token");
+
+        const res = await fetch(url, {
+          headers: {
+            Authorization: `Bearer ${token}`, 
+          },
+        });
         const data = await res.json();
 
-        // Suporta ambos formatos de resposta: lista ou objeto com "voos"
         const listaVoos = Array.isArray(data) ? data : data.voos || [];
 
         setVoos(listaVoos);
@@ -52,6 +57,7 @@ export const EscolherVoo = () => {
 
     buscarVoos();
   }, [state]);
+
 
   const datasPaginadas = datas.slice(
     paginaDatas * diasPorPagina,

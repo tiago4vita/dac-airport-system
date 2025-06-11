@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { CheckinModal } from "../CheckinModal/CheckinModal";
+import api from "../../api/axiosInstance"; 
 import "./Checkin.css";
 
 export const Checkin = () => {
@@ -11,15 +11,7 @@ export const Checkin = () => {
   const [itensPorPagina, setItensPorPagina] = useState(10);
   const navigate = useNavigate();
 
-  const token = sessionStorage.getItem("token");
   const codigoCliente = sessionStorage.getItem("codigo");
-
-  const api = axios.create({
-    baseURL: "http://localhost:8080",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
 
   useEffect(() => {
     const buscarReservas = async () => {
