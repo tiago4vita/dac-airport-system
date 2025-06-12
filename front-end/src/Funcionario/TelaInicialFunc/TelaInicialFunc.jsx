@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import axiosInstance from "../../api/axiosInstance";
 import { EtiquetaFuncionario } from "../LabelFunc/LabelFunc";
 import { ModalCancelaVoo } from "../ModalCancelaVoo/ModalCancelaVoo";
 import { ModalRealiza } from "../ModalRealiza/ModalRealiza";
@@ -14,15 +14,6 @@ export const TelaInicialFunc = () => {
   const [modalCancelamentoAberto, setModalCancelamentoAberto] = useState(false);
   const [modalConfirmacaoAberto, setModalConfirmacaoAberto] = useState(false);
   const navigate = useNavigate();
-
-  const token = sessionStorage.getItem("token");
-
-  const api = axios.create({
-    baseURL: "http://localhost:8080",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
 
   useEffect(() => {
     const calcularItensPorAltura = () => {
@@ -45,7 +36,7 @@ export const TelaInicialFunc = () => {
         .split("T")[0];
 
       try {
-        const res = await api.get(`/voos?data=${dataInicio}&data-fim=${dataFim}`);
+        const res = await axiosInstance.get(`/voos?data=${dataInicio}&data-fim=${dataFim}`);
         const filtrados = res.data.filter((voo) => voo.estado?.toLowerCase() === "criada");
         setVoos(filtrados);
       } catch (err) {
@@ -72,7 +63,7 @@ export const TelaInicialFunc = () => {
 
   const confirmarCancelamento = async () => {
     try {
-      await api.patch(`/voos/${vooSelecionado.codigo}/estado`, {
+      await axiosInstance.patch(`/voos/${vooSelecionado.codigo}/estado`, {
         estado: "CANCELADO",
       });
       setModalCancelamentoAberto(false);
@@ -85,7 +76,7 @@ export const TelaInicialFunc = () => {
 
   const confirmarRealizacao = async () => {
     try {
-      await api.patch(`/voos/${vooSelecionado.codigo}/estado`, {
+      await axiosInstance.patch(`/voos/${vooSelecionado.codigo}/estado`, {
         estado: "REALIZADO",
       });
       setModalConfirmacaoAberto(false);
@@ -174,7 +165,6 @@ export const TelaInicialFunc = () => {
           ))}
         </div>
 
-        {/* Modais */}
         <ModalCancelaVoo
           isOpen={modalCancelamentoAberto}
           onConfirm={confirmarCancelamento}

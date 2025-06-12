@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import "./InserirFunc.css"; 
-import axios from "axios";
+import "./InserirFunc.css";
+import api from "../../api/axiosInstance"; 
 
 export default function InserirFunc() {
   const [funcionarios, setFuncionarios] = useState([]);
@@ -16,17 +16,16 @@ export default function InserirFunc() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
-  // Fetch existing funcionarios to check for duplicates and get next codigo
   useEffect(() => {
     const fetchFuncionarios = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/funcionarios');
+        const response = await api.get("/funcionarios");
         setFuncionarios(response.data || []);
       } catch (error) {
-        console.error('Erro ao buscar funcionários:', error);
+        console.error("Erro ao buscar funcionários:", error);
       }
     };
-    
+
     fetchFuncionarios();
   }, []);
 
@@ -36,235 +35,112 @@ export default function InserirFunc() {
       ...prev,
       [name]: value,
     }));
-    
-    // Clear error when user types
     if (errors[name]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: null
-      }));
+      setErrors((prev) => ({ ...prev, [name]: null }));
     }
   };
 
-  // CPF validation
   const validateCPF = (cpf) => {
-    // Remove any non-digit character
-    cpf = cpf.replace(/\D/g, '');
-    
-    if (cpf.length !== 11) return false;
-    
-    // Check if all digits are the same
-    if (/^(\d)\1+$/.test(cpf)) return false;
-    
-    // Validate first check digit
+    cpf = cpf.replace(/\D/g, "");
+    if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
     let sum = 0;
-    for (let i = 0; i < 9; i++) {
-      sum += parseInt(cpf.charAt(i)) * (10 - i);
-    }
+    for (let i = 0; i < 9; i++) sum += parseInt(cpf.charAt(i)) * (10 - i);
     let mod = sum % 11;
-    let checkDigit1 = mod < 2 ? 0 : 11 - mod;
-    
-    if (parseInt(cpf.charAt(9)) !== checkDigit1) return false;
-    
-    // Validate second check digit
+    if (parseInt(cpf.charAt(9)) !== (mod < 2 ? 0 : 11 - mod)) return false;
     sum = 0;
-    for (let i = 0; i < 10; i++) {
-      sum += parseInt(cpf.charAt(i)) * (11 - i);
-    }
+    for (let i = 0; i < 10; i++) sum += parseInt(cpf.charAt(i)) * (11 - i);
     mod = sum % 11;
-    let checkDigit2 = mod < 2 ? 0 : 11 - mod;
-    
-    return parseInt(cpf.charAt(10)) === checkDigit2;
+    return parseInt(cpf.charAt(10)) === (mod < 2 ? 0 : 11 - mod);
   };
 
-  // Brazilian phone validation
   const validateBrazilianPhone = (phone) => {
-    // Remove all non-digit characters
-    const cleanPhone = phone.replace(/\D/g, '');
-    
-    // Brazilian phone numbers should have 10 or 11 digits
-    // 10 digits: (XX) XXXX-XXXX (landline or old mobile)
-    // 11 digits: (XX) 9XXXX-XXXX (mobile with leading 9)
-    if (cleanPhone.length < 10 || cleanPhone.length > 11) {
-      return false;
-    }
-    
-    // For 11 digits, the 3rd digit should be 9 (for mobile numbers)
-    if (cleanPhone.length === 11 && cleanPhone.charAt(2) !== '9') {
-      return false;
-    }
-    
-    // DDD (area code) should be valid (between 11 and 99)
-    const ddd = parseInt(cleanPhone.substring(0, 2));
-    if (ddd < 11 || ddd > 99) {
-      return false;
-    }
-    
-    return true;
+    const clean = phone.replace(/\D/g, "");
+    if (clean.length < 10 || clean.length > 11) return false;
+    if (clean.length === 11 && clean.charAt(2) !== "9") return false;
+    const ddd = parseInt(clean.substring(0, 2));
+    return ddd >= 11 && ddd <= 99;
   };
 
-  // Email validation
-  const validateEmail = (email) => {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return regex.test(email);
-  };
+  const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-  // Form validation
   const validateForm = () => {
     const newErrors = {};
-    
-    if (!form.nome.trim()) {
-      newErrors.nome = "Nome é obrigatório";
-    } else if (form.nome.trim().length < 3) {
-      newErrors.nome = "Nome deve ter pelo menos 3 caracteres";
-    }
-    
-    if (!form.cpf.trim()) {
-      newErrors.cpf = "CPF é obrigatório";
-    } else if (!validateCPF(form.cpf)) {
-      newErrors.cpf = "CPF inválido";
-    } else if (funcionarios.some(func => func.cpf === form.cpf.replace(/\D/g, ''))) {
-      newErrors.cpf = "CPF já cadastrado";
-    }
-    
-    if (!form.email.trim()) {
-      newErrors.email = "Email é obrigatório";
-    } else if (!validateEmail(form.email)) {
-      newErrors.email = "Email inválido";
-    } else if (funcionarios.some(func => func.email === form.email)) {
-      newErrors.email = "Email já cadastrado";
-    }
-    
-    if (!form.telefone.trim()) {
-      newErrors.telefone = "Telefone é obrigatório";
-    } else if (!validateBrazilianPhone(form.telefone)) {
-      newErrors.telefone = "Telefone inválido, use o formato (XX) XXXXX-XXXX";
-    }
-    
+    if (!form.nome.trim()) newErrors.nome = "Nome é obrigatório";
+    else if (form.nome.length < 3) newErrors.nome = "Nome deve ter pelo menos 3 caracteres";
+
+    if (!form.cpf.trim()) newErrors.cpf = "CPF é obrigatório";
+    else if (!validateCPF(form.cpf)) newErrors.cpf = "CPF inválido";
+    else if (funcionarios.some((f) => f.cpf === form.cpf.replace(/\D/g, ""))) newErrors.cpf = "CPF já cadastrado";
+
+    if (!form.email.trim()) newErrors.email = "Email é obrigatório";
+    else if (!validateEmail(form.email)) newErrors.email = "Email inválido";
+    else if (funcionarios.some((f) => f.email === form.email)) newErrors.email = "Email já cadastrado";
+
+    if (!form.telefone.trim()) newErrors.telefone = "Telefone é obrigatório";
+    else if (!validateBrazilianPhone(form.telefone)) newErrors.telefone = "Telefone inválido";
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  // Format CPF as it's typed
   const formatCPF = (cpf) => {
-    cpf = cpf.replace(/\D/g, '');
-    if (cpf.length > 11) cpf = cpf.substring(0, 11);
-    
-    if (cpf.length > 9) {
-      cpf = cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, '$1.$2.$3-$4');
-    } else if (cpf.length > 6) {
-      cpf = cpf.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3');
-    } else if (cpf.length > 3) {
-      cpf = cpf.replace(/(\d{3})(\d{1,3})/, '$1.$2');
-    }
-    
+    cpf = cpf.replace(/\D/g, "").slice(0, 11);
+    if (cpf.length > 9) return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, "$1.$2.$3-$4");
+    if (cpf.length > 6) return cpf.replace(/(\d{3})(\d{3})(\d{0,3})/, "$1.$2.$3");
+    if (cpf.length > 3) return cpf.replace(/(\d{3})(\d{0,3})/, "$1.$2");
     return cpf;
   };
 
-  // Format phone number as it's typed (Brazilian format)
   const formatPhone = (phone) => {
-    phone = phone.replace(/\D/g, '');
-    if (phone.length > 11) phone = phone.substring(0, 11);
-    
-    if (phone.length > 10) {
-      // 11 digits mobile: (XX) 9XXXX-XXXX
-      phone = phone.replace(/(\d{2})(\d{1})(\d{4})(\d{4})/, '($1) $2$3-$4');
-    } else if (phone.length > 6) {
-      // 10 digits landline: (XX) XXXX-XXXX 
-      phone = phone.replace(/(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
-    } else if (phone.length > 2) {
-      // Just the area code: (XX)
-      phone = phone.replace(/(\d{2})(\d{0,5})/, '($1) $2');
-    }
-    
+    phone = phone.replace(/\D/g, "").slice(0, 11);
+    if (phone.length > 10) return phone.replace(/(\d{2})(\d{1})(\d{4})(\d{4})/, "($1) $2$3-$4");
+    if (phone.length > 6) return phone.replace(/(\d{2})(\d{4})(\d{0,4})/, "($1) $2-$3");
+    if (phone.length > 2) return phone.replace(/(\d{2})(\d{0,5})/, "($1) $2");
     return phone;
   };
 
-  // Handle input formatting
   const handleFormattedChange = (e) => {
     const { name, value } = e.target;
-    
-    if (name === 'cpf') {
-      setForm(prev => ({
-        ...prev,
-        cpf: formatCPF(value)
-      }));
-    } else if (name === 'telefone') {
-      setForm(prev => ({
-        ...prev,
-        telefone: formatPhone(value)
-      }));
-    } else {
-      handleChange(e);
-    }
+    if (name === "cpf") setForm((prev) => ({ ...prev, cpf: formatCPF(value) }));
+    else if (name === "telefone") setForm((prev) => ({ ...prev, telefone: formatPhone(value) }));
+    else handleChange(e);
   };
 
-  // Gera a senha aleatória de 4 dígitos
-  const genPass = () => {
-    return Math.floor(1000 + Math.random() * 9000).toString();
-  };
+  const genPass = () => Math.floor(1000 + Math.random() * 9000).toString();
 
-  // Envio de email com a senha gerada
   const sendEmail = (email, senha) => {
     console.log(`Enviando e-mail para ${email} com a senha: ${senha}`);
-    return new Promise(resolve => {
-      setTimeout(() => {
-        resolve();
-      }, 1000);
-    });
+    return new Promise((resolve) => setTimeout(resolve, 1000));
   };
 
-  // Get next codigo (auto-incremental)
   const getNextCodigo = () => {
     if (!funcionarios.length) return 1;
-    
-    const maxCodigo = funcionarios.reduce((max, func) => {
-      const codigo = func.codigo ? parseInt(func.codigo) : 0;
-      return codigo > max ? codigo : max;
-    }, 0);
-    
-    return maxCodigo + 1;
+    return funcionarios.reduce((max, f) => Math.max(max, parseInt(f.codigo) || 0), 0) + 1;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (!validateForm()) {
-      return;
-    }
+    if (!validateForm()) return;
 
     try {
       setIsSubmitting(true);
       const senha = genPass();
-      
-      // Prepare funcionario object
+
       const newFuncionario = {
         codigo: getNextCodigo(),
         nome: form.nome,
-        cpf: form.cpf.replace(/\D/g, ''),
+        cpf: form.cpf.replace(/\D/g, ""),
         email: form.email,
-        telefone: form.telefone.replace(/\D/g, ''),
-        senha: senha,
+        telefone: form.telefone.replace(/\D/g, ""),
+        senha,
         status: "ATIVO"
       };
-      
-      // Post to the API
-      await axios.post('http://localhost:8080/funcionarios', newFuncionario);
-      
-      // Send email with password
+
+      await api.post("/funcionarios", newFuncionario);
       await sendEmail(form.email, senha);
-      
       alert(`Funcionário cadastrado com sucesso! Senha enviada para ${form.email}: ${senha}`);
-      
-      // Reset form
-      setForm({
-        nome: "",
-        cpf: "",
-        email: "",
-        telefone: "",
-      });
-      
-      // Navigate back to list
+
+      setForm({ nome: "", cpf: "", email: "", telefone: "" });
       navigate("/listarfunc");
     } catch (error) {
       console.error("Erro ao cadastrar funcionário:", error);
@@ -274,104 +150,89 @@ export default function InserirFunc() {
     }
   };
 
-  // Limpa campos e redireciona
   const handleCancel = () => {
-    setForm({
-      nome: "",
-      cpf: "",
-      email: "",
-      telefone: "",
-    });
+    setForm({ nome: "", cpf: "", email: "", telefone: "" });
     navigate("/listarfunc");
   };
 
   return (
     <div className="form-func">
-  <div className="form-func-container">
-    <h1 className="form-func-title">Adicionar Novo Funcionário</h1>
-    <p className="form-func-subtitle">Preencha os dados para cadastrar um novo funcionário no sistema</p>
+      <div className="form-func-container">
+        <h1 className="form-func-title">Adicionar Novo Funcionário</h1>
+        <p className="form-func-subtitle">Preencha os dados para cadastrar um novo funcionário no sistema</p>
 
-    <form onSubmit={handleSubmit} className="form-func-form">
-      <div className="form-func-group">
-        <label htmlFor="nome" className="form-func-label">Nome*</label>
-        <input
-          id="nome"
-          name="nome"
-          value={form.nome}
-          onChange={handleChange}
-          required
-          className={`form-func-input ${errors.nome ? 'form-func-input-error' : ''}`}
-          placeholder="Nome completo"
-          disabled={isSubmitting}
-        />
-        {errors.nome && <span className="form-func-error">{errors.nome}</span>}
-      </div>
+        <form onSubmit={handleSubmit} className="form-func-form">
+          <div className="form-func-group">
+            <label htmlFor="nome" className="form-func-label">Nome*</label>
+            <input
+              id="nome"
+              name="nome"
+              value={form.nome}
+              onChange={handleChange}
+              required
+              className={`form-func-input ${errors.nome ? "form-func-input-error" : ""}`}
+              placeholder="Nome completo"
+              disabled={isSubmitting}
+            />
+            {errors.nome && <span className="form-func-error">{errors.nome}</span>}
+          </div>
 
-      <div className="form-func-group">
-        <label htmlFor="cpf" className="form-func-label">CPF*</label>
-        <input
-          id="cpf"
-          name="cpf"
-          value={form.cpf}
-          onChange={handleFormattedChange}
-          required
-          className={`form-func-input ${errors.cpf ? 'form-func-input-error' : ''}`}
-          placeholder="000.000.000-00"
-          disabled={isSubmitting}
-        />
-        {errors.cpf && <span className="form-func-error">{errors.cpf}</span>}
-      </div>
+          <div className="form-func-group">
+            <label htmlFor="cpf" className="form-func-label">CPF*</label>
+            <input
+              id="cpf"
+              name="cpf"
+              value={form.cpf}
+              onChange={handleFormattedChange}
+              required
+              className={`form-func-input ${errors.cpf ? "form-func-input-error" : ""}`}
+              placeholder="000.000.000-00"
+              disabled={isSubmitting}
+            />
+            {errors.cpf && <span className="form-func-error">{errors.cpf}</span>}
+          </div>
 
-      <div className="form-func-group">
-        <label htmlFor="email" className="form-func-label">E-mail*</label>
-        <input
-          id="email"
-          name="email"
-          type="email"
-          value={form.email}
-          onChange={handleChange}
-          required
-          className={`form-func-input ${errors.email ? 'form-func-input-error' : ''}`}
-          placeholder="email@exemplo.com"
-          disabled={isSubmitting}
-        />
-        {errors.email && <span className="form-func-error">{errors.email}</span>}
-      </div>
+          <div className="form-func-group">
+            <label htmlFor="email" className="form-func-label">E-mail*</label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              value={form.email}
+              onChange={handleChange}
+              required
+              className={`form-func-input ${errors.email ? "form-func-input-error" : ""}`}
+              placeholder="email@exemplo.com"
+              disabled={isSubmitting}
+            />
+            {errors.email && <span className="form-func-error">{errors.email}</span>}
+          </div>
 
-      <div className="form-func-group">
-        <label htmlFor="telefone" className="form-func-label">Telefone*</label>
-        <input
-          id="telefone"
-          name="telefone"
-          value={form.telefone}
-          onChange={handleFormattedChange}
-          required
-          className={`form-func-input ${errors.telefone ? 'form-func-input-error' : ''}`}
-          placeholder="(00) 00000-0000"
-          disabled={isSubmitting}
-        />
-        {errors.telefone && <span className="form-func-error">{errors.telefone}</span>}
-      </div>
+          <div className="form-func-group">
+            <label htmlFor="telefone" className="form-func-label">Telefone*</label>
+            <input
+              id="telefone"
+              name="telefone"
+              value={form.telefone}
+              onChange={handleFormattedChange}
+              required
+              className={`form-func-input ${errors.telefone ? "form-func-input-error" : ""}`}
+              placeholder="(00) 00000-0000"
+              disabled={isSubmitting}
+            />
+            {errors.telefone && <span className="form-func-error">{errors.telefone}</span>}
+          </div>
 
-      <div className="form-func-buttons">
-        <button
-          type="button"
-          onClick={handleCancel}
-          className="form-func-button cancel"
-          disabled={isSubmitting}
-        >
-          Cancelar
-        </button>
-        <button
-          type="submit"
-          className="form-func-button submit"
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? "Adicionando..." : "Adicionar"}
-        </button>
+          <div className="form-func-buttons">
+            <button type="button" onClick={handleCancel} className="form-func-button cancel" disabled={isSubmitting}>
+              Cancelar
+            </button>
+            <button type="submit" className="form-func-button submit" disabled={isSubmitting}>
+              {isSubmitting ? "Adicionando..." : "Adicionar"}
+            </button>
+          </div>
+        </form>
       </div>
-    </form>
-  </div>
-</div>
+    </div>
   );
 }

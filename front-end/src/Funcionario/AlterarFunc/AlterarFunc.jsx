@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import api from "../../api/axiosInstance"; 
 import "./AlterarFunc.css";
 
 const AlterarFunc = ({ funcionario, onClose, onSuccess }) => {
@@ -13,7 +13,6 @@ const AlterarFunc = ({ funcionario, onClose, onSuccess }) => {
     status: "ATIVO"
   });
 
-  // Initialize form with funcionario data
   useEffect(() => {
     if (funcionario) {
       setForm({
@@ -35,21 +34,18 @@ const AlterarFunc = ({ funcionario, onClose, onSuccess }) => {
   };
 
   const validateForm = () => {
-    // Basic validation
     if (!form.nome.trim()) return "Nome é obrigatório";
     if (!form.cpf.trim()) return "CPF é obrigatório";
     if (!form.cpf.match(/^\d{11}$/)) return "CPF deve conter 11 números";
     if (!form.email.trim()) return "Email é obrigatório";
     if (!form.email.includes("@")) return "Email inválido";
     if (!form.telefone.trim()) return "Telefone é obrigatório";
-    
-    return null; // No errors
+    return null;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // Validate form
+
     const validationError = validateForm();
     if (validationError) {
       alert(validationError);
@@ -59,17 +55,15 @@ const AlterarFunc = ({ funcionario, onClose, onSuccess }) => {
     try {
       setLoading(true);
       const funcionarioId = funcionario.id || funcionario.codigo;
-      
-      // Try with codigo first
-      await axios.put(`http://localhost:8080/funcionarios/${funcionarioId}`, form);
-      
+
+      await api.put(`/funcionarios/${funcionarioId}`, form);
+
       alert("Funcionário atualizado com sucesso!");
-      onSuccess(); // Notify parent component about success
+      onSuccess();
     } catch (err) {
-      // Try with id as fallback if código fails
       try {
         const altId = funcionario.codigo || funcionario.id;
-        await axios.put(`http://localhost:8080/funcionarios/${altId}`, form);
+        await api.put(`/funcionarios/${altId}`, form);
         alert("Funcionário atualizado com sucesso!");
         onSuccess();
       } catch (idErr) {
@@ -85,9 +79,9 @@ const AlterarFunc = ({ funcionario, onClose, onSuccess }) => {
     <div className="editar-func-modal">
       <div className="editar-func-container">
         <h2 className="editar-func-titulo">Editar Funcionário</h2>
-  
+
         {error && <div className="editar-func-error">{error}</div>}
-  
+
         <form onSubmit={handleSubmit} className="editar-func-form">
           <div className="editar-func-group">
             <label htmlFor="nome" className="editar-func-label">Nome*</label>
@@ -101,7 +95,7 @@ const AlterarFunc = ({ funcionario, onClose, onSuccess }) => {
               disabled={loading}
             />
           </div>
-  
+
           <div className="editar-func-group">
             <label htmlFor="cpf" className="editar-func-label">CPF*</label>
             <input
@@ -116,7 +110,7 @@ const AlterarFunc = ({ funcionario, onClose, onSuccess }) => {
               disabled
             />
           </div>
-  
+
           <div className="editar-func-group">
             <label htmlFor="email" className="editar-func-label">E-mail*</label>
             <input
@@ -130,7 +124,7 @@ const AlterarFunc = ({ funcionario, onClose, onSuccess }) => {
               disabled={loading}
             />
           </div>
-  
+
           <div className="editar-func-group">
             <label htmlFor="telefone" className="editar-func-label">Telefone*</label>
             <input
@@ -143,7 +137,7 @@ const AlterarFunc = ({ funcionario, onClose, onSuccess }) => {
               disabled={loading}
             />
           </div>
-  
+
           <div className="editar-func-group">
             <label htmlFor="status" className="editar-func-label">Status</label>
             <select
@@ -158,7 +152,7 @@ const AlterarFunc = ({ funcionario, onClose, onSuccess }) => {
               <option value="INATIVO">INATIVO</option>
             </select>
           </div>
-  
+
           <div className="editar-func-buttons">
             <button
               type="button"
@@ -180,7 +174,6 @@ const AlterarFunc = ({ funcionario, onClose, onSuccess }) => {
       </div>
     </div>
   );
-  
 };
 
 export default AlterarFunc;

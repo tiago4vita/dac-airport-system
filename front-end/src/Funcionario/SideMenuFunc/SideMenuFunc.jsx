@@ -1,7 +1,7 @@
 import React from "react";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { Plane, LogOut } from "lucide-react";
-import axios from "axios";
+import axiosInstance from "../../api/axiosInstance"; 
 import { useAuth } from "../../AuthContext";
 import "./SideMenuFunc.css";
 
@@ -9,7 +9,6 @@ export const SideMenuFunc = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, logout } = useAuth();
-  const token = localStorage.getItem("token");
 
   const menuItems = [
     { label: "Página Inicial", path: "/homepageF" },
@@ -19,11 +18,9 @@ export const SideMenuFunc = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.post(
-        "http://localhost:8080/logout",
-        { login: user?.usuario?.email },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      await axiosInstance.post("/logout", {
+        login: user?.usuario?.email,
+      });
     } catch (err) {
       console.warn("Falha ao comunicar logout:", err);
     } finally {
