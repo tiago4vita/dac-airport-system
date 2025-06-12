@@ -14,7 +14,20 @@ class RabbitMQConfig {
     fun authServiceQueue(): Queue {
         return Queue("auth-service-queue", true)
     }
-    
+
+    @Bean
+    fun authServiceExchange(): DirectExchange{
+        return DirectExchange("auth")
+    }
+
+    @Bean
+    fun binding(
+        authServiceQueue: DirectExchange,
+        authServiceExchange: Queue
+    ):Binding{
+        return BindingBuilder.bind(authServiceQueue).to(authServiceExchange).with("auth")
+    }
+
     @Bean
     fun jsonMessageConverter(): Jackson2JsonMessageConverter {
         return Jackson2JsonMessageConverter()

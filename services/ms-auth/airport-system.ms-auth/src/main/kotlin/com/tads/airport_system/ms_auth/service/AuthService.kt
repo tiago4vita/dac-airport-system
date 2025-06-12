@@ -8,7 +8,8 @@ import org.springframework.amqp.core.DirectExchange
 
 @Service
 class AuthService(
-    private val usuarioRepository: UsuarioRepository
+    private val usuarioRepository: UsuarioRepository,
+    @Qualifier//
 ) {
     fun authenticate(login: String, senha: String): Boolean {
         val usuario = usuarioRepository.findByEmail(login)
@@ -27,7 +28,14 @@ class AuthService(
             println("Password mismatch for user: $login")
             return false
         }
-        
+
+        val routingkey = "cliente" //criar verificação da role
+
+        val userData: DTO = runBlocking{
+            val request = async { asyncSendAndReceive("auth",routingkey,it.code.toString())}
+            val response = request.await()
+        }
+
         println("User authenticated successfully: $login")
         return true
     }

@@ -1,6 +1,6 @@
 package com.tads.airport_system.ms_saga_orchestrator.config
 
-import org.springframework.amqp.core.Queue
+import qorg.springframework.amqp.core.Queue
 import org.springframework.amqp.rabbit.connection.ConnectionFactory
 import org.springframework.amqp.rabbit.core.RabbitTemplate
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter
@@ -19,6 +19,13 @@ class RabbitMQConfig {
     fun sagaOrchestratorReplyQueue(): Queue {
         return Queue("saga-orchestrator-reply-queue", true)
     }
+
+
+    @Bean
+    public ObjectMapper objectMapper(){
+        return JsonMapper.builder().findAndAddModules().build();
+    }
+
 
     @Bean
     fun jackson2JsonMessageConverter(): Jackson2JsonMessageConverter {
