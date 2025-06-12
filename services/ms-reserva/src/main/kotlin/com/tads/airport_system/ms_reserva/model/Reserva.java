@@ -12,7 +12,7 @@ public class Reserva {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(unique = true)
-    private String id;
+    private Long id;
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
