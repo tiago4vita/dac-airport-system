@@ -63,4 +63,7 @@ public class UsuarioDTO {
         return result;
     }
 
+    public boolean isAtivo() {
+        return ativo;
+    }
 }

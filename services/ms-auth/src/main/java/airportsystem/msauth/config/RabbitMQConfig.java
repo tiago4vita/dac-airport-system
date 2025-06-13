@@ -10,13 +10,16 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMQConfig {
 
     @Bean
-    public Queue clienteCriarQueue() { return new Queue("auth.login", false); }
+    public Queue usuarioLoginQueue() { return new Queue("auth.login", false); }
 
     @Bean
-    public Queue clienteBuscarQueue() { return new Queue("auth.criar", false); }
+    public Queue usuarioCriarQueue() { return new Queue("auth.criar", false); }
 
     @Bean
-    public Queue clienteSomarMilhasQueue() { return new Queue("auth.alterar", false); }
+    public Queue usuarioAlterarQueue() { return new Queue("auth.alterar", false); }
+
+    @Bean
+    public Queue usuarioInativarQueue() { return new Queue("auth.inativar", false); }
 
     @Bean
     public Queue retornoQueue() {

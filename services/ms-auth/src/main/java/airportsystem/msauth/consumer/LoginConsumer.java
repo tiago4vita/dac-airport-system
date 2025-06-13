@@ -53,6 +53,9 @@ public class LoginConsumer {
             if (!usuario.getSenha().equals(senha)) {
                 throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Senha incorreta");
             }
+            if (!usuario.isAtivo()) {
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Usuário inativo");
+            }
 
             // Prepare successful response with required fields
             response.put("success", true);

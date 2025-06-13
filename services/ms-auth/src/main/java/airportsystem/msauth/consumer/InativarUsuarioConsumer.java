@@ -1,6 +1,5 @@
 package airportsystem.msauth.consumer;
 
-import airportsystem.msauth.dto.UsuarioDTO;
 import airportsystem.msauth.model.Usuario;
 import airportsystem.msauth.repository.UsuarioRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -19,51 +18,53 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class LoginConsumer {
+public class InativarUsuarioConsumer {
 
     private final UsuarioRepository usuarioRepository;
     private final ObjectMapper objectMapper;
     private final RabbitTemplate rabbitTemplate;
 
     @Autowired
-    public LoginConsumer(UsuarioRepository usuarioRepository, ObjectMapper objectMapper, RabbitTemplate rabbitTemplate) {
+    public InativarUsuarioConsumer(UsuarioRepository usuarioRepository, ObjectMapper objectMapper, RabbitTemplate rabbitTemplate) {
         this.usuarioRepository = usuarioRepository;
         this.objectMapper = objectMapper;
         this.rabbitTemplate = rabbitTemplate;
     }
 
-    @RabbitListener(queues = "auth.login")
+    @RabbitListener(queues = "auth.inativar")
     public void receiveMessage(String msg) throws JsonMappingException, JsonProcessingException {
         Map<String, Object> response = new HashMap<>();
         try {
             if (msg == null || msg.isEmpty()) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                        "Mensagem vazia. A mensagem deve conter os dados do usuário, incluindo o login e senha.");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, 
+                    "Mensagem vazia. A mensagem deve conter o código do usuário a ser inativado.");
             }
-
+            
             JsonNode jsonNode = objectMapper.readTree(msg);
-
-            String login = jsonNode.get("login").asText();
-            String senha = jsonNode.get("senha").asText();
-
-            // Validate login and senha
-            Usuario usuario = usuarioRepository.findByLogin(login)
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Login não encontrado"));
-
-            if (!usuario.getSenha().equals(senha)) {
-                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Senha incorreta");
+            
+            // Verificar se o código foi fornecido na mensagem
+            if (!jsonNode.has("codigo") || jsonNode.get("codigo").asText().isEmpty()) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, 
+                    "O código do usuário deve ser fornecido na mensagem e não pode ser vazio");
             }
+            
+            String codigo = jsonNode.get("codigo").asText();
+            
+            // Inativar o usuário
+            Usuario usuarioInativado = inativarUsuario(codigo);
+            
+            System.out.println("Usuário inativado via RabbitMQ: (" + usuarioInativado.getCodigo() + ")");
 
-            // Prepare successful response with required fields
+            // Prepare successful response
             response.put("success", true);
-            response.put("login", usuario.getLogin());
-            response.put("senha", usuario.getSenha());
-            response.put("codigo", usuario.getCodigo());
-            response.put("tipo", usuario.getTipo());
-            response.put("message", "Login realizado com sucesso");
+            response.put("codigo", usuarioInativado.getCodigo());
+            response.put("login", usuarioInativado.getLogin());
+            response.put("tipo", usuarioInativado.getTipo());
+            response.put("ativo", usuarioInativado.isAtivo());
+            response.put("message", "Usuário inativado com sucesso");
 
         } catch (ResponseStatusException e) {
-            System.err.println("Erro ao validar login: " + e.getMessage());
+            System.err.println("Erro ao inativar usuário: " + e.getMessage());
 
             // Prepare error response
             response.put("success", false);
@@ -89,5 +90,28 @@ public class LoginConsumer {
         } catch (JsonProcessingException e) {
             System.err.println("Erro ao converter resposta para JSON: " + e.getMessage());
         }
+    }
+
+    @Transactional
+    public Usuario inativarUsuario(String codigo) {
+        // Buscar o usuário pelo código
+        Usuario usuario = usuarioRepository.findById(codigo)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Usuário com código " + codigo + " não encontrado"));
+
+        // Verificar se o usuário já está inativo
+        if (!usuario.isAtivo()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Usuário com código " + codigo + " já está inativo");
+        }
+
+        // Inativar o usuário
+        usuario.setAtivo(false);
+        
+        // Alternativamente, podemos usar o método desativar() do modelo Usuario
+        // usuario = usuario.desativar();
+        
+        // Salvar o usuário inativado
+        return usuarioRepository.save(usuario);
     }
 }
