@@ -1,7 +1,6 @@
-// BuscarVoos.jsx
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../../api/axiosInstance"; 
 import "./BuscarVoos.css";
 
 export const BuscarVoos = () => {
@@ -15,12 +14,7 @@ export const BuscarVoos = () => {
   const [erro, setErro] = useState("");
 
   useEffect(() => {
-    const token = sessionStorage.getItem("token");
-      axios.get("http://localhost:8080/aeroportos", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+    api.get("/aeroportos")
       .then((res) => {
         const tratados = res.data.map((a) => ({
           nome: (a[" nome"] || a.nome || "").trim(),
@@ -63,7 +57,8 @@ export const BuscarVoos = () => {
     setSugestoesDestino([]);
   };
 
-  const extrairCodigo = (texto) => texto.match(/\((.*?)\)/)?.[1]?.trim().toUpperCase() || "";
+  const extrairCodigo = (texto) =>
+    texto.match(/\((.*?)\)/)?.[1]?.trim().toUpperCase() || "";
 
   const handleBuscar = async () => {
     const origemCodigo = extrairCodigo(origem);
@@ -74,12 +69,12 @@ export const BuscarVoos = () => {
       if (origemCodigo) params.set("origem", origemCodigo);
       if (destinoCodigo) params.set("destino", destinoCodigo);
 
-      let url = "http://localhost:8080/voos";
+      let url = "/voos";
       if (params.toString()) {
         url += `?${params.toString()}`;
       }
 
-      const res = await axios.get(url);
+      const res = await api.get(url);
       const voos = res.data;
 
       if (!voos.length) {
@@ -96,7 +91,6 @@ export const BuscarVoos = () => {
       setErro("Erro ao buscar voos. Tente novamente.");
     }
   };
-
 
   return (
     <div className="buscar-voos">
@@ -145,7 +139,9 @@ export const BuscarVoos = () => {
         </div>
 
         <div className="botoes-linha">
-          <button className="botao-buscar" onClick={handleBuscar}>Buscar</button>
+          <button className="botao-buscar" onClick={handleBuscar}>
+            Buscar
+          </button>
         </div>
       </div>
 

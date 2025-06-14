@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../../api/axiosInstance"; 
 import { MapPin, ArrowRight } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import "./VerReserva.css";
@@ -8,15 +8,6 @@ export const VerReserva = () => {
   const { codigo } = useParams();
   const [reserva, setReserva] = useState(null);
   const navigate = useNavigate();
-
-  const token = sessionStorage.getItem("token");
-
-  const api = axios.create({
-    baseURL: "http://localhost:8080",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
 
   useEffect(() => {
     api.get(`/reservas/${codigo}`)

@@ -1,5 +1,5 @@
 import React from "react";
-import axios from "axios";
+import api from "../../api/axiosInstance"; 
 import "./CheckinModal.css";
 import alertaIcon from "../assets/alerta.svg";
 
@@ -8,7 +8,7 @@ export const CheckinModal = ({ isOpen, onConfirm, onCancel, reserva }) => {
 
   const handleConfirmar = async () => {
     try {
-      await axios.patch(`http://localhost:8080/reservas/${reserva.codigo}/estado`, {
+      await api.patch(`/reservas/${reserva.codigo}/estado`, {
         estado: "CHECK-IN"
       });
       onConfirm();

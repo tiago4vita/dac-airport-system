@@ -1,26 +1,17 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
+import api from "../../api/axiosInstance";
 import { EtiquetaFuncionario } from "../LabelFunc/LabelFunc";
 import { MapPin, ArrowRight, Search } from "lucide-react";
 import "./ConfirmacaoEmbarque.css";
 
 export const ConfirmacaoEmbarque = () => {
-  const { codigo } = useParams(); // código do voo
+  const { codigo } = useParams();
   const navigate = useNavigate();
 
   const [codigoReserva, setCodigoReserva] = useState("");
   const [reserva, setReserva] = useState(null);
   const [erro, setErro] = useState(null);
-
-  const token = sessionStorage.getItem("token");
-
-  const api = axios.create({
-    baseURL: "http://localhost:8080",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
 
   const buscarReserva = async () => {
     try {

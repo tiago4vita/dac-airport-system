@@ -31,42 +31,43 @@ services:
     networks:
       - airport-network
 
+  mongodb:
+    image: mongo:6
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      - MONGO_INITDB_DATABASE=auth
+    command: mongod --quiet --logpath /dev/null
+    restart: always
+    networks:
+      - airport-network
+
   ms-auth:
     build:
-      context: ./services/ms-auth/airport-system.ms-auth
+      context: ./services/ms-auth
       dockerfile: Dockerfile
+    container_name: ms-auth
     ports:
       - "8080:8080"
     environment:
       - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/auth
       - SPRING_RABBITMQ_HOST=rabbitmq
       - SPRING_RABBITMQ_PORT=5672
-      - SPRING_RABBITMQ_USERNAME=guest
-      - SPRING_RABBITMQ_PASSWORD=guest
+      - SPRING_RABBITMQ_USERNAME=user
+      - SPRING_RABBITMQ_PASSWORD=password
     depends_on:
       - mongodb
       - rabbitmq
-    networks:
-      - airport-network
-
-  mongodb:
-    image: mongo:6
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongodb_data:/data/db
-      - ./services/ms-auth/airport-system.ms-auth/src/main/resources/mongodb/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
-    environment:
-      - MONGO_INITDB_DATABASE=auth
-      - MONGODB_DISABLE_JAVASCRIPT=false
-      - MONGODB_LOG_LEVEL=error
-    command: mongod --quiet --logpath /dev/null --setParameter logLevel=0
+    restart: on-failure
     networks:
       - airport-network
 
   ms-cliente:
     build:
-      context: ./services/ms-cliente/airport-system.ms-cliente
+      context: ./services/ms-cliente
       dockerfile: Dockerfile
     ports:
       - "8081:8081"
@@ -74,8 +75,13 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-cliente:5432/cliente_db
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
+      - SPRING_RABBITMQ_USERNAME=user
+      - SPRING_RABBITMQ_PASSWORD=password
     depends_on:
       - postgres-cliente
+      - rabbitmq
     networks:
       - airport-network
 
@@ -99,8 +105,8 @@ services:
       - "5672:5672"  # AMQP port
       - "15672:15672"  # Management UI
     environment:
-      - RABBITMQ_DEFAULT_USER=guest
-      - RABBITMQ_DEFAULT_PASS=guest
+      - RABBITMQ_DEFAULT_USER=user
+      - RABBITMQ_DEFAULT_PASS=password
     networks:
       - airport-network
 

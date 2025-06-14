@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axiosInstance from '../../api/axiosInstance'; // ajuste o caminho conforme a sua estrutura
 import './ListarFunc.css';
 import { SideMenuFunc } from '../SideMenuFunc/SideMenuFunc';
 import { Link, useNavigate } from 'react-router-dom';
@@ -21,7 +21,7 @@ const ListarFunc = () => {
   const fetchFuncionarios = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:8080/funcionarios');
+      const response = await axiosInstance.get('/funcionarios');
       setFuncionarios(response.data || []);
       setError(null);
     } catch (error) {
@@ -36,45 +36,30 @@ const ListarFunc = () => {
     fetchFuncionarios();
   }, []);
 
-  // Format CPF for display
   const formatCpf = (cpf) => {
     if (!cpf) return '111.222.333-00';
-    
-    // If it's already formatted, return as is
     if (cpf.includes('.') || cpf.includes('-')) return cpf;
-    
-    // Format raw CPF
     return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
   };
 
-  // Format phone for display
   const formatPhone = (phone) => {
     if (!phone) return '(419) 9999-9999';
-    
-    // If it's already formatted, return as is
     if (phone.includes('(') || phone.includes(')')) return phone;
-    
-    // Raw phone number
+
     const cleaned = phone.replace(/\D/g, '');
-    
-    // Format according to length
     if (cleaned.length === 11) {
-      // Mobile format (11 digits)
       return cleaned.replace(/(\d{2})(\d{1})(\d{4})(\d{4})/, '($1) $2$3-$4');
     } else if (cleaned.length === 10) {
-      // Landline format (10 digits)
       return cleaned.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
     }
-    
+
     return phone;
   };
 
-  // Get current items
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = funcionarios.slice(indexOfFirstItem, indexOfLastItem);
 
-  // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const pageNumbers = [];
@@ -82,58 +67,52 @@ const ListarFunc = () => {
     pageNumbers.push(i);
   }
 
-  // Open delete confirmation modal
   const handleDeleteClick = (funcionario) => {
     setSelectedFuncionario(funcionario);
     setShowDeleteModal(true);
   };
 
-  // Close delete confirmation modal
   const handleCloseModal = () => {
     setShowDeleteModal(false);
     setSelectedFuncionario(null);
   };
 
-  // Handle successful deletion
   const handleDeleteSuccess = () => {
     setShowDeleteModal(false);
     setSelectedFuncionario(null);
     fetchFuncionarios();
-    navigate('/listarfunc'); // Refresh the page
+    navigate('/listarfunc');
   };
 
-  // Handle edit button click
   const handleEditClick = (funcionario) => {
     setSelectedFuncionarioToEdit(funcionario);
     setShowEditModal(true);
   };
 
-  // Close edit modal
   const handleCloseEditModal = () => {
     setShowEditModal(false);
     setSelectedFuncionarioToEdit(null);
   };
 
-  // Handle successful edit
   const handleEditSuccess = () => {
     setShowEditModal(false);
     setSelectedFuncionarioToEdit(null);
-    fetchFuncionarios(); // Refresh the data
+    fetchFuncionarios();
   };
 
   return (
     <div className="listar-func-container">
       <SideMenuFunc />
-      
+
       <div className="conteudo">
         <section className="etiqueta-funcionario">
-            <h2>FUNCIONÁRIO</h2>
-        </section>   
+          <h2>FUNCIONÁRIO</h2>
+        </section>
 
         <section className="lista-funcionarios">
-            <h2>Lista de Funcionários</h2>
-            <p>Aqui você pode ver todos os funcionários cadastrados no sistema e gerenciá-los!</p> 
-            <Link to="/inserirfunc" className="add-btn">+ Novo Funcionário</Link>  
+          <h2>Lista de Funcionários</h2>
+          <p>Aqui você pode ver todos os funcionários cadastrados no sistema e gerenciá-los!</p>
+          <Link to="/inserirfunc" className="add-btn">+ Novo Funcionário</Link>
         </section>
 
         <div className="funcionarios-section">
@@ -172,13 +151,13 @@ const ListarFunc = () => {
                         </span>
                       </td>
                       <td className="actions">
-                        <button 
+                        <button
                           className="edit-btn"
                           onClick={() => handleEditClick(funcionario)}
                         >
                           Editar
                         </button>
-                        <button 
+                        <button
                           className="remove-btn"
                           onClick={() => handleDeleteClick(funcionario)}
                         >
@@ -189,17 +168,17 @@ const ListarFunc = () => {
                   ))}
                 </tbody>
               </table>
-              
+
               {funcionarios.length > itemsPerPage && (
                 <div className="pagination">
-                  <button 
-                    className="pagination-arrow" 
+                  <button
+                    className="pagination-arrow"
                     onClick={() => currentPage > 1 && paginate(currentPage - 1)}
                     disabled={currentPage === 1}
                   >
                     &lt;
                   </button>
-                  
+
                   {pageNumbers.map(number => (
                     <button
                       key={number}
@@ -209,9 +188,9 @@ const ListarFunc = () => {
                       {number}
                     </button>
                   ))}
-                  
-                  <button 
-                    className="pagination-arrow" 
+
+                  <button
+                    className="pagination-arrow"
                     onClick={() => currentPage < pageNumbers.length && paginate(currentPage + 1)}
                     disabled={currentPage === pageNumbers.length}
                   >
@@ -225,7 +204,7 @@ const ListarFunc = () => {
       </div>
 
       {showDeleteModal && selectedFuncionario && (
-        <ConfirmarDeleteFunc 
+        <ConfirmarDeleteFunc
           funcionario={selectedFuncionario}
           onClose={handleCloseModal}
           onSuccess={handleDeleteSuccess}
@@ -233,7 +212,7 @@ const ListarFunc = () => {
       )}
 
       {showEditModal && selectedFuncionarioToEdit && (
-        <AlterarFunc 
+        <AlterarFunc
           funcionario={selectedFuncionarioToEdit}
           onClose={handleCloseEditModal}
           onSuccess={handleEditSuccess}
@@ -244,4 +223,3 @@ const ListarFunc = () => {
 };
 
 export default ListarFunc;
-

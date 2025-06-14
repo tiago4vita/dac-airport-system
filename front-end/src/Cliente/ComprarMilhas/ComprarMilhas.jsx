@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import api from "../../api/axiosInstance"; 
 import "./ComprarMilhas.css";
 
 export const ComprarMilhas = () => {
@@ -9,15 +9,7 @@ export const ComprarMilhas = () => {
   const valorMilha = 5;
   const navigate = useNavigate();
 
-  const token = sessionStorage.getItem("token");
   const codigoCliente = sessionStorage.getItem("codigo");
-
-  const api = axios.create({
-    baseURL: "http://localhost:8080",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
 
   useEffect(() => {
     api.get(`/clientes/${codigoCliente}`)

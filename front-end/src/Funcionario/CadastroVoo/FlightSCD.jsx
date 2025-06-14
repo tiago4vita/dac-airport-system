@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import "./FlightSCD.css"; 
+import api from "../../api/axiosInstance";
+import "./FlightSCD.css";
 
 const calcularMilhas = (valor) => valor * 0.2;
 
@@ -18,15 +18,6 @@ const CadastroVoo = () => {
   const [sugestoesDestino, setSugestoesDestino] = useState([]);
 
   const navigate = useNavigate();
-
-  const token = sessionStorage.getItem("token");
-
-  const api = axios.create({
-    baseURL: "http://localhost:8080",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
 
   useEffect(() => {
     api.get("/aeroportos")
