@@ -13,7 +13,7 @@ public class ReservaDTO {
         this.id = id;
         this.vooId = vooId;
         this.dataHoraRes = dataHoraRes;
-        this.estado = estado
+        this.estado = estado;
     }
 
     public String getId(){
@@ -25,7 +25,7 @@ public class ReservaDTO {
     }
 
     public LocalDateTime getDataHoraRes() {
-        return dataHoraRes
+        return dataHoraRes;
     }
 
     public String getEstado() {
@@ -53,5 +53,5 @@ public class ReservaDTO {
                 ", estado=" + estado +
                 '}';
     }
-    
+
 }

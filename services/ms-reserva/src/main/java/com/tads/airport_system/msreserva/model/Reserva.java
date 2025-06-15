@@ -1,4 +1,6 @@
 package airportsystem.msreserva.model;
+
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -22,7 +24,7 @@ public class Reserva {
     @Column(name = "dataHoraRes", nullable = false)
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     private LocalDateTime dataHoraRes = LocalDateTime.now();
-    
+
     @Column(nullable = false)
     private String estado;
 
@@ -34,6 +36,7 @@ public class Reserva {
         this.dataHoraRes = LocalDateTime.now();
     }
 
+    //getters e setters
     public String getId(){
         return id;
     }
@@ -50,7 +53,7 @@ public class Reserva {
         return estado;
     }
 
-    public void setID(String id) {
+    public void setID(Long id) {
         this.id = id;
     }
 
