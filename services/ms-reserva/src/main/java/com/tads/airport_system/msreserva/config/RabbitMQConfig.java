@@ -1,4 +1,4 @@
-package airport_system.msreserva.config;
+package com.tads.airport_system.msreserva.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;

@@ -1,7 +1,7 @@
-package com.tads.airport_system.ms_reserva.dto
+package com.tads.airport_system.msreserva.dto;
 
-import com.tads.airport_system.ms_reserva.model.Reserva
-import java.time.LocalDateTime
+import com.tads.airport_system.msreserva.model.Reserva;
+import java.time.LocalDateTime;
 
 import java.util.Objects;
 
@@ -9,7 +9,7 @@ public class ReservaDTO {
 
     public ReservaDTO() {}
 
-    public ReservaDTO (String id, String vooId, LocalDateTime dataHoraRes, String estado) {
+    public ReservaDTO (Long id, String vooId, LocalDateTime dataHoraRes, String estado) {
         this.id = id;
         this.vooId = vooId;
         this.dataHoraRes = dataHoraRes;

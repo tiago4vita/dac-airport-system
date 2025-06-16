@@ -1,8 +1,8 @@
 package com.tads.airport_system.msreserva.consumer;
 
-import airport_system.msreserva.model.Reserva;
-import airport_system.msreserva.dto.ReservaDTO;
-import airport_system.msreserva.repository.ReservaRepository;
+import com.tads.airport_system.msreserva.model.Reserva;
+import com.tads.airport_system.msreserva.dto.ReservaDTO;
+import com.tads.airport_system.msreserva.repository.ReservaRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -34,6 +34,8 @@ public class ConsultarReservaConsumer {
         Map<String, Object> response = new HashMap<>();
         try {
             String reservaCodigo = objectMapper.readValue(msg, String.class);
+        } finally {
+
         }
     }
 }

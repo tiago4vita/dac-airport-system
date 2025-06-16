@@ -1,4 +1,4 @@
-package airportsystem.msreserva.model;
+package com.tads.airport_system.msreserva.model;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -28,16 +28,22 @@ public class Reserva {
     @Column(nullable = false)
     private String estado;
 
-    public Cliente(String cpf, String nome, String email, EnderecoDTO endereco) {
+    public Reserva(Long id, String vooId, String estado, LocalDateTime dataHoraRes) {
         this.id = id;
         this.vooId = vooId;
-        this.email = email;
         this.estado = estado;
         this.dataHoraRes = LocalDateTime.now();
     }
 
+    public Reserva() {
+
+    }
+
+    public Reserva(String id) {
+    }
+
     //getters e setters
-    public String getId(){
+    public Long getId(){
         return id;
     }
 
@@ -46,7 +52,7 @@ public class Reserva {
     }
 
     public LocalDateTime getDataHoraRes() {
-        return dataHoraRes
+        return dataHoraRes;
     }
 
     public String getEstado() {

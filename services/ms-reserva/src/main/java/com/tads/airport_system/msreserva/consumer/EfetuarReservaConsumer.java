@@ -1,17 +1,22 @@
-package airport_system.msreserva.consumer;
+package com.tads.airport_system.msreserva.consumer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import airport_system.msreserva.dto.ReservaDTO;
-import airport_system.msreserva.model.Reserva;
-import airport_system.msreserva.repository.ReservaRepository;
+import com.tads.airport_system.msreserva.dto.ReservaDTO;
+import com.tads.airport_system.msreserva.model.Reserva;
+import com.tads.airport_system.msreserva.repository.ReservaRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class EfetuarReservaConsumer {
 
@@ -74,7 +79,7 @@ public class EfetuarReservaConsumer {
         }
 
         Reserva reserva = new Reserva(
-            reservaDTO.getId();
+            reservaDTO.getId());
             reservaDTO.getVooId();
             reservaDTO.getDataHoraRes();
             reservaDTO.getEstado();
