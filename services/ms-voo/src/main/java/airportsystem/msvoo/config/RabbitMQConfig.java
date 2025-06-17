@@ -10,6 +10,9 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMQConfig {
 
     @Bean
+    public Queue vooRealizarQueue() { return new Queue("voo.realizar", false); }
+
+    @Bean
     public Queue vooBuscarQueue() { return new Queue("voo.criar", false); }
 
     @Bean

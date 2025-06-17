@@ -26,7 +26,7 @@ public class Voo {
 
     private EstadoVoo estado;
 
-    enum EstadoVoo {
+    public enum EstadoVoo {
         CONFIRMADO,
         CANCELADO,
         REALIZADO
