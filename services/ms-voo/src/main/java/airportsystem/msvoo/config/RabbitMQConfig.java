@@ -16,6 +16,9 @@ public class RabbitMQConfig {
     public Queue vooBuscarQueue() { return new Queue("voo.criar", false); }
 
     @Bean
+    public Queue vooCancelarQueue() { return new Queue("voo.cancelar", false); }
+
+    @Bean
     public Queue retornoQueue() {
         return new Queue("retorno", false);
     }
