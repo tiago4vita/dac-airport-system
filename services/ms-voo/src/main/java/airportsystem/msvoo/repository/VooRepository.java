@@ -15,6 +15,7 @@ public interface VooRepository extends JpaRepository<Voo, String> {
     Voo findByDestino(String destino);
 
     List<Voo> findByDataHoraBetween(LocalDateTime dataInicio, LocalDateTime dataFim);
+    List<Voo> findByDataHoraBetweenAndOrigemAndDestino(LocalDateTime dataInicio, LocalDateTime dataFim, String origem, String destino);
 
     boolean existsByCodigo(String codigo);
     boolean existsByOrigem(String origem);
