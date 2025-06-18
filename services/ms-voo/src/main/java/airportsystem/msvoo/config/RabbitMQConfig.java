@@ -19,6 +19,12 @@ public class RabbitMQConfig {
     public Queue vooBuscarQueue() { return new Queue("voo.buscar", false); }
 
     @Bean
+    public Queue vooBuscarProximas48HorasQueue() { return new Queue("voo.buscar-proximas-48-horas", false); }
+
+    @Bean
+    public Queue vooBuscarDiaOrigemDestinoQueue() { return new Queue("voo.buscar-dia-origem-destino", false); }
+
+    @Bean
     public Queue vooCancelarQueue() { return new Queue("voo.cancelar", false); }
 
     @Bean
