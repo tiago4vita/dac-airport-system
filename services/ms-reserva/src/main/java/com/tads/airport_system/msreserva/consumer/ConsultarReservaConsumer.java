@@ -34,8 +34,19 @@ public class ConsultarReservaConsumer {
         Map<String, Object> response = new HashMap<>();
         try {
             String reservaCodigo = objectMapper.readValue(msg, String.class);
+            Optional<Reserva> reserva = buscarReservaPorId(reservaCodigo);
+
+            if (reserva.isPresent()) {
+                Reserva reservaConsultada = reserva.get();
+                System.out.println("Reserva consultada via RabbitMQ: (" + reservaConsultada.getId() + ") " + msg);
+            }
         } finally {
 
         }
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<Reserva> buscarReservaPorId(String id){
+        return reservaRepository.findById(id);
     }
 }
