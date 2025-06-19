@@ -1,7 +1,7 @@
 import React from "react";
 import api from "../../api/axiosInstance"; 
 import "./CheckinModal.css";
-import alertaIcon from "../assets/alerta.svg";
+import alertaIcon from "../../assets/alerta.svg";
 
 export const CheckinModal = ({ isOpen, onConfirm, onCancel, reserva }) => {
   if (!isOpen) return null;

@@ -1,7 +1,7 @@
 import React from "react";
-import axiosInstance from "../api/axiosInstance";
+import axiosInstance from "../../api/axiosInstance";
 import "./ModalRealiza.css";
-import alertaIcon from "../assets/alerta.svg";
+import alertaIcon from "../../assets/alerta.svg";
 
 export const ModalRealiza = ({ isOpen, vooCodigo, onCancel, onSuccess }) => {
   if (!isOpen) return null;

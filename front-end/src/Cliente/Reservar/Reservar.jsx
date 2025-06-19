@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import api from "../../api/axiosInstance"; 
 import "./Reservar.css";
-import imagemAssentos from "../assets/image-1.png";
+import imagemAssentos from "../../assets/image-1.png";
 
 export const Reservar = () => {
   const { state } = useLocation();
