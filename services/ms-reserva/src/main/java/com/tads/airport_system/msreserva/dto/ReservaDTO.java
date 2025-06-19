@@ -7,9 +7,14 @@ import java.util.Objects;
 
 public class ReservaDTO {
 
+    private String id;
+    private String vooId;
+    private LocalDateTime dataHoraRes;
+    private String estado;
+
     public ReservaDTO() {}
 
-    public ReservaDTO (Long id, String vooId, LocalDateTime dataHoraRes, String estado) {
+    public ReservaDTO (String id, String vooId, LocalDateTime dataHoraRes, String estado) {
         this.id = id;
         this.vooId = vooId;
         this.dataHoraRes = dataHoraRes;

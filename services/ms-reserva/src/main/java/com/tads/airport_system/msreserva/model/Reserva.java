@@ -14,7 +14,7 @@ public class Reserva {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(unique = true)
-    private Long id;
+    private String id;
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -28,7 +28,7 @@ public class Reserva {
     @Column(nullable = false)
     private String estado;
 
-    public Reserva(Long id, String vooId, String estado, LocalDateTime dataHoraRes) {
+    public Reserva(String id, String vooId, String estado, LocalDateTime dataHoraRes) {
         this.id = id;
         this.vooId = vooId;
         this.estado = estado;
@@ -43,7 +43,7 @@ public class Reserva {
     }
 
     //getters e setters
-    public Long getId(){
+    public String getId(){
         return id;
     }
 
@@ -59,7 +59,7 @@ public class Reserva {
         return estado;
     }
 
-    public void setID(Long id) {
+    public void setID(String id) {
         this.id = id;
     }
 

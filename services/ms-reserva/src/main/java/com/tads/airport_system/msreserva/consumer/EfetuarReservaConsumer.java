@@ -18,6 +18,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.HashMap;
 import java.util.Map;
 
+@Component
 public class EfetuarReservaConsumer {
 
     private final ReservaRepository reservaRepository;
@@ -79,10 +80,12 @@ public class EfetuarReservaConsumer {
         }
 
         Reserva reserva = new Reserva(
-            reservaDTO.getId());
-            reservaDTO.getVooId();
-            reservaDTO.getDataHoraRes();
-            reservaDTO.getEstado();
-        )
+            reservaDTO.getId(),
+            reservaDTO.getVooId(),
+            reservaDTO.getEstado(),
+            reservaDTO.getDataHoraRes()
+        );
+
+        return reservaRepository.save(reserva);
     }
 }
