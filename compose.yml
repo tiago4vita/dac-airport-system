@@ -117,12 +117,30 @@ services:
     ports:
       - "8082:8082"
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-cliente:5432/voo_db
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-voo:5432/voo_db
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
+      - SPRING_RABBITMQ_USERNAME=user
+      - SPRING_RABBITMQ_PASSWORD=password
     depends_on:
-      - mongodb
+      - postgres-voo
       - rabbitmq
+    networks:
+      - airport-network
+
+  postgres-voo:
+    image: postgres:16
+    ports:
+      - "5434:5432"
+    environment:
+      - POSTGRES_DB=voo_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - postgres_voo_data:/var/lib/postgresql/data
+      - ./services/ms-voo/src/main/resources/db/init:/docker-entrypoint-initdb.d
     networks:
       - airport-network
 
@@ -132,4 +150,5 @@ networks:
 
 volumes:
   mongodb_data:
-  postgres_cliente_data: 
+  postgres_cliente_data:
+  postgres_voo_data:
