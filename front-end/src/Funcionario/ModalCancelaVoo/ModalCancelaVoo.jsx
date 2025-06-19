@@ -1,7 +1,7 @@
 import React from "react";
-import axiosInstance from "../api/axiosInstance"; 
+import axiosInstance from "../../api/axiosInstance"; 
 import "./ModalCancelaVoo.css";
-import alertaIcon from "../assets/alerta.svg";
+import alertaIcon from "../../assets/alerta.svg";
 
 export const ModalCancelaVoo = ({ isOpen, vooId, onCancel, onSuccess }) => {
   if (!isOpen) return null;

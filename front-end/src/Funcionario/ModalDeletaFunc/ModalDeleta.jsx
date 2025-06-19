@@ -1,7 +1,7 @@
 import React from "react";
-import axiosInstance from "../api/axiosInstance"; // ajuste o caminho conforme necessário
+import axiosInstance from "../../api/axiosInstance"; // ajuste o caminho conforme necessário
 import "./ModalDeleta.css"; 
-import alertaIcon from "../assets/alerta.svg";
+import alertaIcon from "../../assets/alerta.svg";
 
 export const ModalDeleta = ({ isOpen, usuarioId, onCancel, onSuccess }) => {
   if (!isOpen) return null;
