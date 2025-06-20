@@ -144,6 +144,39 @@ services:
     networks:
       - airport-network
 
+  ms-reserva:
+    build:
+      context: ./services/ms-reserva
+      dockerfile: Dockerfile
+    ports:
+      - "8083:8083"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-reserva:5432/reserva_db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
+      - SPRING_RABBITMQ_USERNAME=user
+      - SPRING_RABBITMQ_PASSWORD=password
+    depends_on:
+      - postgres-reserva
+      - rabbitmq
+    networks:
+      - airport-network
+
+  postgres-reserva:
+    image: postgres:16
+    ports:
+      - "5435:5432"
+    environment:
+      - POSTGRES_DB=reserva_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - postgres_reserva_data:/var/lib/postgresql/data
+    networks:
+      - airport-network
+
 networks:
   airport-network:
     driver: bridge
@@ -152,3 +185,4 @@ volumes:
   mongodb_data:
   postgres_cliente_data:
   postgres_voo_data:
+  postgres_reserva_data:
