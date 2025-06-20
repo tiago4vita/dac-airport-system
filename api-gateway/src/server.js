@@ -50,12 +50,27 @@ app.post('/login', validateLoginRequest, async (req, res) => {
       responseBody = await response.json();
     }
 
+    // If login is successful (status 200), generate JWT token
+    if (response.status === 200 && responseBody) {
+      // Generate JWT token with user email and tipo
+      const token = generateToken(responseBody.email || authRequest.email, responseBody.tipo);
+      
+      // Add JWT token to the response
+      responseBody.access_token = token;
+      responseBody.token_type = 'bearer';
+      
+      // Set Authorization header
+      res.setHeader('Authorization', `Bearer ${token}`);
+    }
+
     // Forward the exact status code from ms-auth
     res.status(response.status);
 
-    // Forward all headers from ms-auth
+    // Forward all headers from ms-auth (except Authorization which we set above)
     for (const [key, value] of response.headers.entries()) {
-      res.setHeader(key, value);
+      if (key.toLowerCase() !== 'authorization') {
+        res.setHeader(key, value);
+      }
     }
 
     // Send the response body if it exists, otherwise just end the response
