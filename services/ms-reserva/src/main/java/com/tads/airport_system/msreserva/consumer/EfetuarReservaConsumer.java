@@ -2,11 +2,11 @@ package com.tads.airport_system.msreserva.consumer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tads.airport_system.msreserva.dto.ReservaDTO;
+import com.tads.airport_system.msreserva.event.ReservaEvent;
 import com.tads.airport_system.msreserva.model.Reserva;
 import com.tads.airport_system.msreserva.repository.ReservaRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,6 +86,16 @@ public class EfetuarReservaConsumer {
             reservaDTO.getDataHoraRes()
         );
 
-        return reservaRepository.save(reserva);
+        Reserva savedReserva = reservaRepository.save(reserva);
+
+        try {
+            ReservaEvent event = new ReservaEvent("RESERVA_CRIADA", savedReserva);
+            rabbitTemplate.convertAndSend("reserva.eventos", objectMapper.writeValueAsString(event));
+            System.out.println("Evento de reserva criada enviado: " + event);
+        } catch (JsonProcessingException e) {
+            System.err.println("Erro ao converter evento para JSON: " + e.getMessage());
+        }
+
+        return savedReserva;
     }
 }

@@ -151,29 +151,46 @@ services:
     ports:
       - "8083:8083"
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-reserva:5432/reserva_db
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_DATASOURCE_COMMAND_URL=jdbc:postgresql://postgres-reserva-command:5432/reserva_command_db
+      - SPRING_DATASOURCE_QUERY_URL=jdbc:postgresql://postgres-reserva-query:5432/reserva_query_db
+      - SPRING_DATASOURCE_COMMAND_USERNAME=postgres
+      - SPRING_DATASOURCE_COMMAND_PASSWORD=postgres
+      - SPRING_DATASOURCE_QUERY_USERNAME=postgres
+      - SPRING_DATASOURCE_QUERY_PASSWORD=postgres
       - SPRING_RABBITMQ_HOST=rabbitmq
       - SPRING_RABBITMQ_PORT=5672
       - SPRING_RABBITMQ_USERNAME=user
       - SPRING_RABBITMQ_PASSWORD=password
     depends_on:
-      - postgres-reserva
+      - postgres-reserva-command
+      - postgres-reserva-query
       - rabbitmq
     networks:
       - airport-network
 
-  postgres-reserva:
+  postgres-reserva-command:
     image: postgres:16
     ports:
       - "5435:5432"
     environment:
-      - POSTGRES_DB=reserva_db
+      - POSTGRES_DB=reserva_command_db
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     volumes:
-      - postgres_reserva_data:/var/lib/postgresql/data
+      - postgres_reserva_command_data:/var/lib/postgresql/data
+    networks:
+      - airport-network
+
+  postgres-reserva-query:
+    image: postgres:16
+    ports:
+      - "5436:5432"
+    environment:
+      - POSTGRES_DB=reserva_query_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - postgres_reserva_query_data:/var/lib/postgresql/data
     networks:
       - airport-network
 
@@ -185,4 +202,5 @@ volumes:
   mongodb_data:
   postgres_cliente_data:
   postgres_voo_data:
-  postgres_reserva_data:
+  postgres_reserva_command_data:
+  postgres_reserva_query_data:

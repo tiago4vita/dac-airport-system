@@ -34,14 +34,39 @@ public class ConsultarReservaConsumer {
         Map<String, Object> response = new HashMap<>();
         try {
             String reservaCodigo = objectMapper.readValue(msg, String.class);
+
+            // Em uma implementação CQRS mais completa, deveríamos consultar o modelo de leitura (ReservaView)
+            // em vez do modelo de comando (Reserva), mas isso exigiria mudanças grandes demais
             Optional<Reserva> reserva = buscarReservaPorId(reservaCodigo);
 
             if (reserva.isPresent()) {
                 Reserva reservaConsultada = reserva.get();
                 System.out.println("Reserva consultada via RabbitMQ: (" + reservaConsultada.getId() + ") " + msg);
-            }
-        } finally {
 
+                response.put("success", true);
+                response.put("reserva", new ReservaDTO(
+                    reservaConsultada.getId(),
+                    reservaConsultada.getVooId(),
+                    reservaConsultada.getDataHoraRes(),
+                    reservaConsultada.getEstado()
+                ));
+            } else {
+                response.put("success", false);
+                response.put("message", "Reserva não encontrada: " + reservaCodigo);
+            }
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "Erro ao consultar reserva: " + e.getMessage());
+            System.err.println("Erro ao consultar reserva: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            try {
+                String responseJson = objectMapper.writeValueAsString(response);
+                rabbitTemplate.convertAndSend("retorno", responseJson);
+                System.out.println("Resposta de consulta enviada: " + responseJson);
+            } catch (JsonProcessingException e) {
+                System.err.println("Erro ao converter resposta para JSON: " + e.getMessage());
+            }
         }
     }
 

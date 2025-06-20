@@ -4,6 +4,7 @@ import com.tads.airport_system.msreserva.model.Reserva;
 import com.tads.airport_system.msreserva.model.EstadoReserva;
 import com.tads.airport_system.msreserva.model.AlteracaoEstadoReserva;
 import com.tads.airport_system.msreserva.dto.ReservaDTO;
+import com.tads.airport_system.msreserva.event.ReservaEvent;
 import com.tads.airport_system.msreserva.repository.ReservaRepository;
 import com.tads.airport_system.msreserva.repository.EstadoReservaRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -72,6 +73,15 @@ public class CancelarReservaConsumer {
 
                     // salva a reserva atualizada
                     reservaRepository.save(reserva);
+
+                    // Publica evento para atualizar o modelo de consulta (CQRS)
+                    try {
+                        ReservaEvent event = new ReservaEvent("RESERVA_CANCELADA", reserva);
+                        rabbitTemplate.convertAndSend("reserva.eventos", objectMapper.writeValueAsString(event));
+                        System.out.println("Evento de reserva cancelada enviado: " + event);
+                    } catch (JsonProcessingException e) {
+                        System.err.println("Erro ao converter evento para JSON: " + e.getMessage());
+                    }
 
                     // resposta de sucesso
                     response.put("success", true);

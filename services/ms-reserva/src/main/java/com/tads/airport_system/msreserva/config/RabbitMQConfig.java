@@ -22,4 +22,9 @@ public class RabbitMQConfig {
     public ObjectMapper objectMapper() {
         return JsonMapper.builder().findAndAddModules().build();
     }
+
+    @Bean
+    public Queue reservaEventosQueue() {
+        return new Queue("reserva.eventos", true);
+    }
 }

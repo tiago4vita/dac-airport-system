@@ -64,17 +64,17 @@ public class Reserva {
     }
 
     /**
-     * Sets the state without creating a state change record
-     * @param estado the new state
+     * Seta o estado sem criar um registro de mudança de estado
+     * @param estado o novo estado
      */
     public void setEstado(EstadoReserva estado) {
         this.estado = estado;
     }
 
     /**
-     * Updates the state of the reservation and creates a state change record
-     * @param novoEstado the new state
-     * @return the created state change record
+     * Atualiza o estado da reserva e cria um registro de mudança de estado
+     * @param novoEstado o novo estado
+     * @return o registro da criação da mudança de estado
      */
     public AlteracaoEstadoReserva atualizarEstado(EstadoReserva novoEstado) {
         EstadoReserva estadoAntigo = this.estado;
@@ -103,8 +103,8 @@ public class Reserva {
     }
 
     /**
-     * Adds a state change to the reservation and sets the reservation on the state change
-     * @param alteracaoEstado the state change to add
+     * Adiciona uma mudança de estado para a reserva e seta a reserva na mudança de estado
+     * @param alteracaoEstado a mudança de estado a adicionar
      */
     public void addAlteracaoEstado(AlteracaoEstadoReserva alteracaoEstado) {
         alteracoesEstado.add(alteracaoEstado);
@@ -112,8 +112,8 @@ public class Reserva {
     }
 
     /**
-     * Removes a state change from the reservation
-     * @param alteracaoEstado the state change to remove
+     * Remove uma mudança de estado da reserva
+     * @param alteracaoEstado a mudança de estado a remover
      */
     public void removeAlteracaoEstado(AlteracaoEstadoReserva alteracaoEstado) {
         alteracoesEstado.remove(alteracaoEstado);
@@ -121,10 +121,10 @@ public class Reserva {
     }
 
     /**
-     * Creates and adds a new state change to the reservation
-     * @param estadoOrigem the origin state
-     * @param estadoDestino the destination state
-     * @return the created state change
+     * Cria e adiciona uma nova mudança de estado para a reserva
+     * @param estadoOrigem o estado original
+     * @param estadoDestino o estado a ser registrado
+     * @return a alteração de mudança de estado criada
      */
     public AlteracaoEstadoReserva alterarEstado(EstadoReserva estadoOrigem, EstadoReserva estadoDestino) {
         AlteracaoEstadoReserva alteracao = new AlteracaoEstadoReserva(this, estadoOrigem, estadoDestino);
