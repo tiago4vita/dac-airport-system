@@ -13,6 +13,12 @@ public class RabbitMQConfig {
     public Queue reservaEfetuarQueue() { return new Queue("reserva.efetuar", true); }
 
     @Bean
+    public Queue reservaCancelarQueue() { return new Queue("reserva.cancelar", true); }
+
+    @Bean
+    public Queue reservaConsultarQueue() { return new Queue("reserva.consultar", true); }
+
+    @Bean
     public ObjectMapper objectMapper() {
         return JsonMapper.builder().findAndAddModules().build();
     }
