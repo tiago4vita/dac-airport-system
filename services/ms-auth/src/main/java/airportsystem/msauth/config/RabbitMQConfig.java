@@ -22,12 +22,6 @@ public class RabbitMQConfig {
     public Queue usuarioInativarQueue() { return new Queue("auth.inativar", false); }
 
     @Bean
-    public Queue retornoQueue() {
-        return new Queue("retorno", false);
-    }
-
-
-    @Bean
     public ObjectMapper objectMapper() {
         return JsonMapper.builder().findAndAddModules().build();
     }

@@ -30,11 +30,11 @@ app.post('/login', validateLoginRequest, async (req, res) => {
     const authRequest = { ...req.body };
     
     // Hash the password before sending to auth service
-    if (authRequest.senha) {
-      authRequest.senha = hashPassword(authRequest.senha);
-    }
+    // if (authRequest.senha) {
+    //   authRequest.senha = hashPassword(authRequest.senha);
+    // }
     
-    const authUrl = `${process.env.MICROSERVICE_AUTH_URL}/api/auth/login`;
+    const authUrl = `${process.env.ORCHESTRATOR_URL}/login`;
     const response = await fetch(authUrl, {
       method: 'POST',
       headers: {
