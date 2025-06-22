@@ -63,7 +63,7 @@ public class ReservaEventHandler {
      * Lida com os eventos de RESERVA_CRIADA
      * @param event o evento
      */
-    @Transactional
+    @Transactional(transactionManager = "queryTransactionManager")
     public void handleReservaCriada(ReservaEvent event) {
         ReservaView reservaView = new ReservaView(
             event.getReservaId(),
@@ -82,7 +82,7 @@ public class ReservaEventHandler {
      * Lida com eventos de RESERVA_CANCELADA
      * @param event o evento
      */
-    @Transactional
+    @Transactional(transactionManager = "queryTransactionManager")
     public void handleReservaCancelada(ReservaEvent event) {
         ReservaView reservaView = reservaViewRepository.findById(event.getReservaId())
             .orElse(null);
@@ -102,7 +102,7 @@ public class ReservaEventHandler {
      * Lida com os eventos de RESERVA_ESTADO_ALTERADO
      * @param event o evento
      */
-    @Transactional
+    @Transactional(transactionManager = "queryTransactionManager")
     public void handleReservaEstadoAlterado(ReservaEvent event) {
         ReservaView reservaView = reservaViewRepository.findById(event.getReservaId())
             .orElse(null);

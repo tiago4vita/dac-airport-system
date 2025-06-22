@@ -19,20 +19,24 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Configuração para banco de dados de comando e leitura no padrão CQRS.
- * Essa classe seta dois data sources diferentes, managers de entidade e managers de transação
- * para os lados de comando (escrita, deleção e alteração) e leitura da aplicação.
+ * Configuration for command and query databases in CQRS pattern.
+ * This class sets up two different data sources, entity managers and transaction managers
+ * for the command (write, delete, update) and query (read) sides of the application.
  */
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(
         basePackages = "com.tads.airport_system.msreserva.repository",
+        excludeFilters = @org.springframework.context.annotation.ComponentScan.Filter(
+                type = org.springframework.context.annotation.FilterType.REGEX,
+                pattern = ".*ReservaViewRepository"
+        ),
         entityManagerFactoryRef = "commandEntityManagerFactory",
         transactionManagerRef = "commandTransactionManager"
 )
 public class DataSourceConfig {
 
-    // Configuração do BD de comando
+    // Command Database Configuration
 
     @Primary
     @Bean(name = "commandDataSource")
@@ -48,8 +52,10 @@ public class DataSourceConfig {
             @Qualifier("commandDataSource") DataSource dataSource) {
 
         Map<String, String> properties = new HashMap<>();
-        properties.put("hibernate.hbm2ddl.auto", "create");
+        properties.put("hibernate.hbm2ddl.auto", "update");
         properties.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
+        properties.put("hibernate.show_sql", "true");
+        properties.put("hibernate.format_sql", "true");
 
         return builder
                 .dataSource(dataSource)
@@ -66,7 +72,7 @@ public class DataSourceConfig {
         return new JpaTransactionManager(entityManagerFactory);
     }
 
-    // Configuração do BD de leitura
+    // Query Database Configuration
 
     @Bean(name = "queryDataSource")
     @ConfigurationProperties(prefix = "spring.datasource.query")
@@ -80,8 +86,10 @@ public class DataSourceConfig {
             @Qualifier("queryDataSource") DataSource dataSource) {
 
         Map<String, String> properties = new HashMap<>();
-        properties.put("hibernate.hbm2ddl.auto", "create");
+        properties.put("hibernate.hbm2ddl.auto", "update");
         properties.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
+        properties.put("hibernate.show_sql", "true");
+        properties.put("hibernate.format_sql", "true");
 
         return builder
                 .dataSource(dataSource)

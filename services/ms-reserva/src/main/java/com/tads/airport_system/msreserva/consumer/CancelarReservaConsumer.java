@@ -2,11 +2,9 @@ package com.tads.airport_system.msreserva.consumer;
 
 import com.tads.airport_system.msreserva.model.Reserva;
 import com.tads.airport_system.msreserva.model.EstadoReserva;
-import com.tads.airport_system.msreserva.model.AlteracaoEstadoReserva;
 import com.tads.airport_system.msreserva.dto.ReservaDTO;
 import com.tads.airport_system.msreserva.event.ReservaEvent;
-import com.tads.airport_system.msreserva.repository.ReservaRepository;
-import com.tads.airport_system.msreserva.repository.EstadoReservaRepository;
+import com.tads.airport_system.msreserva.service.ReservaCommandService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,96 +14,66 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 import java.util.HashMap;
 
 @Component
 public class CancelarReservaConsumer {
-    private final ReservaRepository reservaRepository;
-    private final EstadoReservaRepository estadoReservaRepository;
+    private final ReservaCommandService reservaCommandService;
     private final ObjectMapper objectMapper;
     private final RabbitTemplate rabbitTemplate;
 
     @Autowired
     public CancelarReservaConsumer(
-            ReservaRepository reservaRepository,
-            EstadoReservaRepository estadoReservaRepository,
+            ReservaCommandService reservaCommandService,
             ObjectMapper objectMapper,
             RabbitTemplate rabbitTemplate) {
-        this.reservaRepository = reservaRepository;
-        this.estadoReservaRepository = estadoReservaRepository;
+        this.reservaCommandService = reservaCommandService;
         this.objectMapper = objectMapper;
         this.rabbitTemplate = rabbitTemplate;
     }
 
     @RabbitListener(queues = "reserva.cancelar")
-    @Transactional
+    @Transactional(transactionManager = "commandTransactionManager")
     public void receiveMessage(String msg) throws JsonMappingException, JsonProcessingException {
         Map<String, Object> response = new HashMap<>();
         try {
             // Deserializa a mensagem pra conseguir o ID da reserva
             String reservaId = objectMapper.readValue(msg, String.class);
 
-            // Find the reservation by ID
-            Optional<Reserva> optionalReserva = reservaRepository.findById(reservaId);
+            // Use the command service to cancel the reservation
+            Optional<Reserva> optionalReserva = reservaCommandService.cancelReserva(reservaId);
 
             if (optionalReserva.isPresent()) {
                 Reserva reserva = optionalReserva.get();
-                EstadoReserva estadoAtual = reserva.getEstado();
 
-                // checa se a reserva pode ser cancelada (esta no estado CRIADA ou CHECK-IN)
-                if (estadoAtual.getCodigoEstado().equals(EstadoReserva.Estado.CRIADA.name()) || 
-                    estadoAtual.getCodigoEstado().equals(EstadoReserva.Estado.CHECK_IN.name())) {
-
-                    // Pega o estado CANCELADA
-                    EstadoReserva estadoCancelada = estadoReservaRepository.findByCodigoEstado(EstadoReserva.Estado.CANCELADA.name());
-
-                    // Atualiza o estado da reserva para CANCELADA e registra a mudança de estado
-                    AlteracaoEstadoReserva alteracao = reserva.atualizarEstado(estadoCancelada);
-
-                    // Retorna milhas pro saldo do cliente e registra que elas vieram de um cancelamento
-                    // nota: envolver chamada de serviço ou atualizar entidade
-                    // mudar depois, deixar no log por enquanto
-                    System.out.println("Milhas retornadas para o cliente da reserva: " + reservaId);
-                    System.out.println("Registro de milhas de cancelamento criado para a reserva: " + reservaId);
-
-                    // salva a reserva atualizada
-                    reservaRepository.save(reserva);
-
-                    // Publica evento para atualizar o modelo de consulta (CQRS)
-                    try {
-                        ReservaEvent event = new ReservaEvent("RESERVA_CANCELADA", reserva);
-                        rabbitTemplate.convertAndSend("reserva.eventos", objectMapper.writeValueAsString(event));
-                        System.out.println("Evento de reserva cancelada enviado: " + event);
-                    } catch (JsonProcessingException e) {
-                        System.err.println("Erro ao converter evento para JSON: " + e.getMessage());
-                    }
-
-                    // resposta de sucesso
-                    response.put("success", true);
-                    response.put("message", "Reserva cancelada com sucesso");
-                    response.put("reserva", new ReservaDTO(
-                            reserva.getId(),
-                            reserva.getClienteId(),
-                            reserva.getVooId(),
-                            reserva.getDataHoraRes(),
-                            reserva.getEstado()
-                    ));
-
-                    System.out.println("Reserva cancelada via RabbitMQ: (" + reserva.getId() + ")");
-                } else {
-                    // reserva não pode ser cancelada
-                    response.put("success", false);
-                    response.put("message", "Reserva não pode ser cancelada. Estado atual: " + estadoAtual.getDescricao());
-                    System.out.println("Tentativa de cancelar reserva em estado inválido: " + estadoAtual.getCodigoEstado());
+                // Publica evento para atualizar o modelo de consulta (CQRS)
+                try {
+                    ReservaEvent event = new ReservaEvent("RESERVA_CANCELADA", reserva);
+                    rabbitTemplate.convertAndSend("reserva.eventos", objectMapper.writeValueAsString(event));
+                    System.out.println("Evento de reserva cancelada enviado: " + event);
+                } catch (JsonProcessingException e) {
+                    System.err.println("Erro ao converter evento para JSON: " + e.getMessage());
                 }
+
+                // resposta de sucesso
+                response.put("success", true);
+                response.put("message", "Reserva cancelada com sucesso");
+                response.put("reserva", new ReservaDTO(
+                        reserva.getId(),
+                        reserva.getClienteId(),
+                        reserva.getVooId(),
+                        reserva.getDataHoraRes(),
+                        reserva.getEstado()
+                ));
+
+                System.out.println("Reserva cancelada via RabbitMQ: (" + reserva.getId() + ")");
             } else {
-                // reserva não encontrada
+                // reserva não encontrada ou não pode ser cancelada
                 response.put("success", false);
-                response.put("message", "Reserva não encontrada");
-                System.out.println("Tentativa de cancelar reserva inexistente: " + reservaId);
+                response.put("message", "Reserva não encontrada ou não pode ser cancelada");
+                System.out.println("Tentativa de cancelar reserva inexistente ou inválida: " + reservaId);
             }
         } catch (Exception e) {
             // lida com qualquer erro
@@ -123,10 +91,5 @@ public class CancelarReservaConsumer {
                 System.err.println("Erro ao serializar resposta: " + e.getMessage());
             }
         }
-    }
-
-    @Transactional(readOnly = true)
-    public Optional<Reserva> buscarReservaPorId(String id) {
-        return reservaRepository.findById(id);
     }
 }

@@ -3,33 +3,41 @@ package com.tads.airport_system.msreserva.repository;
 import com.tads.airport_system.msreserva.model.ReservaView;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Repositorio para enfileirar entidades ReservaView do BD de leitura.
- * É parte do padrão CQRS. Esse repositório é usado EXCLUSIVAMENTE para
- * oprações de leitura dos dados desnormalizados.
+ * Repository for ReservaView entities in the query database.
+ * This repository is used EXCLUSIVELY for read operations (queries) in the CQRS pattern.
+ * All write operations should use ReservaRepository instead.
  */
 @Repository
+@Transactional(transactionManager = "queryTransactionManager", readOnly = true)
 public interface ReservaViewRepository extends JpaRepository<ReservaView, String> {
     
     /**
-     * Acha uma view da reserva pelo id
-     * @param id o id da reserva
-     * @return a view da reserva
+     * Find a reservation view by id
+     * @param id the reservation id
+     * @return the reservation view
      */
     ReservaView findByIdEquals(String id);
     
     /**
-     * Acha a view da reserva pelo id do voo
-     * @param vooId o id do voo
-     * @return a view da reserva
+     * Find reservation views by flight id
+     * @param vooId the flight id
+     * @return the reservation views
      */
-    ReservaView findByVooId(String vooId);
+    java.util.List<ReservaView> findByVooId(String vooId);
     
     /**
-     * Checa se a view da reserva existe por id
-     * @param id o id da reserva
-     * @return true se existe, se não, false
+     * Check if a reservation view exists by id
+     * @param id the reservation id
+     * @return true if exists, false otherwise
      */
     boolean existsById(String id);
+    
+    /**
+     * Find all reservation views
+     * @return list of all reservation views
+     */
+    java.util.List<ReservaView> findAll();
 }

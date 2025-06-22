@@ -1,8 +1,8 @@
 package com.tads.airport_system.msreserva.consumer;
 
-import com.tads.airport_system.msreserva.model.Reserva;
+import com.tads.airport_system.msreserva.model.ReservaView;
 import com.tads.airport_system.msreserva.dto.ReservaDTO;
-import com.tads.airport_system.msreserva.repository.ReservaRepository;
+import com.tads.airport_system.msreserva.service.ReservaQueryService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,13 +18,13 @@ import java.util.HashMap;
 
 @Component
 public class ConsultarReservaConsumer {
-    private final ReservaRepository reservaRepository;
+    private final ReservaQueryService reservaQueryService;
     private final ObjectMapper objectMapper;
     private final RabbitTemplate rabbitTemplate;
 
     @Autowired
-    public ConsultarReservaConsumer(ReservaRepository reservaRepository, ObjectMapper objectMapper, RabbitTemplate rabbitTemplate) {
-        this.reservaRepository = reservaRepository;
+    public ConsultarReservaConsumer(ReservaQueryService reservaQueryService, ObjectMapper objectMapper, RabbitTemplate rabbitTemplate) {
+        this.reservaQueryService = reservaQueryService;
         this.objectMapper = objectMapper;
         this.rabbitTemplate = rabbitTemplate;
     }
@@ -35,21 +35,20 @@ public class ConsultarReservaConsumer {
         try {
             String reservaCodigo = objectMapper.readValue(msg, String.class);
 
-            // Em uma implementação CQRS mais completa, deveríamos consultar o modelo de leitura (ReservaView)
-            // em vez do modelo de comando (Reserva), mas isso exigiria mudanças grandes demais
-            Optional<Reserva> reserva = buscarReservaPorId(reservaCodigo);
+            // In CQRS pattern, we query the read model (ReservaView) instead of the command model
+            Optional<ReservaView> reservaView = reservaQueryService.findById(reservaCodigo);
 
-            if (reserva.isPresent()) {
-                Reserva reservaConsultada = reserva.get();
-                System.out.println("Reserva consultada via RabbitMQ: (" + reservaConsultada.getId() + ") " + msg);
+            if (reservaView.isPresent()) {
+                ReservaView view = reservaView.get();
+                System.out.println("Reserva consultada via RabbitMQ (Query DB): (" + view.getId() + ") " + msg);
 
                 response.put("success", true);
                 response.put("reserva", new ReservaDTO(
-                    reservaConsultada.getId(),
-                    reservaConsultada.getVooId(),
-                    reservaConsultada.getClienteId(),
-                    reservaConsultada.getDataHoraRes(),
-                    reservaConsultada.getEstado()
+                    view.getId(),
+                    view.getVooId(),
+                    null, // clienteId not available in view
+                    view.getDataHoraRes(),
+                    createEstadoReservaFromView(view)
                 ));
             } else {
                 response.put("success", false);
@@ -70,9 +69,16 @@ public class ConsultarReservaConsumer {
             }
         }
     }
-
-    @Transactional(readOnly = true)
-    public Optional<Reserva> buscarReservaPorId(String id){
-        return reservaRepository.findById(id);
+    
+    /**
+     * Create EstadoReserva object from ReservaView data
+     * This is needed to maintain compatibility with existing DTO structure
+     */
+    private com.tads.airport_system.msreserva.model.EstadoReserva createEstadoReservaFromView(ReservaView view) {
+        com.tads.airport_system.msreserva.model.EstadoReserva estado = new com.tads.airport_system.msreserva.model.EstadoReserva();
+        estado.setCodigoEstado(view.getEstadoCodigo());
+        estado.setSigla(view.getEstadoSigla());
+        estado.setDescricao(view.getEstadoDescricao());
+        return estado;
     }
 }

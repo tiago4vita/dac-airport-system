@@ -178,6 +178,7 @@ services:
       - POSTGRES_PASSWORD=postgres
     volumes:
       - postgres_reserva_command_data:/var/lib/postgresql/data
+      - ./services/ms-reserva/src/main/resources/db/init/01-init-command-db.sql:/docker-entrypoint-initdb.d/01-init-command-db.sql
     networks:
       - airport-network
 
@@ -191,6 +192,7 @@ services:
       - POSTGRES_PASSWORD=postgres
     volumes:
       - postgres_reserva_query_data:/var/lib/postgresql/data
+      - ./services/ms-reserva/src/main/resources/db/init/02-init-query-db.sql:/docker-entrypoint-initdb.d/02-init-query-db.sql
     networks:
       - airport-network
 
