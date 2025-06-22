@@ -40,6 +40,10 @@ public class EfetuarReservaConsumer {
         Map<String, Object> response = new HashMap<>();
         try {
             EfetuarReservaDTO efetuarReservaDTO = objectMapper.readValue(msg, EfetuarReservaDTO.class);
+            
+            // Validate obligatory fields
+            validateObligatoryFields(efetuarReservaDTO);
+            
             Reserva novaReserva = createReserva(efetuarReservaDTO);
             System.out.println("Reserva efetuada com sucesso: (" + novaReserva + ") " + msg);
 
@@ -75,12 +79,47 @@ public class EfetuarReservaConsumer {
         }
     }
 
+    /**
+     * Validates that all obligatory fields are present and valid
+     * @param efetuarReservaDTO the DTO to validate
+     * @throws ResponseStatusException if validation fails
+     */
+    private void validateObligatoryFields(EfetuarReservaDTO efetuarReservaDTO) {
+        // Validate codigo_voo
+        if (efetuarReservaDTO.getCodigo_voo() == null || efetuarReservaDTO.getCodigo_voo().trim().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Código do voo é obrigatório");
+        }
+        
+        // Validate codigo_cliente
+        if (efetuarReservaDTO.getCodigo_cliente() == null || efetuarReservaDTO.getCodigo_cliente().trim().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Código do cliente é obrigatório");
+        }
+        
+        // Validate valor (must be positive)
+        if (efetuarReservaDTO.getValor() <= 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Valor deve ser maior que zero");
+        }
+        
+        // Validate quantidadePoltronas (must be positive)
+        if (efetuarReservaDTO.getQuantidadePoltronas() <= 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Quantidade de poltronas deve ser maior que zero");
+        }
+        
+        // Validate milhasUtilizadas (must be non-negative)
+        if (efetuarReservaDTO.getMilhasUtilizadas() < 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Milhas utilizadas não podem ser negativas");
+        }
+    }
+
     @Transactional(transactionManager = "commandTransactionManager")
     public Reserva createReserva(EfetuarReservaDTO efetuarReservaDTO) {
         // Use the command service to create the reservation
         Reserva savedReserva = reservaCommandService.createReserva(
             efetuarReservaDTO.getCodigo_voo(),
-            efetuarReservaDTO.getCodigo_cliente()
+            efetuarReservaDTO.getCodigo_cliente(),
+            efetuarReservaDTO.getValor(),
+            efetuarReservaDTO.getQuantidadePoltronas(),
+            efetuarReservaDTO.getMilhasUtilizadas()
         );
 
         try {

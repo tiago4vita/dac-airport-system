@@ -44,12 +44,15 @@ CREATE TABLE estados_reserva (
     descricao VARCHAR(255) NOT NULL
 );
 
--- Reservas (normalized)
+-- Reservas (normalized) - Updated with new fields
 CREATE TABLE reservas (
     id VARCHAR(255) PRIMARY KEY,
     voo_id VARCHAR(255) NOT NULL,
     cliente_id VARCHAR(255) NOT NULL,
     data_hora_res TIMESTAMP NOT NULL,
+    valor DOUBLE PRECISION NOT NULL,
+    quantidade_poltronas INTEGER NOT NULL,
+    milhas_utilizadas INTEGER NOT NULL,
     codigo_estado VARCHAR(50) NOT NULL,
     FOREIGN KEY (codigo_estado) REFERENCES estados_reserva(codigo_estado)
 );
@@ -67,11 +70,14 @@ CREATE TABLE alteracoes_estado_reserva (
 
 ### Query Database Schema
 ```sql
--- Denormalized view for fast queries
+-- Denormalized view for fast queries - Updated with new fields
 CREATE TABLE reservas_view (
     id VARCHAR(255) PRIMARY KEY,
     voo_id VARCHAR(255) NOT NULL,
     data_hora_res TIMESTAMP NOT NULL,
+    valor DOUBLE PRECISION NOT NULL,
+    quantidade_poltronas INTEGER NOT NULL,
+    milhas_utilizadas INTEGER NOT NULL,
     estado_codigo VARCHAR(50) NOT NULL,
     estado_sigla VARCHAR(10) NOT NULL,
     estado_descricao VARCHAR(255) NOT NULL

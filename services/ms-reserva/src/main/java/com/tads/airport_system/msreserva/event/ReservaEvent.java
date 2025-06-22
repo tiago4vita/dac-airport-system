@@ -14,6 +14,9 @@ public class ReservaEvent implements Serializable {
     private String reservaId;
     private String vooId;
     private LocalDateTime dataHoraRes;
+    private double valor;
+    private int quantidadePoltronas;
+    private int milhasUtilizadas;
     private String estadoCodigo;
     private String estadoSigla;
     private String estadoDescricao;
@@ -34,6 +37,9 @@ public class ReservaEvent implements Serializable {
         this.reservaId = reserva.getId();
         this.vooId = reserva.getVooId();
         this.dataHoraRes = reserva.getDataHoraRes();
+        this.valor = reserva.getValor();
+        this.quantidadePoltronas = reserva.getQuantidadePoltronas();
+        this.milhasUtilizadas = reserva.getMilhasUtilizadas();
         this.estadoCodigo = reserva.getEstado().getCodigoEstado();
         this.estadoSigla = reserva.getEstado().getSigla();
         this.estadoDescricao = reserva.getEstado().getDescricao();
@@ -71,6 +77,30 @@ public class ReservaEvent implements Serializable {
     
     public void setDataHoraRes(LocalDateTime dataHoraRes) {
         this.dataHoraRes = dataHoraRes;
+    }
+    
+    public double getValor() {
+        return valor;
+    }
+    
+    public void setValor(double valor) {
+        this.valor = valor;
+    }
+    
+    public int getQuantidadePoltronas() {
+        return quantidadePoltronas;
+    }
+    
+    public void setQuantidadePoltronas(int quantidadePoltronas) {
+        this.quantidadePoltronas = quantidadePoltronas;
+    }
+    
+    public int getMilhasUtilizadas() {
+        return milhasUtilizadas;
+    }
+    
+    public void setMilhasUtilizadas(int milhasUtilizadas) {
+        this.milhasUtilizadas = milhasUtilizadas;
     }
     
     public String getEstadoCodigo() {
@@ -112,6 +142,9 @@ public class ReservaEvent implements Serializable {
                 ", reservaId='" + reservaId + '\'' +
                 ", vooId='" + vooId + '\'' +
                 ", dataHoraRes=" + dataHoraRes +
+                ", valor=" + valor +
+                ", quantidadePoltronas=" + quantidadePoltronas +
+                ", milhasUtilizadas=" + milhasUtilizadas +
                 ", estadoCodigo='" + estadoCodigo + '\'' +
                 ", estadoSigla='" + estadoSigla + '\'' +
                 ", estadoDescricao='" + estadoDescricao + '\'' +

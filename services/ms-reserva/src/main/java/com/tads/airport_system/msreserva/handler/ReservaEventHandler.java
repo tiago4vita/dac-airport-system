@@ -72,6 +72,9 @@ public class ReservaEventHandler {
             event.getReservaId(),
             event.getVooId(),
             event.getDataHoraRes(),
+            event.getValor(),
+            event.getQuantidadePoltronas(),
+            event.getMilhasUtilizadas(),
             event.getEstadoCodigo(),
             event.getEstadoSigla(),
             event.getEstadoDescricao()

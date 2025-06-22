@@ -28,6 +28,15 @@ public class Reserva {
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     private LocalDateTime dataHoraRes = LocalDateTime.now();
 
+    @Column(nullable = false)
+    private double valor;
+
+    @Column(nullable = false)
+    private int quantidadePoltronas;
+
+    @Column(nullable = false)
+    private int milhasUtilizadas;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "codigo_estado", nullable = false)
     private EstadoReserva estado;
@@ -35,12 +44,15 @@ public class Reserva {
     @OneToMany(mappedBy = "reserva", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AlteracaoEstadoReserva> alteracoesEstado = new ArrayList<>();
 
-    public Reserva(String id, String vooId, String clienteId, EstadoReserva estado, LocalDateTime dataHoraRes) {
+    public Reserva(String id, String vooId, String clienteId, EstadoReserva estado, LocalDateTime dataHoraRes, double valor, int quantidadePoltronas, int milhasUtilizadas) {
         this.id = id;
         this.vooId = vooId;
         this.clienteId = clienteId;
         this.estado = estado;
         this.dataHoraRes = LocalDateTime.now();
+        this.valor = valor;
+        this.quantidadePoltronas = quantidadePoltronas;
+        this.milhasUtilizadas = milhasUtilizadas;
     }
 
     public Reserva() {
@@ -65,6 +77,18 @@ public class Reserva {
 
     public LocalDateTime getDataHoraRes() {
         return dataHoraRes;
+    }
+
+    public double getValor() {
+        return valor;
+    }
+
+    public int getQuantidadePoltronas() {
+        return quantidadePoltronas;
+    }
+
+    public int getMilhasUtilizadas() {
+        return milhasUtilizadas;
     }
 
     public EstadoReserva getEstado() {
@@ -110,6 +134,18 @@ public class Reserva {
 
     public void setDataHoraRes(LocalDateTime dataHoraRes) {
         this.dataHoraRes = dataHoraRes;
+    }
+
+    public void setValor(double valor) {
+        this.valor = valor;
+    }
+
+    public void setQuantidadePoltronas(int quantidadePoltronas) {
+        this.quantidadePoltronas = quantidadePoltronas;
+    }
+
+    public void setMilhasUtilizadas(int milhasUtilizadas) {
+        this.milhasUtilizadas = milhasUtilizadas;
     }
 
     public List<AlteracaoEstadoReserva> getAlteracoesEstado() {

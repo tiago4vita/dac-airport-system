@@ -48,6 +48,9 @@ public class ConsultarReservaConsumer {
                     view.getVooId(),
                     null, // clienteId not available in view
                     view.getDataHoraRes(),
+                    view.getValor(),
+                    view.getQuantidadePoltronas(),
+                    view.getMilhasUtilizadas(),
                     createEstadoReservaFromView(view)
                 ));
             } else {

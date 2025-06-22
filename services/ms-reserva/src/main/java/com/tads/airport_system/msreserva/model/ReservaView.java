@@ -11,6 +11,9 @@ public class ReservaView {
     private String id;
     private String vooId;
     private LocalDateTime dataHoraRes;
+    private double valor;
+    private int quantidadePoltronas;
+    private int milhasUtilizadas;
     private String estadoCodigo;
     private String estadoSigla;
     private String estadoDescricao;
@@ -18,10 +21,13 @@ public class ReservaView {
     public ReservaView() {
     }
 
-    public ReservaView(String id, String vooId, LocalDateTime dataHoraRes, String estadoCodigo, String estadoSigla, String estadoDescricao) {
+    public ReservaView(String id, String vooId, LocalDateTime dataHoraRes, double valor, int quantidadePoltronas, int milhasUtilizadas, String estadoCodigo, String estadoSigla, String estadoDescricao) {
         this.id = id;
         this.vooId = vooId;
         this.dataHoraRes = dataHoraRes;
+        this.valor = valor;
+        this.quantidadePoltronas = quantidadePoltronas;
+        this.milhasUtilizadas = milhasUtilizadas;
         this.estadoCodigo = estadoCodigo;
         this.estadoSigla = estadoSigla;
         this.estadoDescricao = estadoDescricao;
@@ -49,6 +55,30 @@ public class ReservaView {
 
     public void setDataHoraRes(LocalDateTime dataHoraRes) {
         this.dataHoraRes = dataHoraRes;
+    }
+
+    public double getValor() {
+        return valor;
+    }
+
+    public void setValor(double valor) {
+        this.valor = valor;
+    }
+
+    public int getQuantidadePoltronas() {
+        return quantidadePoltronas;
+    }
+
+    public void setQuantidadePoltronas(int quantidadePoltronas) {
+        this.quantidadePoltronas = quantidadePoltronas;
+    }
+
+    public int getMilhasUtilizadas() {
+        return milhasUtilizadas;
+    }
+
+    public void setMilhasUtilizadas(int milhasUtilizadas) {
+        this.milhasUtilizadas = milhasUtilizadas;
     }
 
     public String getEstadoCodigo() {
@@ -81,6 +111,9 @@ public class ReservaView {
                 "id='" + id + '\'' +
                 ", vooId='" + vooId + '\'' +
                 ", dataHoraRes=" + dataHoraRes +
+                ", valor=" + valor +
+                ", quantidadePoltronas=" + quantidadePoltronas +
+                ", milhasUtilizadas=" + milhasUtilizadas +
                 ", estadoCodigo='" + estadoCodigo + '\'' +
                 ", estadoSigla='" + estadoSigla + '\'' +
                 ", estadoDescricao='" + estadoDescricao + '\'' +

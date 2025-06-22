@@ -39,9 +39,12 @@ public class ReservaCommandService {
      * Create a new reservation
      * @param vooId the flight ID
      * @param clienteId the client ID
+     * @param valor the reservation value
+     * @param quantidadePoltronas the number of seats
+     * @param milhasUtilizadas the miles used
      * @return the created reservation
      */
-    public Reserva createReserva(String vooId, String clienteId) {
+    public Reserva createReserva(String vooId, String clienteId, double valor, int quantidadePoltronas, int milhasUtilizadas) {
         EstadoReserva estadoCriada = estadoReservaRepository.findByCodigoEstado(EstadoReserva.Estado.CRIADA.name());
         
         Reserva reserva = new Reserva(
@@ -49,7 +52,10 @@ public class ReservaCommandService {
             vooId,
             clienteId,
             estadoCriada,
-            LocalDateTime.now()
+            LocalDateTime.now(),
+            valor,
+            quantidadePoltronas,
+            milhasUtilizadas
         );
 
         return reservaRepository.save(reserva);
