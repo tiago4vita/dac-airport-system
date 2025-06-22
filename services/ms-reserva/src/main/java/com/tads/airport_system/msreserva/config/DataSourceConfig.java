@@ -48,7 +48,7 @@ public class DataSourceConfig {
             @Qualifier("commandDataSource") DataSource dataSource) {
 
         Map<String, String> properties = new HashMap<>();
-        properties.put("hibernate.hbm2ddl.auto", "update");
+        properties.put("hibernate.hbm2ddl.auto", "create");
         properties.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
 
         return builder
@@ -80,7 +80,7 @@ public class DataSourceConfig {
             @Qualifier("queryDataSource") DataSource dataSource) {
 
         Map<String, String> properties = new HashMap<>();
-        properties.put("hibernate.hbm2ddl.auto", "update");
+        properties.put("hibernate.hbm2ddl.auto", "create");
         properties.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
 
         return builder

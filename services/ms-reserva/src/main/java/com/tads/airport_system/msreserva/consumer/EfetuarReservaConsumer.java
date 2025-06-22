@@ -82,6 +82,7 @@ public class EfetuarReservaConsumer {
         Reserva reserva = new Reserva(
             reservaDTO.getId(),
             reservaDTO.getVooId(),
+            reservaDTO.getClienteId(),
             reservaDTO.getEstado(),
             reservaDTO.getDataHoraRes()
         );

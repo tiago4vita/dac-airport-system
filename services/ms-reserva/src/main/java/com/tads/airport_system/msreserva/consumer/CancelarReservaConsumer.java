@@ -88,6 +88,7 @@ public class CancelarReservaConsumer {
                     response.put("message", "Reserva cancelada com sucesso");
                     response.put("reserva", new ReservaDTO(
                             reserva.getId(),
+                            reserva.getClienteId(),
                             reserva.getVooId(),
                             reserva.getDataHoraRes(),
                             reserva.getEstado()

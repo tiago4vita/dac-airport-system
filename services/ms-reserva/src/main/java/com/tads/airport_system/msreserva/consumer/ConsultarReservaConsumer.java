@@ -47,6 +47,7 @@ public class ConsultarReservaConsumer {
                 response.put("reserva", new ReservaDTO(
                     reservaConsultada.getId(),
                     reservaConsultada.getVooId(),
+                    reservaConsultada.getClienteId(),
                     reservaConsultada.getDataHoraRes(),
                     reservaConsultada.getEstado()
                 ));

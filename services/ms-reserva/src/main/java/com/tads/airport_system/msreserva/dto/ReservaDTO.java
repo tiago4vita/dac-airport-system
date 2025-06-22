@@ -10,14 +10,16 @@ public class ReservaDTO {
 
     private String id;
     private String vooId;
+    private String clienteId;
     private LocalDateTime dataHoraRes;
     private EstadoReserva estado;
 
     public ReservaDTO() {}
 
-    public ReservaDTO (String id, String vooId, LocalDateTime dataHoraRes, EstadoReserva estado) {
+    public ReservaDTO (String id, String vooId, String clienteId, LocalDateTime dataHoraRes, EstadoReserva estado) {
         this.id = id;
         this.vooId = vooId;
+        this.clienteId = clienteId;
         this.dataHoraRes = dataHoraRes;
         this.estado = estado;
     }
@@ -28,6 +30,10 @@ public class ReservaDTO {
 
     public String getVooId(){
         return vooId;
+    }
+
+    public String getClienteId() {
+        return clienteId;
     }
 
     public LocalDateTime getDataHoraRes() {
@@ -46,6 +52,10 @@ public class ReservaDTO {
         this.vooId = vooId;
     }
 
+    public void setClienteId(String clienteId) {
+        this.clienteId = clienteId;
+    }
+
     public void setDataHoraRes(LocalDateTime dataHoraRes) {
         this.dataHoraRes = dataHoraRes;
     }
@@ -55,6 +65,7 @@ public class ReservaDTO {
         return "ReservaDTO{" +
                 "id='" + id + '\'' +
                 ", vooId='" + vooId + '\'' +
+                ", clienteId='" + clienteId + '\'' +
                 ", dataHoraRes='" + dataHoraRes + '\'' +
                 ", estado=" + estado +
                 '}';

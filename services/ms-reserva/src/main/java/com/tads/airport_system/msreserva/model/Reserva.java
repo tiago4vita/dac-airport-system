@@ -21,6 +21,9 @@ public class Reserva {
     @Column(unique = true, nullable = false)
     private String vooId;
 
+    @Column(nullable = false)
+    private String clienteId;
+
     @Column(name = "dataHoraRes", nullable = false)
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     private LocalDateTime dataHoraRes = LocalDateTime.now();
@@ -32,9 +35,10 @@ public class Reserva {
     @OneToMany(mappedBy = "reserva", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AlteracaoEstadoReserva> alteracoesEstado = new ArrayList<>();
 
-    public Reserva(String id, String vooId, EstadoReserva estado, LocalDateTime dataHoraRes) {
+    public Reserva(String id, String vooId, String clienteId, EstadoReserva estado, LocalDateTime dataHoraRes) {
         this.id = id;
         this.vooId = vooId;
+        this.clienteId = clienteId;
         this.estado = estado;
         this.dataHoraRes = LocalDateTime.now();
     }
@@ -53,6 +57,10 @@ public class Reserva {
 
     public String getVooId(){
         return vooId;
+    }
+
+    public String getClienteId() {
+        return clienteId;
     }
 
     public LocalDateTime getDataHoraRes() {
@@ -82,6 +90,12 @@ public class Reserva {
         return alterarEstado(estadoAntigo, novoEstado);
     }
 
+    private AlteracaoEstadoReserva alterarEstado(EstadoReserva estadoAntigo, EstadoReserva novoEstado) {
+        AlteracaoEstadoReserva alteracaoEstadoReserva = new AlteracaoEstadoReserva(this, estadoAntigo, novoEstado);
+        this.alteracoesEstado.add(alteracaoEstadoReserva);
+        return alteracaoEstadoReserva;
+    }
+
     public void setID(String id) {
         this.id = id;
     }
@@ -90,45 +104,15 @@ public class Reserva {
         this.vooId = vooId;
     }
 
+    public void setClienteId(String clienteId) {
+        this.clienteId = clienteId;
+    }
+
     public void setDataHoraRes(LocalDateTime dataHoraRes) {
         this.dataHoraRes = dataHoraRes;
     }
 
     public List<AlteracaoEstadoReserva> getAlteracoesEstado() {
         return alteracoesEstado;
-    }
-
-    public void setAlteracoesEstado(List<AlteracaoEstadoReserva> alteracoesEstado) {
-        this.alteracoesEstado = alteracoesEstado;
-    }
-
-    /**
-     * Adiciona uma mudança de estado para a reserva e seta a reserva na mudança de estado
-     * @param alteracaoEstado a mudança de estado a adicionar
-     */
-    public void addAlteracaoEstado(AlteracaoEstadoReserva alteracaoEstado) {
-        alteracoesEstado.add(alteracaoEstado);
-        alteracaoEstado.setReserva(this);
-    }
-
-    /**
-     * Remove uma mudança de estado da reserva
-     * @param alteracaoEstado a mudança de estado a remover
-     */
-    public void removeAlteracaoEstado(AlteracaoEstadoReserva alteracaoEstado) {
-        alteracoesEstado.remove(alteracaoEstado);
-        alteracaoEstado.setReserva(null);
-    }
-
-    /**
-     * Cria e adiciona uma nova mudança de estado para a reserva
-     * @param estadoOrigem o estado original
-     * @param estadoDestino o estado a ser registrado
-     * @return a alteração de mudança de estado criada
-     */
-    public AlteracaoEstadoReserva alterarEstado(EstadoReserva estadoOrigem, EstadoReserva estadoDestino) {
-        AlteracaoEstadoReserva alteracao = new AlteracaoEstadoReserva(this, estadoOrigem, estadoDestino);
-        addAlteracaoEstado(alteracao);
-        return alteracao;
     }
 }
