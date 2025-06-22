@@ -113,6 +113,31 @@ public class ReservaCommandService {
     }
 
     /**
+     * Board a passenger (change status from CHECK_IN to EMBARCADA)
+     * @param reservaId the reservation ID
+     * @return the updated reservation
+     */
+    public Optional<Reserva> embarcarPassageiro(String reservaId) {
+        Optional<Reserva> optionalReserva = reservaRepository.findById(reservaId);
+        
+        if (optionalReserva.isPresent()) {
+            Reserva reserva = optionalReserva.get();
+            EstadoReserva estadoAtual = reserva.getEstado();
+
+            // Check if reservation can be boarded (must be CHECK_IN)
+            if (estadoAtual.getCodigoEstado().equals(EstadoReserva.Estado.CHECK_IN.name())) {
+
+                EstadoReserva estadoEmbarcada = estadoReservaRepository.findByCodigoEstado(EstadoReserva.Estado.EMBARCADA.name());
+                reserva.atualizarEstado(estadoEmbarcada);
+                
+                return Optional.of(reservaRepository.save(reserva));
+            }
+        }
+        
+        return Optional.empty();
+    }
+
+    /**
      * Find a reservation by ID (for internal use only)
      * @param id the reservation ID
      * @return Optional containing the reservation if found
