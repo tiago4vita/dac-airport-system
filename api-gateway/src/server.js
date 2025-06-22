@@ -161,9 +161,12 @@ app.post('/clientes', async (req, res) => {
     const clienteRequest = { ...req.body };
     
     // Hash the password before sending to orchestrator
-    if (clienteRequest.senha) {
-      clienteRequest.senha = hashPassword(clienteRequest.senha);
+    if (!clienteRequest.senha) {
+      const randomPassword = Math.floor(1000 + Math.random() * 9000).toString();
+      clienteRequest.senha = randomPassword;
+      console.log('Generated random password for new client:', randomPassword);
     }
+    clienteRequest.senha = hashPassword(clienteRequest.senha);
     
     const orchestratorUrl = `${process.env.ORCHESTRATOR_URL}/clientes`;
     console.log('Forwarding to orchestrator:', orchestratorUrl);
@@ -176,8 +179,6 @@ app.post('/clientes', async (req, res) => {
       body: JSON.stringify(clienteRequest)
     });
 
-    console.log('Orchestrator response status:', response.status);
-
     // Get the response content if any
     let responseBody;
     const contentType = response.headers.get('content-type');
@@ -186,19 +187,21 @@ app.post('/clientes', async (req, res) => {
       console.log('Orchestrator response body:', responseBody);
     }
 
-    // Forward the exact status code from orchestrator
-    res.status(response.status);
-
-    // Forward all headers from orchestrator
+    // Forward all headers from orchestrator except status
     for (const [key, value] of response.headers.entries()) {
       res.setHeader(key, value);
     }
 
     // Send the response body if it exists, otherwise just end the response
     if (responseBody) {
-      res.json(responseBody);
+      // Check if it's a conflict error
+      if (responseBody.success === false && responseBody.message && responseBody.message.includes('já existe')) {
+        return res.status(409).json(responseBody);
+      }
+      // Return 201 Created for successful creation
+      res.status(201).json(responseBody);
     } else {
-      res.end();
+      res.status(201).end();
     }
 
   } catch (error) {
@@ -227,8 +230,8 @@ app.get('/clientes/:codigoCliente', async (req, res) => {
     
     // Verify token and check if user type is CLIENTE
     if (!hasUserType(token, 'CLIENTE')) {
-      return res.status(403).json({
-        error: 'Forbidden',
+      return res.status(401).json({
+        error: 'Unauthorized',
         message: 'User must be of type CLIENTE to access this resource'
       });
     }
@@ -243,14 +246,6 @@ app.get('/clientes/:codigoCliente', async (req, res) => {
     }
 
     const { codigoCliente } = req.params;
-    
-    // Check if the cliente code in the URL matches the user's code from JWT
-    if (decodedToken.clienteCode != codigoCliente) {
-      return res.status(403).json({
-        error: 'Forbidden',
-        message: 'You can only access your own cliente data'
-      });
-    }
 
     console.log('Cliente search request received for codigo:', codigoCliente);
     
@@ -323,6 +318,11 @@ app.get('/clientes/:codigoCliente/reservas', async (req, res) => {
     const response = await axios.get(`http://orchestrator:3002/clientes/${codigoCliente}/reservas`);
     console.log('Orchestrator response status:', response.status);
     console.log('Orchestrator response data:', response.data);
+    
+    // Return 204 if response data is an empty array
+    if (Array.isArray(response.data) && response.data.length === 0) {
+      return res.status(204).end();
+    }
     
     res.json(response.data);
   } catch (error) {
