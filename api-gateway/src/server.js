@@ -26,15 +26,19 @@ app.get('/health', (req, res) => {
 // R02a - LOGIN
 app.post('/login', validateLoginRequest, async (req, res) => {
   try {
+    console.log('Login request received:', req.body);
+    
     // Create a copy of the request body
     const authRequest = { ...req.body };
     
     // Hash the password before sending to auth service
-    // if (authRequest.senha) {
-    //   authRequest.senha = hashPassword(authRequest.senha);
-    // }
+    if (authRequest.senha) {
+      authRequest.senha = hashPassword(authRequest.senha);
+    }
     
     const authUrl = `${process.env.ORCHESTRATOR_URL}/login`;
+    console.log('Forwarding to orchestrator:', authUrl);
+    
     const response = await fetch(authUrl, {
       method: 'POST',
       headers: {
@@ -43,15 +47,19 @@ app.post('/login', validateLoginRequest, async (req, res) => {
       body: JSON.stringify(authRequest)
     });
 
+    console.log('Orchestrator response status:', response.status);
+
     // Get the response content if any
     let responseBody;
     const contentType = response.headers.get('content-type');
     if (contentType && contentType.includes('application/json')) {
       responseBody = await response.json();
+      console.log('Orchestrator response body:', responseBody);
     }
 
     // If login is successful (status 200), generate JWT token
     if (response.status === 200 && responseBody) {
+      console.log('Generating JWT token for email:', responseBody.email || authRequest.email);
       // Generate JWT token with user email and tipo
       const token = generateToken(responseBody.email || authRequest.email, responseBody.tipo);
       
@@ -131,65 +139,52 @@ app.post('/logout', async (req, res) => {
 // R01 - AUTOCADASTRO
 app.post('/clientes', async (req, res) => {
   try {
-    // Step 1: Call ms-cliente to create the cliente
-    const clienteUrl = `${process.env.MICROSERVICE_CLIENTE_URL}/api/clientes`;
-    const response = await fetch(clienteUrl, {
+    console.log('Cliente creation request received:', req.body);
+    
+    // Create a copy of the request body
+    const clienteRequest = { ...req.body };
+    
+    // Hash the password before sending to orchestrator
+    if (clienteRequest.senha) {
+      clienteRequest.senha = hashPassword(clienteRequest.senha);
+    }
+    
+    const orchestratorUrl = `${process.env.ORCHESTRATOR_URL}/clientes`;
+    console.log('Forwarding to orchestrator:', orchestratorUrl);
+    
+    const response = await fetch(orchestratorUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(req.body)
+      body: JSON.stringify(clienteRequest)
     });
 
-    // Forward status and headers from ms-cliente
-    res.status(response.status);
-    for (const [key, value] of response.headers.entries()) {
-      res.setHeader(key, value);
-    }
+    console.log('Orchestrator response status:', response.status);
 
-    // Process response from ms-cliente
+    // Get the response content if any
     let responseBody;
     const contentType = response.headers.get('content-type');
     if (contentType && contentType.includes('application/json')) {
       responseBody = await response.json();
+      console.log('Orchestrator response body:', responseBody);
     }
 
-    // Step 2: If cliente was created successfully (201), generate password and send to ms-auth
-    if (response.status === 201) {
-      // Generate random 4-digit PIN
-      const rawPassword = generateRandomPassword();
-      console.log(`Generated password for ${req.body.email}: ${rawPassword}`);
-      
-      // Hash the password with SHA-256 + salt
-      const hashedPassword = hashPassword(rawPassword);
-      
-      // Create user in ms-auth using RabbitMQ (SAGA pattern)
-      await sendToQueue('auth-service-queue', {
-        action: 'CREATE_USER',
-        payload: {
-          email: req.body.email,
-          senha: hashedPassword,
-          tipo: 'CLIENTE',
-          ativo: true
-        }
-      });
-      
-      // Enhance response to include information about the password
-      if (responseBody) {
-        responseBody.message = 'Cliente created successfully. Password sent to console.';
-      } else {
-        responseBody = { 
-          message: 'Cliente created successfully. Password sent to console.' 
-        };
-      }
+    // Forward the exact status code from orchestrator
+    res.status(response.status);
+
+    // Forward all headers from orchestrator
+    for (const [key, value] of response.headers.entries()) {
+      res.setHeader(key, value);
     }
 
-    // Send the response
+    // Send the response body if it exists, otherwise just end the response
     if (responseBody) {
       res.json(responseBody);
     } else {
       res.end();
     }
+
   } catch (error) {
     console.error('Error forwarding cliente request:', error);
     res.status(500).json({

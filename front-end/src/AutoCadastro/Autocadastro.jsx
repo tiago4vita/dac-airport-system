@@ -2,8 +2,11 @@ import React from "react";
 import { useForm, Controller } from "react-hook-form";
 import { IMaskInput } from "react-imask";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import vector from "../assets/vector.svg";
 import "./AutoCadastro.css";
+
+console.log(process.env.REACT_APP_API_URL);
 
 // Validador de CPF
 function validarCPF(cpf) {
@@ -23,6 +26,11 @@ function validarCPF(cpf) {
   if (resto !== parseInt(cpf.charAt(10))) return false;
 
   return true;
+}
+
+// Gerador de senha aleatória de 4 dígitos
+function gerarSenha() {
+  return Math.floor(1000 + Math.random() * 9000).toString();
 }
 
 export const Autocadastro = () => {
@@ -55,10 +63,13 @@ export const Autocadastro = () => {
   };
 
   const onSubmit = async (data) => {
+    const senha = gerarSenha();
+    
     const cliente = {
       cpf: data.cpf.replace(/\D/g, ""),
       email: data.email,
       nome: data.nome,
+      senha: senha,
       saldo_milhas: 0,
       endereco: {
         cep: data.cep.replace(/\D/g, ""),
@@ -72,7 +83,7 @@ export const Autocadastro = () => {
     };
 
     try {
-      const response = await fetch("http://localhost:8080/clientes", {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/clientes`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -80,9 +91,11 @@ export const Autocadastro = () => {
         body: JSON.stringify(cliente),
       });
 
-      if (response.ok) {
-        alert("Cadastro realizado com sucesso! Verifique sua caixa de e-mail");
-        navigate("/");
+      if (response.status === 201) {
+        alert(`Cliente criado com sucesso. Sua senha é ${senha}`);
+        setTimeout(() => {
+          navigate("/");
+        }, 3000);
       } else {
         alert("Erro ao cadastrar cliente");
       }
@@ -236,7 +249,6 @@ export const Autocadastro = () => {
             <button
               type="button"
               className="cadastro-cancelar"
-              onClick={() => navigate("/")}
             >
               Cancelar
             </button>

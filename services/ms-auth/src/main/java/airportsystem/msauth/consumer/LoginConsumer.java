@@ -50,28 +50,33 @@ public class LoginConsumer {
             // Validate login and senha
             Usuario usuario = usuarioRepository.findByLogin(login);
             if(usuario == null) {
-                System.err.println("Erro ao validar login: Login incorreto");
-
-                // Prepare error response
+                System.err.println("Erro ao logar: Usuário não encontrado");
                 response.put("success", false);
-                response.put("message", "Erro ao validar login: Login incorreto");
-                response.put("errorType", "VALIDATION_ERROR");
+                response.put("message", "Erro ao logar: Usuário não encontrado");
+                response.put("errorType", "USER_NOT_FOUND");
                 response.put("statusCode", 401);
             } else if (!usuario.isAtivo()) {
                 System.err.println("Erro ao logar: Usuário inativo");
-
-                // Prepare error response
                 response.put("success", false);
                 response.put("message", "Erro ao logar: Usuário inativo");
                 response.put("errorType", "INACTIVE_USER");
                 response.put("statusCode", 401);
-            } else {// Prepare successful response with required fields
+            } else if(usuario.getSenha().equals(senha)) {
+                System.out.println("Login realizado com sucesso");
+
+                // Prepare successful response with required fields
                 response.put("success", true);
-                response.put("login", usuario.getLogin());
-                response.put("senha", usuario.getSenha());
-                response.put("codigo", usuario.getCodigo());
-                response.put("tipo", usuario.getTipo());
                 response.put("message", "Login realizado com sucesso");
+                response.put("codigo", usuario.getCodigo());
+                response.put("tipo", usuario.getTipo().toString());
+                response.put("email", usuario.getLogin());
+                response.put("statusCode", 200);
+            } else {
+                System.err.println("Erro ao logar: Senha incorreta");
+                response.put("success", false);
+                response.put("message", "Senha incorreta");
+                response.put("errorType", "INVALID_CREDENTIALS"); 
+                response.put("statusCode", 401);
             }
         } catch (ResponseStatusException e) {
             System.err.println("Erro ao validar login: " + e.getMessage());
@@ -92,13 +97,13 @@ public class LoginConsumer {
             response.put("errorType", "INTERNAL_ERROR");
         }
 
-        // Send response to retorno queue
+        // Return response directly
         try {
             String responseJson = objectMapper.writeValueAsString(response);
             return responseJson;
         } catch (JsonProcessingException e) {
             System.err.println("Erro ao converter resposta para JSON: " + e.getMessage());
-            return e.getMessage();
+            return "{\"success\":false,\"message\":\"Erro crítico ao processar JSON\",\"errorType\":\"CRITICAL_ERROR\"}";
         }
     }
 }

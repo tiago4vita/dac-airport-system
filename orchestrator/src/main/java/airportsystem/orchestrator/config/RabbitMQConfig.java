@@ -15,31 +15,6 @@ public class RabbitMQConfig {
     }
     
     @Bean
-    public Queue funcionarioCriarQueue() {
-        return new Queue("funcionario.criar", false);
-    }
-    
-    @Bean
-    public Queue funcionarioDeletarQueue() {
-        return new Queue("funcionario.deletar", false);
-    }
-    
-    @Bean
-    public Queue clienteCriarQueue() {
-        return new Queue("cliente.criar", false);
-    }
-    
-    @Bean
-    public Queue clienteDeletarQueue() {
-        return new Queue("cliente.deletar", false);
-    }
-    
-    @Bean
-    public Queue authCriarQueue() {
-        return new Queue("auth.criar", false);
-    }
-    
-    @Bean
     public ObjectMapper objectMapper() {
         return JsonMapper.builder().findAndAddModules().build();
     }
