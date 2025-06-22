@@ -31,12 +31,6 @@ public class RabbitMQConfig {
     public Queue aeroportoBuscarTodosQueue() { return new Queue("aeroporto.buscar-todos", false); }
 
     @Bean
-    public Queue retornoQueue() {
-        return new Queue("retorno", false);
-    }
-
-
-    @Bean
     public ObjectMapper objectMapper() {
         return JsonMapper.builder().findAndAddModules().build();
     }

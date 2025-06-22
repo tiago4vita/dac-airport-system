@@ -13,7 +13,7 @@ public class RabbitMQConfig {
     public Queue retornoQueue() {
         return new Queue("retorno", true);
     }
-    
+
     @Bean
     public ObjectMapper objectMapper() {
         return JsonMapper.builder().findAndAddModules().build();

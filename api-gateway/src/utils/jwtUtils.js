@@ -20,9 +20,10 @@ const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '24h';
  * Generate a JWT token
  * @param {string} email - User's email address
  * @param {string} tipo - User type/role (e.g., 'CLIENTE', 'FUNCIONARIO')
+ * @param {string} clienteCode - Optional cliente code for authorization
  * @returns {string} JWT token
  */
-const generateToken = (email, tipo = {}) => {
+const generateToken = (email, tipo = {}, clienteCode = null) => {
   // Create the payload with standard claims
   const payload = {
     sub: email,        // Subject (whom the token refers to)
@@ -30,6 +31,11 @@ const generateToken = (email, tipo = {}) => {
     iss: 'ms-auth',    // Issuer of the token
     iat: Math.floor(Date.now() / 1000),  // Issued at timestamp
   };
+
+  // Add cliente code if provided
+  if (clienteCode) {
+    payload.clienteCode = clienteCode;
+  }
 
   // Sign the token
   return jwt.sign(

@@ -45,6 +45,7 @@ export const Login = () => {
           access_token,
         };
 
+        // Let AuthContext handle sessionStorage
         login(usuarioCompleto);
 
         if (tipo === "CLIENTE") {

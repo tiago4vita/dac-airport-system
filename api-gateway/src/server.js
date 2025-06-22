@@ -6,7 +6,9 @@ const { validateLoginRequest } = require('./middleware/loginValidation');
 const fetch = require('node-fetch');
 const { generateRandomPassword, hashPassword } = require('./utils/passwordUtils');
 const { sendToQueue, connect } = require('./services/rabbitMQService');
-const { generateToken, verifyToken } = require('./utils/jwtUtils');
+const { generateToken, verifyToken, hasUserType } = require('./utils/jwtUtils');
+const jwt = require('jsonwebtoken');
+const axios = require('axios');
 
 // Load environment variables
 dotenv.config();
@@ -60,8 +62,15 @@ app.post('/login', validateLoginRequest, async (req, res) => {
     // If login is successful (status 200), generate JWT token
     if (response.status === 200 && responseBody) {
       console.log('Generating JWT token for email:', responseBody.email || authRequest.email);
-      // Generate JWT token with user email and tipo
-      const token = generateToken(responseBody.email || authRequest.email, responseBody.tipo);
+      
+      // Extract cliente code from the response if available
+      let clienteCode = null;
+      if (responseBody.usuario && responseBody.usuario.codigo) {
+        clienteCode = responseBody.usuario.codigo;
+      }
+      
+      // Generate JWT token with user email, tipo, and cliente code
+      const token = generateToken(responseBody.email || authRequest.email, responseBody.tipo, clienteCode);
       
       // Add JWT token to the response
       responseBody.access_token = token;
@@ -197,53 +206,127 @@ app.post('/clientes', async (req, res) => {
 // PERMISSÃO : CLIENTE
 // R03 - TELA INICIAL DE CLIENTE
 app.get('/clientes/:codigoCliente', async (req, res) => {
-  // Get token from Authorization header
-  const authHeader = req.headers.authorization;
-  if (!authHeader) {
-    return res.status(401).json({
-      error: 'Unauthorized',
-      message: 'No authorization token provided'
-    });
-  }
+  try {
+    // Get token from Authorization header
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+      return res.status(401).json({
+        error: 'Unauthorized',
+        message: 'No authorization token provided'
+      });
+    }
 
-  const token = authHeader.split(' ')[1];
-  
-  // Verify token and check if user type is CLIENTE
-  if (!hasUserType(token, 'CLIENTE')) {
-    return res.status(403).json({
-      error: 'Forbidden',
-      message: 'User must be of type CLIENTE to access this resource'
-    });
-  }
+    const token = authHeader.split(' ')[1];
+    
+    // Verify token and check if user type is CLIENTE
+    if (!hasUserType(token, 'CLIENTE')) {
+      return res.status(403).json({
+        error: 'Forbidden',
+        message: 'User must be of type CLIENTE to access this resource'
+      });
+    }
 
-  //TODO: Implementar a lógica para buscar o cliente usando saga
-  //Verificar se o codigo do cliente é o mesmo do JWT
-  //Se não for, retornar 403
+    // Verify if the cliente code in the URL matches the one in the JWT
+    const decodedToken = verifyToken(token);
+    if (!decodedToken) {
+      return res.status(401).json({
+        error: 'Unauthorized',
+        message: 'Invalid or expired token'
+      });
+    }
+
+    const { codigoCliente } = req.params;
+    
+    // Check if the cliente code in the URL matches the user's code from JWT
+    if (decodedToken.clienteCode != codigoCliente) {
+      return res.status(403).json({
+        error: 'Forbidden',
+        message: 'You can only access your own cliente data'
+      });
+    }
+
+    console.log('Cliente search request received for codigo:', codigoCliente);
+    
+    const orchestratorUrl = `${process.env.ORCHESTRATOR_URL}/clientes/${codigoCliente}`;
+    console.log('Forwarding to orchestrator:', orchestratorUrl);
+    
+    const response = await fetch(orchestratorUrl, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    console.log('Orchestrator response status:', response.status);
+
+    // Get the response content if any
+    let responseBody;
+    const contentType = response.headers.get('content-type');
+    if (contentType && contentType.includes('application/json')) {
+      responseBody = await response.json();
+      console.log('Orchestrator response body:', responseBody);
+    }
+
+    // Forward the exact status code from orchestrator
+    res.status(response.status);
+
+    // Forward all headers from orchestrator
+    for (const [key, value] of response.headers.entries()) {
+      res.setHeader(key, value);
+    }
+
+    // Send the response body if it exists, otherwise just end the response
+    if (responseBody) {
+      res.json(responseBody);
+    } else {
+      res.end();
+    }
+
+  } catch (error) {
+    console.error('Error forwarding cliente search request:', error);
+    res.status(500).json({ error: 'Internal Server Error', message: error.message });
+  }
 });
 
-// R04 - LISTAR RESERVAS
+// PERMISSÃO: CLIENTE
+// R-something: Listar reservas do cliente
 app.get('/clientes/:codigoCliente/reservas', async (req, res) => {
-  // Get token from Authorization header
-  const authHeader = req.headers.authorization;
-  if (!authHeader) {
-    return res.status(401).json({
-      error: 'Unauthorized',
-      message: 'No authorization token provided'
-    });
-  }
+  try {
+    const { codigoCliente } = req.params;
+    
+    // Validate JWT token
+    const token = req.headers.authorization?.replace('Bearer ', '');
+    if (!token) {
+      return res.status(401).json({ success: false, message: 'Token não fornecido' });
+    }
 
-  const token = authHeader.split(' ')[1];
-  
-  // Verify token and check if user type is CLIENTE
-  if (!hasUserType(token, 'CLIENTE')) {
-    return res.status(403).json({
-      error: 'Forbidden',
-      message: 'User must be of type CLIENTE to access this resource'
-    });
+    const decoded = verifyToken(token);
+    if (!decoded) {
+      return res.status(401).json({ success: false, message: 'Token inválido ou expirado' });
+    }
+    console.log('JWT decoded for reservas endpoint:', decoded);
+    
+    // Ensure the client can only access their own reservations
+    if (decoded.role === 'CLIENTE' && decoded.clienteCode !== codigoCliente) {
+      return res.status(403).json({ success: false, message: 'Acesso negado' });
+    }
+
+    console.log('Forwarding to orchestrator: http://orchestrator:3002/clientes/' + codigoCliente + '/reservas');
+    
+    const response = await axios.get(`http://orchestrator:3002/clientes/${codigoCliente}/reservas`);
+    console.log('Orchestrator response status:', response.status);
+    console.log('Orchestrator response data:', response.data);
+    
+    res.json(response.data);
+  } catch (error) {
+    console.error('Error in /clientes/:codigoCliente/reservas:', error.message);
+    if (error.response) {
+      console.error('Error response data:', error.response.data);
+      res.status(error.response.status).json(error.response.data);
+    } else {
+      res.status(500).json({ success: false, message: 'Erro interno do servidor' });
+    }
   }
-  //TODO: Implementar a lógica para buscar as reservas do cliente usando saga
-  //Verificar se o codigo do cliente é o mesmo do JWT
-  //Se não for, retornar 403
 });
 
 // R05 - COMPRAR MILHAS

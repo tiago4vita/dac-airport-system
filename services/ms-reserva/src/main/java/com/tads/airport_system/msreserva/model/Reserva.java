@@ -4,6 +4,7 @@ package com.tads.airport_system.msreserva.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -41,6 +42,7 @@ public class Reserva {
     @JoinColumn(name = "codigo_estado", nullable = false)
     private EstadoReserva estado;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "reserva", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AlteracaoEstadoReserva> alteracoesEstado = new ArrayList<>();
 

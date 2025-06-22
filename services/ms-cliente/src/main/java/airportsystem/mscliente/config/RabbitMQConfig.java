@@ -28,12 +28,6 @@ public class RabbitMQConfig {
     public Queue clienteDeletarQueue() { return new Queue("cliente.deletar", true); }
 
     @Bean
-    public Queue retornoQueue() {
-        return new Queue("retorno", true);
-    }
-
-
-    @Bean
     public ObjectMapper objectMapper() {
         return JsonMapper.builder().findAndAddModules().build();
     }
