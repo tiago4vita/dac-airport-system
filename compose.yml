@@ -98,6 +98,7 @@ services:
     networks:
       - airport-network
 
+
   rabbitmq:
     image: rabbitmq:3-management
     ports:
@@ -143,6 +144,58 @@ services:
     networks:
       - airport-network
 
+  ms-reserva:
+    build:
+      context: ./services/ms-reserva
+      dockerfile: Dockerfile
+    ports:
+      - "8083:8083"
+    environment:
+      - SPRING_DATASOURCE_COMMAND_URL=jdbc:postgresql://postgres-reserva-command:5432/reserva_command_db
+      - SPRING_DATASOURCE_QUERY_URL=jdbc:postgresql://postgres-reserva-query:5432/reserva_query_db
+      - SPRING_DATASOURCE_COMMAND_USERNAME=postgres
+      - SPRING_DATASOURCE_COMMAND_PASSWORD=postgres
+      - SPRING_DATASOURCE_QUERY_USERNAME=postgres
+      - SPRING_DATASOURCE_QUERY_PASSWORD=postgres
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
+      - SPRING_RABBITMQ_USERNAME=user
+      - SPRING_RABBITMQ_PASSWORD=password
+    depends_on:
+      - postgres-reserva-command
+      - postgres-reserva-query
+      - rabbitmq
+    networks:
+      - airport-network
+
+  postgres-reserva-command:
+    image: postgres:16
+    ports:
+      - "5435:5432"
+    environment:
+      - POSTGRES_DB=reserva_command_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - postgres_reserva_command_data:/var/lib/postgresql/data
+      - ./services/ms-reserva/src/main/resources/db/init/01-init-command-db.sql:/docker-entrypoint-initdb.d/01-init-command-db.sql
+    networks:
+      - airport-network
+
+  postgres-reserva-query:
+    image: postgres:16
+    ports:
+      - "5436:5432"
+    environment:
+      - POSTGRES_DB=reserva_query_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - postgres_reserva_query_data:/var/lib/postgresql/data
+      - ./services/ms-reserva/src/main/resources/db/init/02-init-query-db.sql:/docker-entrypoint-initdb.d/02-init-query-db.sql
+    networks:
+      - airport-network
+
 networks:
   airport-network:
     driver: bridge
@@ -151,3 +204,5 @@ volumes:
   mongodb_data:
   postgres_cliente_data:
   postgres_voo_data:
+  postgres_reserva_command_data:
+  postgres_reserva_query_data:
