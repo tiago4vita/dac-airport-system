@@ -2,6 +2,7 @@ package airportsystem.msauth.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.index.Indexed;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -18,20 +19,24 @@ public class Usuario {
     @Indexed(unique = true)
     private String codigo;
 
+    @Field("login")
     @Indexed(unique = true)
     @Email(message = "Email inválido")
     @NotBlank(message = "Email não pode ser vazio")
     private String login;
 
+    @Field("senha")
     @NotBlank(message = "Senha não pode ser vazia")
     private String senha;// Stores SHA256+SALT hash from API Gateway
 
+    @Field("tipo")
     private TipoUsuario tipo;
 
     public enum TipoUsuario {
         CLIENTE, FUNCIONARIO
     }
 
+    @Field("ativo")
     private boolean ativo;
 
     // Default constructor

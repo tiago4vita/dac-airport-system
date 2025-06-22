@@ -10,7 +10,27 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMQConfig {
 
     @Bean
-    public Queue clienteCriarQueue() {
+    public Queue retornoQueue() {
         return new Queue("retorno", true);
+    }
+    
+    @Bean
+    public Queue funcionarioCriarQueue() {
+        return new Queue("funcionario.criar", false);
+    }
+    
+    @Bean
+    public Queue funcionarioDeletarQueue() {
+        return new Queue("funcionario.deletar", false);
+    }
+    
+    @Bean
+    public Queue authCriarQueue() {
+        return new Queue("auth.criar", false);
+    }
+    
+    @Bean
+    public ObjectMapper objectMapper() {
+        return JsonMapper.builder().findAndAddModules().build();
     }
 }

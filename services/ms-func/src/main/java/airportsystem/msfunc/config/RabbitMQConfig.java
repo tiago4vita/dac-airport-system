@@ -32,6 +32,11 @@ public class RabbitMQConfig {
     }
 
     @Bean
+    public Queue funcionarioDeletarQueue() { 
+        return new Queue("funcionario.deletar", false); 
+    }
+
+    @Bean
     public ObjectMapper objectMapper() {
         return JsonMapper.builder().findAndAddModules().build();
     }

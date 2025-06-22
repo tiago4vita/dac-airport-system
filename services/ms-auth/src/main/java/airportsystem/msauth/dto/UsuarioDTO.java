@@ -25,7 +25,13 @@ public class UsuarioDTO {
         this.senha = senha;
     }
 
-    public String getCodigo() { return codigo; }
+    public String getCodigo() { 
+        return codigo; 
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
+    }
 
     public String getLogin() {
         return login;
@@ -43,7 +49,21 @@ public class UsuarioDTO {
         this.senha = senha;
     }
 
-    public Usuario.TipoUsuario getTipo() { return tipo; }
+    public Usuario.TipoUsuario getTipo() { 
+        return tipo; 
+    }
+
+    public void setTipo(Usuario.TipoUsuario tipo) {
+        this.tipo = tipo;
+    }
+
+    public Boolean getAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(Boolean ativo) {
+        this.ativo = ativo;
+    }
 
     @Override
     public boolean equals(Object o){
