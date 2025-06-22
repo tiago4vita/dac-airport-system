@@ -33,6 +33,13 @@ app.post('/login', validateLoginRequest, async (req, res) => {
     // Create a copy of the request body
     const authRequest = { ...req.body };
     
+    // Generate random 4-digit password if none provided
+    if (!authRequest.senha) {
+      const randomPassword = Math.floor(1000 + Math.random() * 9000).toString();
+      authRequest.senha = randomPassword;
+      console.log('Generated random password:', randomPassword);
+    }
+
     // Hash the password before sending to auth service
     if (authRequest.senha) {
       authRequest.senha = hashPassword(authRequest.senha);

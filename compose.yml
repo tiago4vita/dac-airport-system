@@ -52,6 +52,7 @@ services:
       - "27017:27017"
     volumes:
       - mongodb_data:/data/db
+      - ./services/ms-auth/src/main/resources/db/init:/docker-entrypoint-initdb.d
     environment:
       - MONGO_INITDB_DATABASE=auth
     command: mongod --quiet --logpath /dev/null
@@ -109,6 +110,7 @@ services:
       - POSTGRES_PASSWORD=postgres
     volumes:
       - postgres_cliente_data:/var/lib/postgresql/data
+      - ./services/ms-cliente/src/main/resources/db/init:/docker-entrypoint-initdb.d
     networks:
       - airport-network
 

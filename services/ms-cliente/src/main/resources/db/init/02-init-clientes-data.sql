@@ -1,0 +1,2 @@
+INSERT INTO clientes (cep,data_atualizacao,data_criacao,milhas,cpf,bairro,cidade,codigo,complemento,email,nome,numero,rua,uf) VALUES
+	 ('29142120',NULL,'2025-06-22 09:21:22.508404',0,'62529933014','PBandeirantes','Cariacica','a3773666-379c-4273-ab10-22632f56d21b','Apartamento','joaomelara@xerocopiadora.com.br','Joao Melara','567','Rua das Palmeiras','Espirito Santo'); 
