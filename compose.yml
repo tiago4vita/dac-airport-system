@@ -3,10 +3,10 @@ services:
     build:
       context: ./front-end
       dockerfile: Dockerfile
+      args:
+        REACT_APP_API_URL: http://localhost:3001
     ports:
       - "3000:3000"
-    environment:
-      - REACT_APP_API_URL=http://localhost:3000
     depends_on:
       - api-gateway
     networks:
@@ -20,13 +20,27 @@ services:
       - "3001:3001"
     environment:
       - PORT=3001
-      - MICROSERVICE_AUTH_URL=http://ms-auth:8080
-      - MICROSERVICE_CLIENTE_URL=http://ms-cliente:8081
-      - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672
+      - ORCHESTRATOR_URL=http://orchestrator:3002
       - PASSWORD_SALT=airport-system-salt
     depends_on:
-      - ms-auth
-      - ms-cliente
+      - orchestrator
+      - rabbitmq
+    networks:
+      - airport-network
+
+  orchestrator:
+    build:
+      context: ./orchestrator
+      dockerfile: Dockerfile
+    ports:
+      - "3002:3002"
+    environment:
+      - PORT=3002
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
+      - SPRING_RABBITMQ_USERNAME=user
+      - SPRING_RABBITMQ_PASSWORD=password
+    depends_on:
       - rabbitmq
     networks:
       - airport-network
@@ -38,6 +52,7 @@ services:
       - "27017:27017"
     volumes:
       - mongodb_data:/data/db
+      - ./services/ms-auth/src/main/resources/db/init:/docker-entrypoint-initdb.d
     environment:
       - MONGO_INITDB_DATABASE=auth
     command: mongod --quiet --logpath /dev/null
@@ -95,9 +110,43 @@ services:
       - POSTGRES_PASSWORD=postgres
     volumes:
       - postgres_cliente_data:/var/lib/postgresql/data
+      - ./services/ms-cliente/src/main/resources/db/init:/docker-entrypoint-initdb.d
     networks:
       - airport-network
 
+  ms-func:
+    build:
+      context: ./services/ms-func
+      dockerfile: Dockerfile
+    ports:
+      - "8084:8084"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-func:5432/func_db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
+      - SPRING_RABBITMQ_USERNAME=user
+      - SPRING_RABBITMQ_PASSWORD=password
+    depends_on:
+      - postgres-func
+      - rabbitmq
+    networks:
+      - airport-network
+
+  postgres-func:
+    image: postgres:16
+    ports:
+      - "5437:5432"
+    environment:
+      - POSTGRES_DB=func_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - postgres_func_data:/var/lib/postgresql/data
+      - ./services/ms-func/src/main/resources/db/init:/docker-entrypoint-initdb.d
+    networks:
+      - airport-network
 
   rabbitmq:
     image: rabbitmq:3-management
@@ -203,6 +252,7 @@ networks:
 volumes:
   mongodb_data:
   postgres_cliente_data:
+  postgres_func_data:
   postgres_voo_data:
   postgres_reserva_command_data:
   postgres_reserva_query_data:

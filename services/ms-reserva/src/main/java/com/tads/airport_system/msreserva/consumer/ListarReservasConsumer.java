@@ -11,6 +11,8 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 
 import java.util.List;
 import java.util.Map;
@@ -31,47 +33,20 @@ public class ListarReservasConsumer {
     }
 
     @RabbitListener(queues = "reserva.listar")
-    public void receiveMessage(String msg) throws JsonMappingException, JsonProcessingException {
-        Map<String, Object> response = new HashMap<>();
-        try {
-            String clienteId = objectMapper.readValue(msg, String.class);
+    public String receiveMessage(String clienteId) throws JsonProcessingException {
+        System.out.println("ListarReservasConsumer received message for clienteId: '" + clienteId + "'");
 
-            // Find all reservations for the client
-            List<Reserva> reservas = reservaRepository.findByClienteId(clienteId);
+        List<Reserva> reservas = reservaRepository.findByClienteId(clienteId);
+        System.out.println("Reservas listadas via RabbitMQ para cliente: " + clienteId + " - Total: " + reservas.size());
 
-            System.out.println("Reservas listadas via RabbitMQ para cliente: " + clienteId + " - Total: " + reservas.size());
+        ObjectNode response = objectMapper.createObjectNode();
+        ArrayNode reservasJson = objectMapper.valueToTree(reservas);
+        response.put("success", true);
+        response.put("total", reservas.size());
+        response.set("reservas", reservasJson);
+        String jsonResponse = objectMapper.writeValueAsString(response);
 
-            // Convert to DTOs
-            List<ReservaDTO> reservasDTO = reservas.stream()
-                .map(reserva -> new ReservaDTO(
-                    reserva.getId(),
-                    reserva.getVooId(),
-                    reserva.getClienteId(),
-                    reserva.getDataHoraRes(),
-                    reserva.getValor(),
-                    reserva.getQuantidadePoltronas(),
-                    reserva.getMilhasUtilizadas(),
-                    reserva.getEstado()
-                ))
-                .collect(Collectors.toList());
-
-            response.put("success", true);
-            response.put("reservas", reservasDTO);
-            response.put("total", reservasDTO.size());
-
-        } catch (Exception e) {
-            response.put("success", false);
-            response.put("message", "Erro ao listar reservas: " + e.getMessage());
-            System.err.println("Erro ao listar reservas: " + e.getMessage());
-            e.printStackTrace();
-        } finally {
-            try {
-                String responseJson = objectMapper.writeValueAsString(response);
-                rabbitTemplate.convertAndSend("retorno", responseJson);
-                System.out.println("Resposta de listagem enviada: " + responseJson);
-            } catch (JsonProcessingException e) {
-                System.err.println("Erro ao converter resposta para JSON: " + e.getMessage());
-            }
-        }
+        System.out.println("Sending response: " + jsonResponse);
+        return jsonResponse;
     }
 }

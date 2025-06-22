@@ -33,13 +33,14 @@ public class LoginConsumer {
     }
 
     @RabbitListener(queues = "auth.login")
-    public void receiveMessage(String msg) throws JsonMappingException, JsonProcessingException {
+    public String receiveMessage(String msg) throws JsonMappingException, JsonProcessingException {
         Map<String, Object> response = new HashMap<>();
         try {
             if (msg == null || msg.isEmpty()) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                         "Mensagem vazia. A mensagem deve conter os dados do usuário, incluindo o login e senha.");
             }
+            System.out.println("Login recebido via RabbitMQ: " + msg);
 
             JsonNode jsonNode = objectMapper.readTree(msg);
 
@@ -47,24 +48,36 @@ public class LoginConsumer {
             String senha = jsonNode.get("senha").asText();
 
             // Validate login and senha
-            Usuario usuario = usuarioRepository.findByLogin(login)
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Login não encontrado"));
+            Usuario usuario = usuarioRepository.findByLogin(login);
+            if(usuario == null) {
+                System.err.println("Erro ao logar: Usuário não encontrado");
+                response.put("success", false);
+                response.put("message", "Erro ao logar: Usuário não encontrado");
+                response.put("errorType", "USER_NOT_FOUND");
+                response.put("statusCode", 401);
+            } else if (!usuario.isAtivo()) {
+                System.err.println("Erro ao logar: Usuário inativo");
+                response.put("success", false);
+                response.put("message", "Erro ao logar: Usuário inativo");
+                response.put("errorType", "INACTIVE_USER");
+                response.put("statusCode", 401);
+            } else if(usuario.getSenha().equals(senha)) {
+                System.out.println("Login realizado com sucesso");
 
-            if (!usuario.getSenha().equals(senha)) {
-                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Senha incorreta");
+                // Prepare successful response with required fields
+                response.put("success", true);
+                response.put("message", "Login realizado com sucesso");
+                response.put("codigo", usuario.getCodigo());
+                response.put("tipo", usuario.getTipo().toString());
+                response.put("email", usuario.getLogin());
+                response.put("statusCode", 200);
+            } else {
+                System.err.println("Erro ao logar: Senha incorreta");
+                response.put("success", false);
+                response.put("message", "Senha incorreta");
+                response.put("errorType", "INVALID_CREDENTIALS"); 
+                response.put("statusCode", 401);
             }
-            if (!usuario.isAtivo()) {
-                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Usuário inativo");
-            }
-
-            // Prepare successful response with required fields
-            response.put("success", true);
-            response.put("login", usuario.getLogin());
-            response.put("senha", usuario.getSenha());
-            response.put("codigo", usuario.getCodigo());
-            response.put("tipo", usuario.getTipo());
-            response.put("message", "Login realizado com sucesso");
-
         } catch (ResponseStatusException e) {
             System.err.println("Erro ao validar login: " + e.getMessage());
 
@@ -84,13 +97,13 @@ public class LoginConsumer {
             response.put("errorType", "INTERNAL_ERROR");
         }
 
-        // Send response to retorno queue
+        // Return response directly
         try {
             String responseJson = objectMapper.writeValueAsString(response);
-            rabbitTemplate.convertAndSend("retorno", responseJson);
-            System.out.println("Resposta enviada para a fila retorno: " + responseJson);
+            return responseJson;
         } catch (JsonProcessingException e) {
             System.err.println("Erro ao converter resposta para JSON: " + e.getMessage());
+            return "{\"success\":false,\"message\":\"Erro crítico ao processar JSON\",\"errorType\":\"CRITICAL_ERROR\"}";
         }
     }
 }

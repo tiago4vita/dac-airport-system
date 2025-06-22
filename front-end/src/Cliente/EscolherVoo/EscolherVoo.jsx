@@ -21,7 +21,7 @@ export const EscolherVoo = () => {
         if (origem) params.append("origem", origem);
         if (destino) params.append("destino", destino);
 
-        let url = "http://localhost:8080/voos";
+        let url = `${process.env.REACT_APP_API_URL}/voos`;
         if (params.toString()) {
           url += "?" + params.toString();
         }

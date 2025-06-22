@@ -9,9 +9,12 @@ export function AuthProvider({ children }) {
   });
 
   const login = (userData) => {
-    sessionStorage.setItem("token", userData.access_token);
-    sessionStorage.setItem("usuario", JSON.stringify(userData));
     setUser(userData);
+    sessionStorage.setItem("user", JSON.stringify(userData));
+    sessionStorage.setItem("token", userData.access_token);
+    if (userData && userData.codigo) {
+      sessionStorage.setItem("codigo", userData.codigo);
+    }
   };
 
   const logout = () => {

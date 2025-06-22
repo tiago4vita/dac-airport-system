@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { ModalCancela } from "../ModalCancela/ModalCancela";
 import { SaldoMilhas } from "../SaldoMilhas/SaldoMilhas";
 import api from "../../api/axiosInstance";
 import "./TelaInicialCli.css";
+import { useAuth } from "../../AuthContext";
 
 export const TelaInicialCli = () => {
   const [cliente, setCliente] = useState(null);
@@ -12,8 +13,41 @@ export const TelaInicialCli = () => {
   const [itensPorPagina, setItensPorPagina] = useState(10);
   const [reservaSelecionada, setReservaSelecionada] = useState(null);
   const navigate = useNavigate();
+  const { user } = useAuth();
 
-  const codigoCliente = sessionStorage.getItem("codigo");
+  const carregarDados = useCallback(async () => {
+    const codigoCliente = user?.codigo;
+    if (!codigoCliente) return;
+
+    try {
+      const clienteRes = await api.get(`/clientes/${codigoCliente}`);
+      setCliente(clienteRes.data);
+
+      const reservasRes = await api.get(
+        `/clientes/${codigoCliente}/reservas`
+      );
+      
+      const reservasProcessadas = reservasRes.data.map(reserva => ({
+        ...reserva,
+        voo: {
+          ...reserva.voo.voo,
+          aeroporto_origem: reserva.voo.voo.origem,
+          aeroporto_destino: reserva.voo.voo.destino,
+          data: new Date(
+            reserva.voo.voo.dataHora[0], 
+            reserva.voo.voo.dataHora[1] - 1,
+            reserva.voo.voo.dataHora[2],
+            reserva.voo.voo.dataHora[3],
+            reserva.voo.voo.dataHora[4]
+          )
+        }
+      }));
+
+      setReservas(reservasProcessadas);
+    } catch (error) {
+      console.error("Erro ao carregar dados:", error);
+    }
+  }, [user]);
 
   useEffect(() => {
     const calcularItensPorAltura = () => {
@@ -27,23 +61,9 @@ export const TelaInicialCli = () => {
     setItensPorPagina(calcularItensPorAltura());
   }, []);
 
-  const carregarDados = async () => {
-    if (!codigoCliente) return;
-
-    try {
-      const clienteRes = await api.get(`/clientes/${codigoCliente}`);
-      setCliente(clienteRes.data);
-
-      const reservasRes = await api.get(`/clientes/${codigoCliente}/reservas`);
-      setReservas(reservasRes.data);
-    } catch (error) {
-      console.error("Erro ao carregar dados:", error);
-    }
-  };
-
   useEffect(() => {
     carregarDados();
-  }, []);
+  }, [carregarDados]);
 
   const totalPaginas = Math.ceil(reservas.length / itensPorPagina);
   const inicio = (paginaAtual - 1) * itensPorPagina;
@@ -69,7 +89,7 @@ export const TelaInicialCli = () => {
 
   return (
     <>
-      <SaldoMilhas saldo={cliente?.saldoMilhas ?? 0} />
+      <SaldoMilhas saldo={cliente?.saldo_milhas ?? 0} />
 
       <section className="tabela-reservas-cliente">
         <table>
@@ -87,7 +107,7 @@ export const TelaInicialCli = () => {
           <tbody>
             {reservasPaginadas.map((reserva, index) => {
               const voo = reserva.voo;
-              const dataObj = new Date(voo?.data);
+              const dataObj = voo.data;
               const statusClass = reserva.estado.toLowerCase().replace(/\s/g, "-");
 
               return (

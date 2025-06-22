@@ -7,7 +7,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -22,26 +21,42 @@ public class CriarClienteConsumer {
 
     private final ClienteRepository clienteRepository;
     private final ObjectMapper objectMapper;
-    private final RabbitTemplate rabbitTemplate;
 
     @Autowired
-    public CriarClienteConsumer(ClienteRepository clienteRepository, ObjectMapper objectMapper, RabbitTemplate rabbitTemplate) {
+    public CriarClienteConsumer(ClienteRepository clienteRepository, ObjectMapper objectMapper) {
         this.clienteRepository = clienteRepository;
         this.objectMapper = objectMapper;
-        this.rabbitTemplate = rabbitTemplate;
     }
 
     @RabbitListener(queues = "cliente.criar")
-    public void receiveMessage(String msg) throws JsonMappingException, JsonProcessingException {
+    public String receiveMessage(String msg) throws JsonMappingException, JsonProcessingException {
         Map<String, Object> response = new HashMap<>();
         try {
+            if (msg == null || msg.isEmpty()) {
+                response.put("success", false);
+                response.put("message", "Mensagem vazia. A mensagem deve conter os dados do cliente.");
+                response.put("errorType", "VALIDATION_ERROR");
+                return objectMapper.writeValueAsString(response);
+            }
+            
+            System.out.println("Criar cliente recebido via RabbitMQ: " + msg);
+            
             ClienteDTO clienteDTO = objectMapper.readValue(msg, ClienteDTO.class);
             Cliente novoCliente = createCliente(clienteDTO);
             System.out.println("Cliente criado via RabbitMQ: (" + novoCliente.getNome() + ") " + msg);
             
             // Prepare successful response
             response.put("success", true);
-            response.put("cliente", novoCliente);
+            
+            Map<String, Object> clienteData = new HashMap<>();
+            clienteData.put("codigo", novoCliente.getCodigo());
+            clienteData.put("cpf", novoCliente.getCpf());
+            clienteData.put("nome", novoCliente.getNome());
+            clienteData.put("email", novoCliente.getEmail());
+            clienteData.put("milhas", novoCliente.getMilhas());
+            clienteData.put("dataCriacao", novoCliente.getDataCriacao());
+            
+            response.put("cliente", clienteData);
             response.put("message", "Cliente criado com sucesso");
             
         } catch (ResponseStatusException e) {
@@ -63,13 +78,12 @@ public class CriarClienteConsumer {
             response.put("errorType", "INTERNAL_ERROR");
         }
         
-        // Send response to retorno queue
+        // Return response directly
         try {
-            String responseJson = objectMapper.writeValueAsString(response);
-            rabbitTemplate.convertAndSend("retorno", responseJson);
-            System.out.println("Resposta enviada para a fila retorno: " + responseJson);
+            return objectMapper.writeValueAsString(response);
         } catch (JsonProcessingException e) {
             System.err.println("Erro ao converter resposta para JSON: " + e.getMessage());
+            return "{\"success\":false,\"message\":\"Erro crítico ao processar JSON\",\"errorType\":\"CRITICAL_ERROR\"}";
         }
     }
 

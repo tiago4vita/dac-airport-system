@@ -6,7 +6,9 @@ const { validateLoginRequest } = require('./middleware/loginValidation');
 const fetch = require('node-fetch');
 const { generateRandomPassword, hashPassword } = require('./utils/passwordUtils');
 const { sendToQueue, connect } = require('./services/rabbitMQService');
-const { generateToken, verifyToken } = require('./utils/jwtUtils');
+const { generateToken, verifyToken, hasUserType } = require('./utils/jwtUtils');
+const jwt = require('jsonwebtoken');
+const axios = require('axios');
 
 // Load environment variables
 dotenv.config();
@@ -26,15 +28,26 @@ app.get('/health', (req, res) => {
 // R02a - LOGIN
 app.post('/login', validateLoginRequest, async (req, res) => {
   try {
+    console.log('Login request received:', req.body);
+    
     // Create a copy of the request body
     const authRequest = { ...req.body };
     
+    // Generate random 4-digit password if none provided
+    if (!authRequest.senha) {
+      const randomPassword = Math.floor(1000 + Math.random() * 9000).toString();
+      authRequest.senha = randomPassword;
+      console.log('Generated random password:', randomPassword);
+    }
+
     // Hash the password before sending to auth service
     if (authRequest.senha) {
       authRequest.senha = hashPassword(authRequest.senha);
     }
     
-    const authUrl = `${process.env.MICROSERVICE_AUTH_URL}/api/auth/login`;
+    const authUrl = `${process.env.ORCHESTRATOR_URL}/login`;
+    console.log('Forwarding to orchestrator:', authUrl);
+    
     const response = await fetch(authUrl, {
       method: 'POST',
       headers: {
@@ -43,19 +56,45 @@ app.post('/login', validateLoginRequest, async (req, res) => {
       body: JSON.stringify(authRequest)
     });
 
+    console.log('Orchestrator response status:', response.status);
+
     // Get the response content if any
     let responseBody;
     const contentType = response.headers.get('content-type');
     if (contentType && contentType.includes('application/json')) {
       responseBody = await response.json();
+      console.log('Orchestrator response body:', responseBody);
+    }
+
+    // If login is successful (status 200), generate JWT token
+    if (response.status === 200 && responseBody) {
+      console.log('Generating JWT token for email:', responseBody.email || authRequest.email);
+      
+      // Extract cliente code from the response if available
+      let clienteCode = null;
+      if (responseBody.usuario && responseBody.usuario.codigo) {
+        clienteCode = responseBody.usuario.codigo;
+      }
+      
+      // Generate JWT token with user email, tipo, and cliente code
+      const token = generateToken(responseBody.email || authRequest.email, responseBody.tipo, clienteCode);
+      
+      // Add JWT token to the response
+      responseBody.access_token = token;
+      responseBody.token_type = 'bearer';
+      
+      // Set Authorization header
+      res.setHeader('Authorization', `Bearer ${token}`);
     }
 
     // Forward the exact status code from ms-auth
     res.status(response.status);
 
-    // Forward all headers from ms-auth
+    // Forward all headers from ms-auth (except Authorization which we set above)
     for (const [key, value] of response.headers.entries()) {
-      res.setHeader(key, value);
+      if (key.toLowerCase() !== 'authorization') {
+        res.setHeader(key, value);
+      }
     }
 
     // Send the response body if it exists, otherwise just end the response
@@ -116,65 +155,55 @@ app.post('/logout', async (req, res) => {
 // R01 - AUTOCADASTRO
 app.post('/clientes', async (req, res) => {
   try {
-    // Step 1: Call ms-cliente to create the cliente
-    const clienteUrl = `${process.env.MICROSERVICE_CLIENTE_URL}/api/clientes`;
-    const response = await fetch(clienteUrl, {
+    console.log('Cliente creation request received:', req.body);
+    
+    // Create a copy of the request body
+    const clienteRequest = { ...req.body };
+    
+    // Hash the password before sending to orchestrator
+    if (!clienteRequest.senha) {
+      const randomPassword = Math.floor(1000 + Math.random() * 9000).toString();
+      clienteRequest.senha = randomPassword;
+      console.log('Generated random password for new client:', randomPassword);
+    }
+    clienteRequest.senha = hashPassword(clienteRequest.senha);
+    
+    const orchestratorUrl = `${process.env.ORCHESTRATOR_URL}/clientes`;
+    console.log('Forwarding to orchestrator:', orchestratorUrl);
+    
+    const response = await fetch(orchestratorUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(req.body)
+      body: JSON.stringify(clienteRequest)
     });
 
-    // Forward status and headers from ms-cliente
-    res.status(response.status);
-    for (const [key, value] of response.headers.entries()) {
-      res.setHeader(key, value);
-    }
-
-    // Process response from ms-cliente
+    // Get the response content if any
     let responseBody;
     const contentType = response.headers.get('content-type');
     if (contentType && contentType.includes('application/json')) {
       responseBody = await response.json();
+      console.log('Orchestrator response body:', responseBody);
     }
 
-    // Step 2: If cliente was created successfully (201), generate password and send to ms-auth
-    if (response.status === 201) {
-      // Generate random 4-digit PIN
-      const rawPassword = generateRandomPassword();
-      console.log(`Generated password for ${req.body.email}: ${rawPassword}`);
-      
-      // Hash the password with SHA-256 + salt
-      const hashedPassword = hashPassword(rawPassword);
-      
-      // Create user in ms-auth using RabbitMQ (SAGA pattern)
-      await sendToQueue('auth-service-queue', {
-        action: 'CREATE_USER',
-        payload: {
-          email: req.body.email,
-          senha: hashedPassword,
-          tipo: 'CLIENTE',
-          ativo: true
-        }
-      });
-      
-      // Enhance response to include information about the password
-      if (responseBody) {
-        responseBody.message = 'Cliente created successfully. Password sent to console.';
-      } else {
-        responseBody = { 
-          message: 'Cliente created successfully. Password sent to console.' 
-        };
-      }
+    // Forward all headers from orchestrator except status
+    for (const [key, value] of response.headers.entries()) {
+      res.setHeader(key, value);
     }
 
-    // Send the response
+    // Send the response body if it exists, otherwise just end the response
     if (responseBody) {
-      res.json(responseBody);
+      // Check if it's a conflict error
+      if (responseBody.success === false && responseBody.message && responseBody.message.includes('já existe')) {
+        return res.status(409).json(responseBody);
+      }
+      // Return 201 Created for successful creation
+      res.status(201).json(responseBody);
     } else {
-      res.end();
+      res.status(201).end();
     }
+
   } catch (error) {
     console.error('Error forwarding cliente request:', error);
     res.status(500).json({
@@ -187,53 +216,124 @@ app.post('/clientes', async (req, res) => {
 // PERMISSÃO : CLIENTE
 // R03 - TELA INICIAL DE CLIENTE
 app.get('/clientes/:codigoCliente', async (req, res) => {
-  // Get token from Authorization header
-  const authHeader = req.headers.authorization;
-  if (!authHeader) {
-    return res.status(401).json({
-      error: 'Unauthorized',
-      message: 'No authorization token provided'
-    });
-  }
+  try {
+    // Get token from Authorization header
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+      return res.status(401).json({
+        error: 'Unauthorized',
+        message: 'No authorization token provided'
+      });
+    }
 
-  const token = authHeader.split(' ')[1];
-  
-  // Verify token and check if user type is CLIENTE
-  if (!hasUserType(token, 'CLIENTE')) {
-    return res.status(403).json({
-      error: 'Forbidden',
-      message: 'User must be of type CLIENTE to access this resource'
-    });
-  }
+    const token = authHeader.split(' ')[1];
+    
+    // Verify token and check if user type is CLIENTE
+    if (!hasUserType(token, 'CLIENTE')) {
+      return res.status(401).json({
+        error: 'Unauthorized',
+        message: 'User must be of type CLIENTE to access this resource'
+      });
+    }
 
-  //TODO: Implementar a lógica para buscar o cliente usando saga
-  //Verificar se o codigo do cliente é o mesmo do JWT
-  //Se não for, retornar 403
+    // Verify if the cliente code in the URL matches the one in the JWT
+    const decodedToken = verifyToken(token);
+    if (!decodedToken) {
+      return res.status(401).json({
+        error: 'Unauthorized',
+        message: 'Invalid or expired token'
+      });
+    }
+
+    const { codigoCliente } = req.params;
+
+    console.log('Cliente search request received for codigo:', codigoCliente);
+    
+    const orchestratorUrl = `${process.env.ORCHESTRATOR_URL}/clientes/${codigoCliente}`;
+    console.log('Forwarding to orchestrator:', orchestratorUrl);
+    
+    const response = await fetch(orchestratorUrl, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    console.log('Orchestrator response status:', response.status);
+
+    // Get the response content if any
+    let responseBody;
+    const contentType = response.headers.get('content-type');
+    if (contentType && contentType.includes('application/json')) {
+      responseBody = await response.json();
+      console.log('Orchestrator response body:', responseBody);
+    }
+
+    // Forward the exact status code from orchestrator
+    res.status(response.status);
+
+    // Forward all headers from orchestrator
+    for (const [key, value] of response.headers.entries()) {
+      res.setHeader(key, value);
+    }
+
+    // Send the response body if it exists, otherwise just end the response
+    if (responseBody) {
+      res.json(responseBody);
+    } else {
+      res.end();
+    }
+
+  } catch (error) {
+    console.error('Error forwarding cliente search request:', error);
+    res.status(500).json({ error: 'Internal Server Error', message: error.message });
+  }
 });
 
-// R04 - LISTAR RESERVAS
+// PERMISSÃO: CLIENTE
+// R-something: Listar reservas do cliente
 app.get('/clientes/:codigoCliente/reservas', async (req, res) => {
-  // Get token from Authorization header
-  const authHeader = req.headers.authorization;
-  if (!authHeader) {
-    return res.status(401).json({
-      error: 'Unauthorized',
-      message: 'No authorization token provided'
-    });
-  }
+  try {
+    const { codigoCliente } = req.params;
+    
+    // Validate JWT token
+    const token = req.headers.authorization?.replace('Bearer ', '');
+    if (!token) {
+      return res.status(401).json({ success: false, message: 'Token não fornecido' });
+    }
 
-  const token = authHeader.split(' ')[1];
-  
-  // Verify token and check if user type is CLIENTE
-  if (!hasUserType(token, 'CLIENTE')) {
-    return res.status(403).json({
-      error: 'Forbidden',
-      message: 'User must be of type CLIENTE to access this resource'
-    });
+    const decoded = verifyToken(token);
+    if (!decoded) {
+      return res.status(401).json({ success: false, message: 'Token inválido ou expirado' });
+    }
+    console.log('JWT decoded for reservas endpoint:', decoded);
+    
+    // Ensure the client can only access their own reservations
+    if (decoded.role === 'CLIENTE' && decoded.clienteCode !== codigoCliente) {
+      return res.status(403).json({ success: false, message: 'Acesso negado' });
+    }
+
+    console.log('Forwarding to orchestrator: http://orchestrator:3002/clientes/' + codigoCliente + '/reservas');
+    
+    const response = await axios.get(`http://orchestrator:3002/clientes/${codigoCliente}/reservas`);
+    console.log('Orchestrator response status:', response.status);
+    console.log('Orchestrator response data:', response.data);
+    
+    // Return 204 if response data is an empty array
+    if (Array.isArray(response.data) && response.data.length === 0) {
+      return res.status(204).end();
+    }
+    
+    res.json(response.data);
+  } catch (error) {
+    console.error('Error in /clientes/:codigoCliente/reservas:', error.message);
+    if (error.response) {
+      console.error('Error response data:', error.response.data);
+      res.status(error.response.status).json(error.response.data);
+    } else {
+      res.status(500).json({ success: false, message: 'Erro interno do servidor' });
+    }
   }
-  //TODO: Implementar a lógica para buscar as reservas do cliente usando saga
-  //Verificar se o codigo do cliente é o mesmo do JWT
-  //Se não for, retornar 403
 });
 
 // R05 - COMPRAR MILHAS

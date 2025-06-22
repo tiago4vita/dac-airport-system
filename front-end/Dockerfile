@@ -2,6 +2,14 @@ FROM node:18-alpine
 
 WORKDIR /app
 
+# Accept build arguments for React environment variables
+ARG REACT_APP_API_URL
+ARG REACT_APP_API_GATEWAY_URL
+
+# Set environment variables for the build process
+ENV REACT_APP_API_URL=$REACT_APP_API_URL
+ENV REACT_APP_API_GATEWAY_URL=$REACT_APP_API_GATEWAY_URL
+
 # Copy package files
 COPY package*.json ./
 

@@ -39,70 +39,48 @@ public class BuscarVooConsumer {
     }
 
     @RabbitListener(queues = "voo.buscar")
-    public void receiveMessage(String msg) throws JsonMappingException, JsonProcessingException {
+    public String receiveMessage(String msg) throws JsonProcessingException {
         Map<String, Object> response = new HashMap<>();
         try {
-            if (msg == null || msg.isEmpty()) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                        "Mensagem vazia. A mensagem deve conter o codigo do voo.");
-            }
+            System.out.println("BuscarVooConsumer received message: '" + msg + "'");
 
-            JsonNode jsonNode = objectMapper.readTree(msg);
+            JsonNode rootNode = objectMapper.readTree(msg);
+            String codigoVoo = rootNode.get("codigo").asText();
+            System.out.println("Looking for flight with code: '" + codigoVoo + "'");
 
-            // Expecting only the flight code in the message
-            String codigo = jsonNode.get("codigo").asText();
+            Voo voo = vooRepository.findByCodigo(codigoVoo);
 
-            // Fetch the Voo by codigo
-            Voo voo = vooRepository.findByCodigo(codigo);
-            if (voo == null) {
-                response.put("success", false);
-                response.put("message", "Voo não encontrado para o código: " + codigo);
-            } else {
-                
-                Aeroporto aeroportoOrigem = aeroportoRepository.findByCodigo(voo.getOrigem());
-                Aeroporto aeroportoDestino = aeroportoRepository.findByCodigo(voo.getDestino());
+            if (voo != null) {
+                Aeroporto origem = aeroportoRepository.findByCodigo(voo.getOrigem());
+                Aeroporto destino = aeroportoRepository.findByCodigo(voo.getDestino());
 
-                Map<String, Object> aeroportoOrigemMap = new HashMap<>();
-                aeroportoOrigemMap.put("codigo", aeroportoOrigem.getCodigo());
-                aeroportoOrigemMap.put("nome", aeroportoOrigem.getNome());
-                aeroportoOrigemMap.put("cidade", aeroportoOrigem.getCidade());
-                aeroportoOrigemMap.put("uf", aeroportoOrigem.getUF());
-
-                Map<String, Object> aeroportoDestinoMap = new HashMap<>();
-                aeroportoDestinoMap.put("codigo", aeroportoDestino.getCodigo());
-                aeroportoDestinoMap.put("nome", aeroportoDestino.getNome());
-                aeroportoDestinoMap.put("cidade", aeroportoDestino.getCidade());
-                aeroportoDestinoMap.put("uf", aeroportoDestino.getUF());
-
-                // Convert LocalDateTime to ZonedDateTime with the appropriate time zone
-                ZonedDateTime zonedDateTime = voo.getDataHora().atZone(ZoneId.of("America/Sao_Paulo"));
-                String formattedDateTime = zonedDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX"));
-
-                response.put("codigo", voo.getCodigo());
-                response.put("data", formattedDateTime); // Use the formatted datetime
-                response.put("valor_passagem", voo.getPrecoEmReais());
-                response.put("quantidade_poltronas_total", voo.getQuantidadePoltronasTotal());
-                response.put("quantidade_poltronas_ocupadas", voo.getQuantidadePoltronasOcupadas());
-                response.put("estado", voo.getEstado().toString());
-                response.put("aeroporto_origem", aeroportoOrigemMap);
-                response.put("aeroporto_destino", aeroportoDestinoMap);
+                System.out.println("Voo encontrado via RabbitMQ: (" + voo.getCodigo() + ") de " + voo.getOrigem() + " para " + voo.getDestino());
                 response.put("success", true);
+                response.put("message", "Voo encontrado com sucesso");
+
+                Map<String, Object> vooMap = new HashMap<>();
+                vooMap.put("codigo", voo.getCodigo());
+                vooMap.put("dataHora", voo.getDataHora());
+                vooMap.put("origem", origem);
+                vooMap.put("destino", destino);
+                vooMap.put("precoEmReais", voo.getPrecoEmReais());
+                vooMap.put("quantidadePoltronasTotal", voo.getQuantidadePoltronasTotal());
+                vooMap.put("quantidadePoltronasOcupadas", voo.getQuantidadePoltronasOcupadas());
+                vooMap.put("estado", voo.getEstado());
+
+                response.put("voo", vooMap);
+            } else {
+                response.put("success", false);
+                response.put("message", "Voo não encontrado com o código: " + codigoVoo);
             }
+
         } catch (Exception e) {
-            System.err.println("Erro inesperado ao processar mensagem: " + e.getMessage());
-            e.printStackTrace();
-
             response.put("success", false);
-            response.put("message", "Erro interno: " + e.getMessage());
-            response.put("errorType", "INTERNAL_ERROR");
+            response.put("message", "Erro ao buscar voo: " + e.getMessage());
         }
 
-        try {
-            String responseJson = objectMapper.writeValueAsString(response);
-            rabbitTemplate.convertAndSend("retorno", responseJson);
-            System.out.println("Resposta enviada para a fila retorno: " + responseJson);
-        } catch (JsonProcessingException e) {
-            System.err.println("Erro ao converter resposta para JSON: " + e.getMessage());
-        }
+        String responseJson = objectMapper.writeValueAsString(response);
+        System.out.println("Sending response: " + responseJson);
+        return responseJson;
     }
 }

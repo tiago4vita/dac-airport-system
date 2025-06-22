@@ -8,6 +8,7 @@
     "@testing-library/react": "^16.2.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.8.4",
+    "dotenv": "^16.5.0",
     "json-server": "^1.0.0-alpha.23",
     "lucide-react": "^0.487.0",
     "react": "^19.0.0",
@@ -16,14 +17,14 @@
     "react-imask": "^7.6.1",
     "react-router-dom": "^7.5.0",
     "react-scripts": "5.0.1",
+    "react-toastify": "^11.0.5",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "server": "json-server --watch mock/db.json --port 8080"
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [

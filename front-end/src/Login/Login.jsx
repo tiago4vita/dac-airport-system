@@ -31,7 +31,7 @@ export const Login = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:3000/login", {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/login`, {
         login: email,
         senha: senha,
       });
@@ -45,6 +45,7 @@ export const Login = () => {
           access_token,
         };
 
+        // Let AuthContext handle sessionStorage
         login(usuarioCompleto);
 
         if (tipo === "CLIENTE") {

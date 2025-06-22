@@ -25,10 +25,7 @@ public class RabbitMQConfig {
     public Queue clienteBuscarExtratoMilhasQueue() { return new Queue("cliente.buscar-extrato-milhas", true); }
 
     @Bean
-    public Queue retornoQueue() {
-        return new Queue("retorno", true);
-    }
-
+    public Queue clienteDeletarQueue() { return new Queue("cliente.deletar", true); }
 
     @Bean
     public ObjectMapper objectMapper() {
