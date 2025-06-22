@@ -18,7 +18,7 @@ public class Reserva {
     @Column(unique = true)
     private String id;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String vooId;
 
     @Column(nullable = false)
