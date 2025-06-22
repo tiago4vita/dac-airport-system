@@ -82,6 +82,31 @@ public class ReservaCommandService {
     }
 
     /**
+     * Perform check-in for a reservation
+     * @param reservaId the reservation ID
+     * @return the updated reservation
+     */
+    public Optional<Reserva> realizarCheckIn(String reservaId) {
+        Optional<Reserva> optionalReserva = reservaRepository.findById(reservaId);
+        
+        if (optionalReserva.isPresent()) {
+            Reserva reserva = optionalReserva.get();
+            EstadoReserva estadoAtual = reserva.getEstado();
+
+            // Check if reservation can be checked in (must be CRIADA and not CANCELADA)
+            if (estadoAtual.getCodigoEstado().equals(EstadoReserva.Estado.CRIADA.name())) {
+
+                EstadoReserva estadoCheckIn = estadoReservaRepository.findByCodigoEstado(EstadoReserva.Estado.CHECK_IN.name());
+                reserva.atualizarEstado(estadoCheckIn);
+                
+                return Optional.of(reservaRepository.save(reserva));
+            }
+        }
+        
+        return Optional.empty();
+    }
+
+    /**
      * Find a reservation by ID (for internal use only)
      * @param id the reservation ID
      * @return Optional containing the reservation if found

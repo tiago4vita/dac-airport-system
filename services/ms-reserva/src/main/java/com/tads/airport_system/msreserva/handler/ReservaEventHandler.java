@@ -45,6 +45,9 @@ public class ReservaEventHandler {
                 case "RESERVA_CANCELADA":
                     handleReservaCancelada(event);
                     break;
+                case "RESERVA_CHECK_IN":
+                    handleReservaCheckIn(event);
+                    break;
                 case "RESERVA_ESTADO_ALTERADO":
                     handleReservaEstadoAlterado(event);
                     break;
@@ -95,6 +98,26 @@ public class ReservaEventHandler {
             System.out.println("ReservaView atualizada (cancelada): " + reservaView);
         } else {
             System.err.println("ReservaView não encontrada para cancelamento: " + event.getReservaId());
+        }
+    }
+
+    /**
+     * Lida com eventos de RESERVA_CHECK_IN
+     * @param event o evento
+     */
+    @Transactional(transactionManager = "queryTransactionManager")
+    public void handleReservaCheckIn(ReservaEvent event) {
+        ReservaView reservaView = reservaViewRepository.findById(event.getReservaId())
+            .orElse(null);
+            
+        if (reservaView != null) {
+            reservaView.setEstadoCodigo(event.getEstadoCodigo());
+            reservaView.setEstadoSigla(event.getEstadoSigla());
+            reservaView.setEstadoDescricao(event.getEstadoDescricao());
+            reservaViewRepository.save(reservaView);
+            System.out.println("ReservaView atualizada (check-in realizado): " + reservaView);
+        } else {
+            System.err.println("ReservaView não encontrada para check-in: " + event.getReservaId());
         }
     }
 

@@ -16,6 +16,9 @@ public class RabbitMQConfig {
     public Queue reservaCancelarQueue() { return new Queue("reserva.cancelar", true); }
 
     @Bean
+    public Queue reservaCheckInQueue() { return new Queue("reserva.checkin", true); }
+
+    @Bean
     public Queue reservaConsultarQueue() { return new Queue("reserva.consultar", true); }
 
     @Bean
