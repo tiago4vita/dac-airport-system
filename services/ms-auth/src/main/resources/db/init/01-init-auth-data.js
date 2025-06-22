@@ -12,7 +12,7 @@ db.usuarios.insertMany([
   {
     "_id": "7b9a4f9c-b01c-4733-bb64-f848f0d76952",
     "login": "func_pre@gmail.com",
-    "senha": "TADS",
+    "senha": "51e97818fca8cc936080e045f50ca32812fc364f3f68fe27798e9c15a2014dd5",
     "tipo": "FUNCIONARIO",
     "ativo": true,
     "_class": "airportsystem.msauth.model.Usuario"
