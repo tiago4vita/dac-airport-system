@@ -25,6 +25,16 @@ public class RabbitMQConfig {
     }
     
     @Bean
+    public Queue clienteCriarQueue() {
+        return new Queue("cliente.criar", false);
+    }
+    
+    @Bean
+    public Queue clienteDeletarQueue() {
+        return new Queue("cliente.deletar", false);
+    }
+    
+    @Bean
     public Queue authCriarQueue() {
         return new Queue("auth.criar", false);
     }
