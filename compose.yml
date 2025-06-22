@@ -20,15 +20,27 @@ services:
       - "3001:3001"
     environment:
       - PORT=3001
-      - MICROSERVICE_AUTH_URL=http://ms-auth:8080
-      - MICROSERVICE_CLIENTE_URL=http://ms-cliente:8081
-      - MICROSERVICE_FUNC_URL=http://ms-func:8084
-      - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672
+      - ORCHESTRATOR_URL=http://orchestrator:3002
       - PASSWORD_SALT=airport-system-salt
     depends_on:
-      - ms-auth
-      - ms-cliente
-      - ms-func
+      - orchestrator
+      - rabbitmq
+    networks:
+      - airport-network
+
+  orchestrator:
+    build:
+      context: ./orchestrator
+      dockerfile: Dockerfile
+    ports:
+      - "3002:3002"
+    environment:
+      - PORT=3002
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
+      - SPRING_RABBITMQ_USERNAME=user
+      - SPRING_RABBITMQ_PASSWORD=password
+    depends_on:
       - rabbitmq
     networks:
       - airport-network
