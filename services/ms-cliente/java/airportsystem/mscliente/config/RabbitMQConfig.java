@@ -9,6 +9,14 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQConfig {
 
+     public static final String LISTAR_QUEUE = "cliente.listar";
+     public static final String CRIAR_QUEUE  = "cliente.criar";
+     public static final String BUSCAR_QUEUE = "cliente.buscar";
+
+    @Bean
+    public Queue listarClientesQueue() {
+        return new Queue(LISTAR_QUEUE, true);}
+
     @Bean
     public Queue clienteCriarQueue() { return new Queue("cliente.criar", true); }
 
@@ -23,7 +31,6 @@ public class RabbitMQConfig {
 
     @Bean
     public Queue clienteBuscarExtratoMilhasQueue() { return new Queue("cliente.buscar-extrato-milhas", true); }
-
 
     @Bean
     public ObjectMapper objectMapper() {

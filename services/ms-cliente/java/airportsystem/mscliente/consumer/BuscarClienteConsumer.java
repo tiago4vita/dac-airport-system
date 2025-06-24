@@ -1,86 +1,64 @@
 package airportsystem.mscliente.consumer;
 
-import airportsystem.mscliente.dto.ClienteDTO;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import airportsystem.mscliente.config.RabbitMQConfig;
 import airportsystem.mscliente.model.Cliente;
 import airportsystem.mscliente.repository.ClienteRepository;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
-@Component
+@Service
 public class BuscarClienteConsumer {
 
     private final ClienteRepository clienteRepository;
     private final ObjectMapper objectMapper;
-    private final RabbitTemplate rabbitTemplate;
 
-    @Autowired
-    public BuscarClienteConsumer(ClienteRepository clienteRepository, ObjectMapper objectMapper, RabbitTemplate rabbitTemplate) {
+    public BuscarClienteConsumer(ClienteRepository clienteRepository,
+                                 ObjectMapper objectMapper) {
         this.clienteRepository = clienteRepository;
-        this.objectMapper = objectMapper;
-        this.rabbitTemplate = rabbitTemplate;
+        this.objectMapper      = objectMapper;
     }
 
-    @RabbitListener(queues = "cliente.buscar")
-    public void receiveMessage(String msg) throws JsonMappingException, JsonProcessingException {
-        Map<String, Object> response = new HashMap<>();
+    @RabbitListener(queues = RabbitMQConfig.BUSCAR_QUEUE)
+    @SendTo
+    public String buscar(String codigo) throws Exception {
+        ObjectNode resp = objectMapper.createObjectNode();
         try {
-            // Assume the message contains the client ID to search for
-            String clienteCodigo = objectMapper.readValue(msg, String.class);
-            Optional<Cliente> clienteEncontrado = buscarClientePorCodigo(clienteCodigo);
-            
-            if (clienteEncontrado.isPresent()) {
-                Cliente cliente = clienteEncontrado.get();
-                System.out.println("Cliente encontrado via RabbitMQ: (" + cliente.getNome() + ") com CODIGO: " + cliente.getCodigo());
-                
-                // Prepare successful response
-                response.put("success", true);
-                response.put("cliente", cliente);
-                response.put("message", "Cliente encontrado com sucesso");
-            } else {
-                System.err.println("Cliente com CODIGO " + clienteCodigo + " não encontrado");
-                
-                // Prepare error response
-                response.put("success", false);
-                response.put("message", "Cliente com código " + clienteCodigo + " não encontrado");
-                response.put("errorType", "NOT_FOUND");
+            // Busca direto pela String
+            Optional<Cliente> opt = clienteRepository.findById(codigo);
+            if (opt.isEmpty()) {
+                throw new ResponseStatusException(
+                    org.springframework.http.HttpStatus.NOT_FOUND,
+                    "Cliente não encontrado"
+                );
             }
-        } catch (Exception e) {
-            System.err.println("Erro ao buscar cliente: " + e.getMessage());
-            e.printStackTrace();
-            
-            // Prepare error response
-            response.put("success", false);
-            response.put("message", "Erro ao buscar cliente: " + e.getMessage());
-            response.put("errorType", "INTERNAL_ERROR");
-        }
-        
-        // Send response to retorno queue
-        try {
-            String responseJson = objectMapper.writeValueAsString(response);
-            rabbitTemplate.convertAndSend("retorno", responseJson);
-            System.out.println("Resposta enviada para a fila retorno: " + responseJson);
-        } catch (JsonProcessingException e) {
-            System.err.println("Erro ao converter resposta para JSON: " + e.getMessage());
-        }
-    }
+            Cliente c = opt.get();
 
-    /**
-     * Busca um cliente pelo seu ID
-     * @param codigo Codigo do cliente a ser buscado
-     * @return Optional contendo o cliente, se encontrado
-     */
-    @Transactional(readOnly = true)
-    public Optional<Cliente> buscarClientePorCodigo(String codigo) {
-        return clienteRepository.findById(codigo);
+            // Monta resposta de sucesso
+            resp.put("success", true);
+            ObjectNode node = resp.putObject("cliente");
+            node.put("codigo", c.getCodigo());
+            node.put("cpf",    c.getCpf());
+            node.put("nome",   c.getNome());
+            node.put("email",  c.getEmail());
+            // adicione demais campos conforme necessário
+
+        } catch (ResponseStatusException ex) {
+            resp.put("success",   false);
+            resp.put("errorType", "NOT_FOUND");
+            resp.put("message",   ex.getReason());
+            resp.put("statusCode", ex.getStatusCode().value());
+        } catch (Exception ex) {
+            resp.put("success",   false);
+            resp.put("errorType", "INTERNAL_ERROR");
+            resp.put("message",   "Erro interno: " + ex.getMessage());
+        }
+        return objectMapper.writeValueAsString(resp);
     }
 }

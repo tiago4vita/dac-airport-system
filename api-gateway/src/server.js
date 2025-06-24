@@ -5,7 +5,7 @@ const createProxyMiddleware = require('./middleware/proxy');
 const { validateLoginRequest } = require('./middleware/loginValidation');
 const fetch = require('node-fetch');
 const { generateRandomPassword, hashPassword } = require('./utils/passwordUtils');
-const { sendToQueue, connect } = require('./services/rabbitMQService');
+const { enviarCadastro } = require('./services/rabbitMQService');
 const { generateToken, verifyToken, hasUserType } = require('./utils/jwtUtils');
 const jwt = require('jsonwebtoken');
 const axios = require('axios');
@@ -168,6 +168,15 @@ app.post('/clientes', async (req, res) => {
     }
     clienteRequest.senha = hashPassword(clienteRequest.senha);
     
+// publica as credenciais no ms-auth via RabbitMQ
+  await enviarCadastro({
+    login: clienteRequest.email,
+    senha: clienteRequest.senha,
+   // (opcional) repasse outros campos que o ms-auth aguarde:
+    cpf: clienteRequest.cpf,
+    nome: clienteRequest.nome
+  });
+
     const orchestratorUrl = `${process.env.ORCHESTRATOR_URL}/clientes`;
     console.log('Forwarding to orchestrator:', orchestratorUrl);
     
@@ -210,6 +219,45 @@ app.post('/clientes', async (req, res) => {
       error: 'Internal Server Error',
       message: error.message
     });
+  }
+});
+
+// R03-TESTE: busca todos os clientes
+app.get('/clientes', async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+      return res
+        .status(401)
+        .json({ error: 'Unauthorized', message: 'No token provided' });
+    }
+    const token = authHeader.replace(/^Bearer\s+/i, '');
+
+    // Permitir FUNCIONARIO, ADMIN ou CLIENTE
+    if (
+      !hasUserType(token, 'FUNCIONARIO') &&
+      !hasUserType(token, 'ADMIN') &&
+      !hasUserType(token, 'CLIENTE')
+    ) {
+      return res
+        .status(403)
+        .json({ error: 'Forbidden', message: 'Insufficient permissions' });
+    }
+
+    const orchestratorUrl = `${process.env.ORCHESTRATOR_URL}/clientes`;
+    console.log('Forwarding GET /clientes to orchestrator:', orchestratorUrl);
+
+    const response = await fetch(orchestratorUrl, {
+      method: 'GET',
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    const text = await response.text();
+    const data = text ? JSON.parse(text) : null;
+    return res.status(response.status).json(data);
+  } catch (error) {
+    console.error('Error in GET /clientes:', error);
+    return res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 

@@ -14,6 +14,8 @@ public class RabbitMQConfig {
         return new Queue("retorno", true);
     }
 
+    @Bean public Queue listarClientesQueue() { return new Queue("cliente.listar", true); }
+
     @Bean
     public ObjectMapper objectMapper() {
         return JsonMapper.builder().findAndAddModules().build();

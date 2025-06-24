@@ -1,63 +1,35 @@
+// api-gateway/src/services/rabbitMQService.js
 const amqp = require('amqplib');
 
-let connection = null;
-let channel = null;
+const EXCHANGE = 'auth.exchange';
+const QUEUE    = 'auth.cadastrar.queue';
+const ROUTING  = 'cadastrar';
 
-/**
- * Connect to RabbitMQ server
- */
+let channel;
+
 async function connect() {
-  try {
-    const rabbitUrl = process.env.RABBITMQ_URL || 'amqp://guest:guest@rabbitmq:5672';
-    connection = await amqp.connect(rabbitUrl);
-    channel = await connection.createChannel();
-    
-    // Declare queues
-    await channel.assertQueue('auth-service-queue', { durable: true });
-    
-    console.log('Connected to RabbitMQ');
-    return channel;
-  } catch (error) {
-    console.error('Error connecting to RabbitMQ:', error);
-    throw error;
-  }
+  if (channel) return channel;
+  const rabbitUrl = process.env.RABBITMQ_URL || 'amqp://guest:guest@rabbitmq:5672';
+  const conn = await amqp.connect(rabbitUrl);
+  channel = await conn.createChannel();
+
+  // 1) garante exchange
+  await channel.assertExchange(EXCHANGE, 'direct', { durable: true });
+  // 2) garante fila
+  await channel.assertQueue   (QUEUE,    { durable: true });
+  // 3) conecta exchange→fila
+  await channel.bindQueue     (QUEUE, EXCHANGE, ROUTING);
+
+  console.log('RabbitMQ conectado e exchange/queue criados');
+  return channel;
 }
 
-/**
- * Send a message to a specified queue
- * @param {string} queue - Queue name
- * @param {object} message - Message to send
- */
-async function sendToQueue(queue, message) {
-  try {
-    if (!channel) await connect();
-    
-    channel.sendToQueue(queue, Buffer.from(JSON.stringify(message)), {
-      persistent: true
-    });
-    
-    console.log(`Message sent to queue ${queue}`);
-  } catch (error) {
-    console.error(`Error sending message to queue ${queue}:`, error);
-    throw error;
-  }
+async function enviarCadastro(payload) {
+  const ch  = await connect();
+  const msg = JSON.stringify(payload);
+  console.log('Enviando cadastro para auth:', msg);
+  // publica no exchange, não diret- na fila
+  ch.publish(EXCHANGE, ROUTING, Buffer.from(msg), { persistent: true });
 }
 
-/**
- * Close RabbitMQ connection
- */
-async function close() {
-  try {
-    if (channel) await channel.close();
-    if (connection) await connection.close();
-    console.log('Closed RabbitMQ connection');
-  } catch (error) {
-    console.error('Error closing RabbitMQ connection:', error);
-  }
-}
-
-module.exports = {
-  connect,
-  sendToQueue,
-  close
-}; 
+module.exports = { enviarCadastro };

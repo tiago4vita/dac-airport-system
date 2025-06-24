@@ -20,27 +20,38 @@ export const TelaInicialCli = () => {
     if (!codigoCliente) return;
 
     try {
+      // 1) Busca dados do cliente
       const clienteRes = await api.get(`/clientes/${codigoCliente}`);
       setCliente(clienteRes.data);
 
+      // 2) Busca reservas
       const reservasRes = await api.get(
         `/clientes/${codigoCliente}/reservas`
       );
-      
-      const reservasProcessadas = reservasRes.data.map(reserva => ({
+
+      // 3) Extrai o array de reservas de dentro do envelope
+      const raw = reservasRes.data;
+      const listaBruta = Array.isArray(raw)
+        ? raw
+        : raw.reservas && Array.isArray(raw.reservas)
+        ? raw.reservas
+        : [];
+
+      // 4) Processa cada reserva
+      const reservasProcessadas = listaBruta.map((reserva) => ({
         ...reserva,
         voo: {
           ...reserva.voo.voo,
           aeroporto_origem: reserva.voo.voo.origem,
           aeroporto_destino: reserva.voo.voo.destino,
           data: new Date(
-            reserva.voo.voo.dataHora[0], 
+            reserva.voo.voo.dataHora[0],
             reserva.voo.voo.dataHora[1] - 1,
             reserva.voo.voo.dataHora[2],
             reserva.voo.voo.dataHora[3],
             reserva.voo.voo.dataHora[4]
-          )
-        }
+          ),
+        },
       }));
 
       setReservas(reservasProcessadas);
@@ -80,7 +91,7 @@ export const TelaInicialCli = () => {
       await api.patch(`/reservas/${reservaSelecionada.codigo}/estado`, {
         estado: "CANCELADA",
       });
-      carregarDados();
+      await carregarDados();
       setReservaSelecionada(null);
     } catch (error) {
       console.error("Erro ao cancelar reserva:", error);
@@ -108,7 +119,9 @@ export const TelaInicialCli = () => {
             {reservasPaginadas.map((reserva, index) => {
               const voo = reserva.voo;
               const dataObj = voo.data;
-              const statusClass = reserva.estado.toLowerCase().replace(/\s/g, "-");
+              const statusClass = reserva.estado
+                .toLowerCase()
+                .replace(/\s/g, "-");
 
               return (
                 <tr key={index}>
@@ -130,16 +143,30 @@ export const TelaInicialCli = () => {
                   <td>
                     <button
                       className="ver"
-                      onClick={() => navigate(`ver-reserva/${reserva.codigo}`)}
+                      onClick={() =>
+                        navigate(`ver-reserva/${reserva.codigo}`)
+                      }
                     >
                       Ver
                     </button>
                     <button
                       className="cancelar-reserva"
-                      disabled={!["criada", "check-in"].includes(reserva.estado.toLowerCase())}
+                      disabled={
+                        !["criada", "check-in"].includes(
+                          reserva.estado.toLowerCase()
+                        )
+                      }
                       style={{
-                        opacity: ["criada", "check-in"].includes(reserva.estado.toLowerCase()) ? "1" : "0.5",
-                        cursor: ["criada", "check-in"].includes(reserva.estado.toLowerCase()) ? "pointer" : "not-allowed",
+                        opacity: ["criada", "check-in"].includes(
+                          reserva.estado.toLowerCase()
+                        )
+                          ? "1"
+                          : "0.5",
+                        cursor: ["criada", "check-in"].includes(
+                          reserva.estado.toLowerCase()
+                        )
+                          ? "pointer"
+                          : "not-allowed",
                       }}
                       onClick={() => handleCancelar(reserva)}
                     >
@@ -157,7 +184,9 @@ export const TelaInicialCli = () => {
             <button
               key={i}
               onClick={() => setPaginaAtual(i + 1)}
-              className={`pagina ${paginaAtual === i + 1 ? "ativa" : ""}`}
+              className={`pagina ${
+                paginaAtual === i + 1 ? "ativa" : ""
+              }`}
             >
               {i + 1}
             </button>

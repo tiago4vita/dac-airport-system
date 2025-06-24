@@ -21,6 +21,7 @@ services:
     environment:
       - PORT=3001
       - ORCHESTRATOR_URL=http://orchestrator:3002
+      - RABBITMQ_URL=amqp://user:password@rabbitmq:5672
       - PASSWORD_SALT=airport-system-salt
     depends_on:
       - orchestrator
