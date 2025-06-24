@@ -494,28 +494,92 @@ app.put('/clientes/:codigoCliente/milhas', async (req, res) => {
 });
 
 // R06 - CONSULTAR EXTRATO DE MILHAS
-app.get('/clientes/{codigoCliente}/milhas', async (req, res) => { 
-  // Get token from Authorization header
-  const authHeader = req.headers.authorization;
-  if (!authHeader) {
-    return res.status(401).json({
-      error: 'Unauthorized',
-      message: 'No authorization token provided'
-    });
-  }
+app.get('/clientes/:codigoCliente/milhas', async (req, res) => {
+  try {
+    // Get token from Authorization header
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+      return res.status(401).json({
+        error: 'Unauthorized',
+        message: 'No authorization token provided'
+      });
+    }
 
-  const token = authHeader.split(' ')[1];
-  
-  // Verify token and check if user type is CLIENTE
-  if (!hasUserType(token, 'CLIENTE')) {
-    return res.status(403).json({
-      error: 'Forbidden',
-      message: 'User must be of type CLIENTE to access this resource'
+    const token = authHeader.split(' ')[1];
+    
+    // Verify token and check if user type is CLIENTE
+    if (!hasUserType(token, 'CLIENTE')) {
+      return res.status(403).json({
+        error: 'Forbidden',
+        message: 'User must be of type CLIENTE to access this resource'
+      });
+    }
+
+    // Verify if the cliente code in the URL matches the one in the JWT
+    const decodedToken = verifyToken(token);
+    if (!decodedToken) {
+      return res.status(401).json({
+        error: 'Unauthorized',
+        message: 'Invalid or expired token'
+      });
+    }
+
+    const { codigoCliente } = req.params;
+
+    // Verify if the cliente code in the URL matches the one in the JWT
+    if (decodedToken.clienteCode && decodedToken.clienteCode !== codigoCliente) {
+      return res.status(403).json({
+        error: 'Forbidden',
+        message: 'User can only access their own miles statement'
+      });
+    }
+
+    console.log('Buscar extrato milhas request received for cliente:', codigoCliente);
+    
+    const orchestratorUrl = `${process.env.ORCHESTRATOR_URL}/clientes/${codigoCliente}/milhas`;
+    console.log('Forwarding to orchestrator:', orchestratorUrl);
+    
+    const response = await fetch(orchestratorUrl, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    console.log('Orchestrator response status:', response.status);
+
+    // Get the response content if any
+    let responseBody;
+    const contentType = response.headers.get('content-type');
+    if (contentType && contentType.includes('application/json')) {
+      responseBody = await response.json();
+      console.log('Orchestrator response body:', responseBody);
+    }
+
+    // Forward the exact status code from orchestrator
+    res.status(response.status);
+
+    // Forward all headers from orchestrator
+    for (const [key, value] of response.headers.entries()) {
+      res.setHeader(key, value);
+    }
+
+    // Send the response body if it exists, otherwise just end the response
+    if (responseBody) {
+      console.log('Orchestrator response body:', responseBody);
+      res.json(responseBody);
+    } else {
+      res.end();
+    }
+
+  } catch (error) {
+    console.error('Error forwarding buscar extrato milhas request:', error);
+    res.status(500).json({
+      error: 'Internal Server Error',
+      message: error.message
     });
   }
-  //TODO: Implementar a lógica para buscar as milhas do cliente usando saga
-  //Verificar se o codigo do cliente é o mesmo do JWT
-  //Se não for, retornar 403
 });
 
 // R07a - BUSCAR VOOS POR DATA, ORIGEM E DESTINO
@@ -762,7 +826,7 @@ app.patch('/voos/{codigoVoo}/estado', async (req, res) => {
     const { estado } = req.body;
     const { codigoVoo } = req.params;
 
-    // FUNCIONARIO can only set CANCELADO or REALIZADO
+    // FUNCIONARIO can only set CANCELADO ou REALIZADO
     if (!estado || (estado !== 'CANCELADO' && estado !== 'REALIZADO')) {
       return res.status(400).json({
         error: 'Invalid estado',

@@ -43,11 +43,11 @@ public class BuscarExtratoMilhasClienteConsumer {
     }
 
     @RabbitListener(queues = "cliente.buscar-extrato-milhas")
-    public void receiveMessage(String msg) throws JsonMappingException, JsonProcessingException {
+    public String receiveMessage(String msg) throws JsonMappingException, JsonProcessingException {
         Map<String, Object> response = new HashMap<>();
         try {
-            // Parse the client code from the message
-            String clienteCodigo = objectMapper.readValue(msg, String.class);
+
+            String clienteCodigo = msg.trim();
             Optional<Cliente> clienteEncontrado = buscarClientePorCodigo(clienteCodigo);
             
             if (clienteEncontrado.isPresent()) {
@@ -55,7 +55,7 @@ public class BuscarExtratoMilhasClienteConsumer {
                 System.out.println("Cliente encontrado via RabbitMQ: (" + cliente.getNome() + ") com CODIGO: " + cliente.getCodigo());
                 
                 // Get client's transactions
-                List<TransacaoMilhas> transacoes = transacaoMilhasRepository.findByClienteCodigoOrderByDataHoraDesc(clienteCodigo);
+                List<TransacaoMilhas> transacoes = transacaoMilhasRepository.findByClienteCodigoOrderByDataHoraAsc(clienteCodigo);
                 
                 // Prepare the transaction list for the response
                 List<Map<String, Object>> transacoesResponse = new ArrayList<>();
@@ -98,13 +98,14 @@ public class BuscarExtratoMilhasClienteConsumer {
             response.put("errorType", "INTERNAL_ERROR");
         }
         
-        // Send response to retorno queue
+        // Return response directly
         try {
             String responseJson = objectMapper.writeValueAsString(response);
-            rabbitTemplate.convertAndSend("retorno", responseJson);
-            System.out.println("Resposta enviada para a fila retorno: " + responseJson);
+            System.out.println("Resposta retornada: " + responseJson);
+            return responseJson;
         } catch (JsonProcessingException e) {
             System.err.println("Erro ao converter resposta para JSON: " + e.getMessage());
+            return "{\"success\":false,\"message\":\"Erro crítico ao processar JSON\",\"errorType\":\"CRITICAL_ERROR\"}";
         }
     }
 
