@@ -5,7 +5,8 @@ const createProxyMiddleware = require('./middleware/proxy');
 const { validateLoginRequest } = require('./middleware/loginValidation');
 const fetch = require('node-fetch');
 const { generateRandomPassword, hashPassword } = require('./utils/passwordUtils');
-const { sendToQueue, connect } = require('./services/rabbitMQService');
+const { sendToQueue, connect } = require('./services/
+MQService');
 const { generateToken, verifyToken } = require('./utils/jwtUtils');
 
 // Load environment variables
