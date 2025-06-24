@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS funcionarios;
 -- Create funcionarios table
 CREATE TABLE IF NOT EXISTS funcionarios (
     codigo VARCHAR(255) PRIMARY KEY,
