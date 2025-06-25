@@ -38,7 +38,7 @@ public class CriarVooConsumer {
     }
 
     @RabbitListener(queues = "voo.criar")
-    public void receiveMessage(String msg) throws JsonMappingException, JsonProcessingException {
+    public String receiveMessage(String msg) throws JsonMappingException, JsonProcessingException {
         Map<String, Object> response = new HashMap<>();
         try {
             if (msg == null || msg.isEmpty()) {
@@ -120,8 +120,10 @@ public class CriarVooConsumer {
             String responseJson = objectMapper.writeValueAsString(response);
             rabbitTemplate.convertAndSend("retorno", responseJson);
             System.out.println("Resposta enviada para a fila retorno: " + responseJson);
+            return responseJson;
         } catch (JsonProcessingException e) {
             System.err.println("Erro ao converter resposta para JSON: " + e.getMessage());
+            return e.getMessage();
         }
     }
 }
