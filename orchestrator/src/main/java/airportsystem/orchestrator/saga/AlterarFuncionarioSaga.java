@@ -46,7 +46,7 @@ public class AlterarFuncionarioSaga {
             if (!funcionarioSuccess) {
                 return funcionarioResponse; // Return the error from ms-func
             }
-            
+            String funcionarioCodigo = funcionarioRequest.getCodigo();
             // Extract funcionario codigo for compensation if needed
             if (funcionarioResponseJson.has("funcionario") && funcionarioResponseJson.get("funcionario").has("codigo")) {
                 funcionarioCodigo = funcionarioResponseJson.get("funcionario").get("codigo").asText();

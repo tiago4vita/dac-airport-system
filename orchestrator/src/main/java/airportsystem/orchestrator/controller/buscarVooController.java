@@ -18,7 +18,7 @@ public class buscarVooController {
     private final RabbitTemplate rabbitTemplate;
     private final ObjectMapper objectMapper;
 
-    public criarVooController(RabbitTemplate rabbitTemplate, ObjectMapper objectMapper) {
+    public buscarVooController(RabbitTemplate rabbitTemplate, ObjectMapper objectMapper) {
         this.rabbitTemplate = rabbitTemplate;
         this.objectMapper = objectMapper;
     }

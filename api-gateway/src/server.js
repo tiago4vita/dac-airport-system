@@ -937,25 +937,25 @@ app.get('/funcionarios', async (req, res) => {
 });
 
 //R17 - CRIAR FUNCIONARIO
-app.post('/funcionarios', async (req, res) => {
+app.post('/funcionario', async (req, res) => {
   // Get token from Authorization header
-  const authHeader = req.headers.authorization;
-  if (!authHeader) {
-    return res.status(401).json({
-      error: 'Unauthorized',
-      message: 'No authorization token provided'
-    });
-  }
-
-  const token = authHeader.split(' ')[1];
-  
-  // Verify token and check if user type is FUNCIONARIO
-  if (!hasUserType(token, 'FUNCIONARIO')) {
-    return res.status(403).json({
-      error: 'Forbidden',
-      message: 'User must be of type FUNCIONARIO to access this resource'
-    });
-  }
+//  const authHeader = req.headers.authorization;
+//  if (!authHeader) {
+//    return res.status(401).json({
+//      error: 'Unauthorized',
+//      message: 'No authorization token provided'
+//    });
+//  }
+//
+//  const token = authHeader.split(' ')[1];
+//
+//  // Verify token and check if user type is FUNCIONARIO
+//  if (!hasUserType(token, 'FUNCIONARIO')) {
+//    return res.status(403).json({
+//      error: 'Forbidden',
+//      message: 'User must be of type FUNCIONARIO to access this resource'
+//    });
+//  }
 
   try {
     const { cpf, email, nome, telefone, senha } = req.body;
@@ -1019,6 +1019,31 @@ app.post('/funcionarios', async (req, res) => {
       senha: hashedPassword
     };
 
+    const createFuncUrl = `${process.env.ORCHESTRATOR_URL}/funcionario`;
+        console.log('Forwarding to orchestrator:', createFuncUrl);
+        const response = await fetch(createFuncUrl, {
+           method: 'POST',
+           headers: {
+             'Content-Type': 'application/json'
+           },
+           body: JSON.stringify(req.body)
+         });
+         console.log('Orchestrator response status:', response.status);
+         let responseBody;
+         const contentType = response.headers.get('content-type');
+             if (contentType && contentType.includes('application/json')) {
+               responseBody = await response.json();
+               console.log('Orchestrator response body:', responseBody);
+             }
+           if (response.status === 200 && responseBody) {
+            console.log('Generating Func:',responseBody)
+           }
+
+           if (responseBody) {
+                 res.json(responseBody);
+               } else {
+                 res.end();
+               }
     //TODO: Implementar a lógica para criar funcionário usando saga
     //sem tokens retornar 401
     //campos invalidos retornar 400

@@ -1,12 +1,11 @@
 package airportsystem.orchestrator.controller;
 
-import airport_system.orchestrator.dto.FuncionarioRequestDTO;
-import airportsystem.orchestrator.saga.LoginSaga;
+import airportsystem.orchestrator.dto.FuncionarioRequestDTO;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,12 +13,14 @@ import java.util.Map;
 import java.util.HashMap;
 import org.springframework.http.HttpStatus;
 import com.fasterxml.jackson.databind.JsonNode;
+import airportsystem.orchestrator.saga.AlterarFuncionarioSaga;
 
 
 @RestController
 @CrossOrigin
 public class AlterarFuncionarioController {
-    private final AlterarFuncionarioSaga alterarFuncionarioSaga
+    private final AlterarFuncionarioSaga alterarFuncionarioSaga;
+    private final ObjectMapper objectMapper;
 
     public AlterarFuncionarioController(AlterarFuncionarioSaga alterarFuncionarioSaga) {
         this.alterarFuncionarioSaga = alterarFuncionarioSaga;
