@@ -40,7 +40,7 @@ public class AtualizarFuncionarioConsumer {
             FuncionarioDTO funcionarioDTO = objectMapper.readValue(message, FuncionarioDTO.class);
             
             // Find the funcionario by codigo
-            Optional<Funcionario> optionalFuncionario = funcionarioRepository.findById(funcionarioDTO.getCodigo());
+            Optional<Funcionario> optionalFuncionario = funcionarioRepository.findOptionalByCpf(funcionarioDTO.getCpf());
             
             if (optionalFuncionario.isEmpty()) {
                 response.put("success", false);
@@ -67,6 +67,7 @@ public class AtualizarFuncionarioConsumer {
                     return objectMapper.writeValueAsString(response);
                 }
                 funcionario.setCpf(funcionarioDTO.getCpf());
+                //funcionario.setCodigo(funcionarioDTO.getCodigo());
             }
             
             // Check if email is being changed and if it already exists
@@ -107,7 +108,8 @@ public class AtualizarFuncionarioConsumer {
             response.put("message", "Erro interno ao processar JSON: " + e.getMessage());
             response.put("errorType", "JSON_ERROR");
         } catch (Exception e) {
-            System.err.println("Error updating funcionario: " + e.getMessage());
+            System.err.println("Error updating funcionarioss: " + e.getMessage());
+            System.out.println("Response gerada com erro: " + response);
             e.printStackTrace();
             
             response.put("success", false);
