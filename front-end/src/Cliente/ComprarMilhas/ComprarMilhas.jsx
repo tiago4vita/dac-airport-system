@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../../api/axiosInstance"; 
+import api from "../../api/axiosInstance";
 import "./ComprarMilhas.css";
 
 export const ComprarMilhas = () => {
@@ -8,27 +8,26 @@ export const ComprarMilhas = () => {
   const [quantidade, setQuantidade] = useState(0);
   const valorMilha = 5;
   const navigate = useNavigate();
-
   const codigoCliente = sessionStorage.getItem("codigo");
 
   useEffect(() => {
     api.get(`/clientes/${codigoCliente}`)
-      .then((res) => setCliente(res.data))
+      .then((res) => {
+        // res.data = { ..., saldo_milhas: number, ... }
+        setCliente(res.data);
+      })
       .catch((err) => {
         console.error("Erro ao buscar cliente:", err);
         alert("Erro ao buscar dados do cliente.");
       });
-  }, []);
+  }, [codigoCliente]);
 
   const total = quantidade * valorMilha;
   const dataHoje = new Date().toLocaleDateString("pt-BR");
 
   const handleCompra = async () => {
     try {
-      await api.put(`/clientes/${codigoCliente}/milhas`, {
-        quantidade: quantidade,
-      });
-
+      await api.put(`/clientes/${codigoCliente}/milhas`, { quantidade });
       alert("Milhas compradas com sucesso!");
       navigate("/extrato");
     } catch (error) {
@@ -45,7 +44,7 @@ export const ComprarMilhas = () => {
           <input
             type="number"
             placeholder="Quantidade de Milhas"
-            min={0}
+            min={1}
             value={quantidade}
             onChange={(e) => setQuantidade(Number(e.target.value))}
           />
@@ -70,8 +69,9 @@ export const ComprarMilhas = () => {
                 </tr>
               </tbody>
             </table>
+            {/* Exibe o saldo retornado no JSON */}
             <p className="saldo">
-              Seu saldo atual de Milhas: <strong>{cliente?.saldoMilhas ?? 0}</strong>
+              Seu saldo atual de Milhas: <strong>{cliente?.saldo_milhas ?? 0}</strong>
             </p>
           </div>
 
@@ -87,7 +87,11 @@ export const ComprarMilhas = () => {
         </section>
 
         <div className="botoes-footer">
-          <button className="btn-comprar" disabled={quantidade <= 0} onClick={handleCompra}>
+          <button
+            className="btn-comprar"
+            disabled={quantidade <= 0}
+            onClick={handleCompra}
+          >
             Comprar
           </button>
         </div>

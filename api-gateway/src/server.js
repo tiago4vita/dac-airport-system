@@ -398,187 +398,87 @@ app.get('/clientes/:codigoCliente/reservas', async (req, res) => {
 // R05 - COMPRAR MILHAS
 app.put('/clientes/:codigoCliente/milhas', async (req, res) => {
   try {
-    // Get token from Authorization header
     const authHeader = req.headers.authorization;
     if (!authHeader) {
-      return res.status(401).json({
-        error: 'Unauthorized',
-        message: 'No authorization token provided'
-      });
+      return res.status(401).json({ error: 'Unauthorized', message: 'No token provided' });
     }
-
-    const token = authHeader.split(' ')[1];
-    
-    // Verify token and check if user type is CLIENTE
+    const token = authHeader.replace(/^Bearer\s+/i, '');
     if (!hasUserType(token, 'CLIENTE')) {
-      return res.status(403).json({
-        error: 'Forbidden',
-        message: 'User must be of type CLIENTE to access this resource'
-      });
+      return res.status(403).json({ error: 'Forbidden', message: 'User must be CLIENTE' });
     }
 
-    // Verify if the cliente code in the URL matches the one in the JWT
-    const decodedToken = verifyToken(token);
-    if (!decodedToken) {
-      return res.status(401).json({
-        error: 'Unauthorized',
-        message: 'Invalid or expired token'
-      });
+    const decoded = verifyToken(token);
+    if (!decoded) {
+      return res.status(401).json({ error: 'Unauthorized', message: 'Invalid token' });
     }
 
     const { codigoCliente } = req.params;
     const { quantidade } = req.body;
-
-    // Validate quantidade field
-    if (!quantidade || !Number.isInteger(quantidade) || quantidade <= 0 || quantidade > 10000) {
+    if (!Number.isInteger(quantidade) || quantidade <= 0 || quantidade > 10000) {
       return res.status(400).json({
         error: 'Invalid quantidade',
-        message: 'Quantidade must be a positive integer between 1 and 10000'
+        message: 'Quantidade must be an integer between 1 and 10000'
       });
     }
-
-    // Verify if the cliente code in the URL matches the one in the JWT
-    if (decodedToken.clienteCode && decodedToken.clienteCode !== codigoCliente) {
-      return res.status(403).json({
-        error: 'Forbidden',
-        message: 'User can only access their own miles'
-      });
+    if (decoded.clienteCode && decoded.clienteCode !== codigoCliente) {
+      return res.status(403).json({ error: 'Forbidden', message: 'Cannot buy miles for another client' });
     }
 
-    console.log('Comprar milhas request received for cliente:', codigoCliente, 'quantidade:', quantidade);
-    
     const orchestratorUrl = `${process.env.ORCHESTRATOR_URL}/clientes/${codigoCliente}/milhas`;
-    console.log('Forwarding to orchestrator:', orchestratorUrl);
-    
-    const response = await fetch(orchestratorUrl, {
+    const orchestratorRes = await fetch(orchestratorUrl, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
+        Authorization: `Bearer ${token}`
       },
       body: JSON.stringify({ quantidade })
     });
 
-    console.log('Orchestrator response status:', response.status);
-
-    // Get the response content if any
-    let responseBody;
-    const contentType = response.headers.get('content-type');
-    if (contentType && contentType.includes('application/json')) {
-      responseBody = await response.json();
-      console.log('Orchestrator response body:', responseBody);
-    }
-
-    // Forward the exact status code from orchestrator
-    res.status(response.status);
-
-    // Forward all headers from orchestrator
-    for (const [key, value] of response.headers.entries()) {
-      res.setHeader(key, value);
-    }
-
-    // Send the response body if it exists, otherwise just end the response
-    if (responseBody) {
-      res.json(responseBody);
-    } else {
-      res.end();
-    }
-
-  } catch (error) {
-    console.error('Error forwarding comprar milhas request:', error);
-    res.status(500).json({
-      error: 'Internal Server Error',
-      message: error.message
-    });
+    const text = await orchestratorRes.text();
+    const body = text ? JSON.parse(text) : null;
+    res.status(orchestratorRes.status).json(body);
+  } catch (err) {
+    console.error('Error forwarding comprar milhas:', err);
+    res.status(500).json({ error: 'Internal Server Error', message: err.message });
   }
 });
 
 // R06 - CONSULTAR EXTRATO DE MILHAS
 app.get('/clientes/:codigoCliente/milhas', async (req, res) => {
   try {
-    // Get token from Authorization header
     const authHeader = req.headers.authorization;
     if (!authHeader) {
-      return res.status(401).json({
-        error: 'Unauthorized',
-        message: 'No authorization token provided'
-      });
+      return res.status(401).json({ error: 'Unauthorized', message: 'No token provided' });
     }
-
-    const token = authHeader.split(' ')[1];
-    
-    // Verify token and check if user type is CLIENTE
+    const token = authHeader.replace(/^Bearer\s+/i, '');
     if (!hasUserType(token, 'CLIENTE')) {
-      return res.status(403).json({
-        error: 'Forbidden',
-        message: 'User must be of type CLIENTE to access this resource'
-      });
+      return res.status(403).json({ error: 'Forbidden', message: 'User must be CLIENTE' });
     }
-
-    // Verify if the cliente code in the URL matches the one in the JWT
-    const decodedToken = verifyToken(token);
-    if (!decodedToken) {
-      return res.status(401).json({
-        error: 'Unauthorized',
-        message: 'Invalid or expired token'
-      });
+    const decoded = verifyToken(token);
+    if (!decoded) {
+      return res.status(401).json({ error: 'Unauthorized', message: 'Invalid token' });
     }
 
     const { codigoCliente } = req.params;
-
-    // Verify if the cliente code in the URL matches the one in the JWT
-    if (decodedToken.clienteCode && decodedToken.clienteCode !== codigoCliente) {
-      return res.status(403).json({
-        error: 'Forbidden',
-        message: 'User can only access their own miles statement'
-      });
+    if (decoded.clienteCode && decoded.clienteCode !== codigoCliente) {
+      return res.status(403).json({ error: 'Forbidden', message: 'Cannot view miles for another client' });
     }
 
-    console.log('Buscar extrato milhas request received for cliente:', codigoCliente);
-    
     const orchestratorUrl = `${process.env.ORCHESTRATOR_URL}/clientes/${codigoCliente}/milhas`;
-    console.log('Forwarding to orchestrator:', orchestratorUrl);
-    
-    const response = await fetch(orchestratorUrl, {
+    const orchestratorRes = await fetch(orchestratorUrl, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
+        Authorization: `Bearer ${token}`
       }
     });
 
-    console.log('Orchestrator response status:', response.status);
-
-    // Get the response content if any
-    let responseBody;
-    const contentType = response.headers.get('content-type');
-    if (contentType && contentType.includes('application/json')) {
-      responseBody = await response.json();
-      console.log('Orchestrator response body:', responseBody);
-    }
-
-    // Forward the exact status code from orchestrator
-    res.status(response.status);
-
-    // Forward all headers from orchestrator
-    for (const [key, value] of response.headers.entries()) {
-      res.setHeader(key, value);
-    }
-
-    // Send the response body if it exists, otherwise just end the response
-    if (responseBody) {
-      console.log('Orchestrator response body:', responseBody);
-      res.json(responseBody);
-    } else {
-      res.end();
-    }
-
-  } catch (error) {
-    console.error('Error forwarding buscar extrato milhas request:', error);
-    res.status(500).json({
-      error: 'Internal Server Error',
-      message: error.message
-    });
+    const text = await orchestratorRes.text();
+    const body = text ? JSON.parse(text) : null;
+    res.status(orchestratorRes.status).json(body);
+  } catch (err) {
+    console.error('Error forwarding extrato milhas:', err);
+    res.status(500).json({ error: 'Internal Server Error', message: err.message });
   }
 });
 

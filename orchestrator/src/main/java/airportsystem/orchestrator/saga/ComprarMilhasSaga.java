@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 
 @Service
 public class ComprarMilhasSaga {
-
     private static final Logger logger = LoggerFactory.getLogger(ComprarMilhasSaga.class);
     private static final int MAX_RETRIES = 3;
     private static final long RETRY_DELAY_MS = 1000;
@@ -27,43 +26,37 @@ public class ComprarMilhasSaga {
     public String execute(String codigoCliente, ComprarMilhasRequestDTO request) {
         try {
             logger.info("Starting ComprarMilhasSaga for cliente: {} with quantidade: {}", codigoCliente, request.getQuantidade());
-            
-            // Validate input
+
             if (codigoCliente == null || codigoCliente.trim().isEmpty()) {
                 return createErrorResponse("Client code cannot be empty", "VALIDATION_ERROR");
             }
-            
             if (request.getQuantidade() == null || request.getQuantidade() <= 0) {
                 return createErrorResponse("Quantidade must be a positive number", "VALIDATION_ERROR");
             }
 
-            // Create payload for ms-cliente
+            // Monta payload JSON
             ObjectNode payload = objectMapper.createObjectNode();
             payload.put("codigo", codigoCliente.trim());
             payload.put("quantidade", request.getQuantidade());
-            
             String payloadJson = objectMapper.writeValueAsString(payload);
-            logger.debug("Sending payload to cliente.somar-milhas: {}", payloadJson);
 
-            // Send request to ms-cliente
+            // Envia com retry
             String response = sendWithRetry("cliente.somar-milhas", payloadJson);
-            
             if (response == null) {
                 return createErrorResponse("Miles purchase request timed out", "TIMEOUT_ERROR");
             }
 
-            // Parse response
-            JsonNode responseJson = objectMapper.readTree(response);
-            boolean success = responseJson.has("success") && responseJson.get("success").asBoolean();
-            
-            if (!success) {
-                String message = responseJson.has("message") ? 
-                    responseJson.get("message").asText() : "Failed to purchase miles";
-                return createErrorResponse(message, "INTERNAL_ERROR");
+            JsonNode respJson = objectMapper.readTree(response);
+            if (!respJson.path("success").asBoolean(false)) {
+                String msg = respJson.path("message").asText("Failed to purchase miles");
+                return createErrorResponse(msg, "INTERNAL_ERROR");
             }
 
-            // Format response according to test requirements
-            return formatResponse(responseJson);
+            // Formata só os campos esperados pelo front
+            ObjectNode formatted = objectMapper.createObjectNode();
+            formatted.put("codigo", respJson.path("codigo").asText());
+            formatted.put("saldo_milhas", respJson.path("saldo_milhas").asLong());
+            return objectMapper.writeValueAsString(formatted);
 
         } catch (Exception e) {
             logger.error("Error in ComprarMilhasSaga: {}", e.getMessage(), e);
@@ -71,39 +64,22 @@ public class ComprarMilhasSaga {
         }
     }
 
-    private String formatResponse(JsonNode responseJson) throws com.fasterxml.jackson.core.JsonProcessingException {
-        ObjectNode formattedResponse = objectMapper.createObjectNode();
-        
-        // Map the fields to the expected format
-        if (responseJson.has("codigo")) {
-            formattedResponse.put("codigo", responseJson.get("codigo").asText());
-        }
-        if (responseJson.has("saldo_milhas")) {
-            formattedResponse.put("saldo_milhas", responseJson.get("saldo_milhas").asLong());
-        }
-        
-        return objectMapper.writeValueAsString(formattedResponse);
-    }
-
     private String sendWithRetry(String queueName, String message) {
         for (int attempt = 1; attempt <= MAX_RETRIES; attempt++) {
             try {
-                logger.debug("Sending message to queue {} (attempt {}/{})", queueName, attempt, MAX_RETRIES);
-                String response = (String) rabbitTemplate.convertSendAndReceive(queueName, message);
-                if (response != null) {
-                    logger.debug("Successfully received response from queue {}", queueName);
-                    return response;
+                logger.debug("Attempt {}/{} sending to queue {}", attempt, MAX_RETRIES, queueName);
+                String resp = (String) rabbitTemplate.convertSendAndReceive(queueName, message);
+                if (resp != null) {
+                    return resp;
                 }
             } catch (Exception e) {
-                logger.warn("Attempt {} failed for queue {}: {}", attempt, queueName, e.getMessage());
-                if (attempt < MAX_RETRIES) {
-                    try {
-                        Thread.sleep(RETRY_DELAY_MS * attempt);
-                    } catch (InterruptedException ie) {
-                        Thread.currentThread().interrupt();
-                        break;
-                    }
-                }
+                logger.warn("Attempt {} failed for {}: {}", attempt, queueName, e.getMessage());
+            }
+            try {
+                Thread.sleep(RETRY_DELAY_MS * attempt);
+            } catch (InterruptedException ie) {
+                Thread.currentThread().interrupt();
+                break;
             }
         }
         logger.error("All {} attempts failed for queue {}", MAX_RETRIES, queueName);
@@ -112,13 +88,13 @@ public class ComprarMilhasSaga {
 
     private String createErrorResponse(String message, String errorType) {
         try {
-            ObjectNode errorResponse = objectMapper.createObjectNode();
-            errorResponse.put("success", false);
-            errorResponse.put("message", message);
-            errorResponse.put("errorType", errorType);
-            return objectMapper.writeValueAsString(errorResponse);
+            ObjectNode error = objectMapper.createObjectNode();
+            error.put("success", false);
+            error.put("message", message);
+            error.put("errorType", errorType);
+            return objectMapper.writeValueAsString(error);
         } catch (Exception e) {
             return "{\"success\":false,\"message\":\"Failed to serialize error response\",\"errorType\":\"INTERNAL_ERROR\"}";
         }
     }
-} 
+}
