@@ -76,30 +76,6 @@
   </dependencies>
 
   <build>
-    <!-- Compile both main and test sources from your existing java/ folder -->
-    <sourceDirectory>${project.basedir}/java</sourceDirectory>
-    <testSourceDirectory>${project.basedir}/java</testSourceDirectory>
-
-    <!-- Load application.properties (and test properties) from resources/ -->
-    <resources>
-      <resource>
-        <directory>${project.basedir}/resources</directory>
-        <includes>
-          <include>**/*.properties</include>
-          <include>**/*.yml</include>
-        </includes>
-      </resource>
-    </resources>
-    <testResources>
-      <testResource>
-        <directory>${project.basedir}/resources</directory>
-        <includes>
-          <include>**/*.properties</include>
-          <include>**/*.yml</include>
-        </includes>
-      </testResource>
-    </testResources>
-
     <plugins>
       <plugin>
         <groupId>org.springframework.boot</groupId>

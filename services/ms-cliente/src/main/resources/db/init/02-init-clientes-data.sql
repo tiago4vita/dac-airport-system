@@ -1,2 +1,4 @@
-INSERT INTO clientes (cep,data_atualizacao,data_criacao,milhas,cpf,bairro,cidade,codigo,complemento,email,nome,numero,rua,uf) VALUES
-	 ('29142120',NULL,'2025-06-22 09:21:22.508404',0,'62529933014','PBandeirantes','Cariacica','a3773666-379c-4273-ab10-22632f56d21b','Apartamento','joaomelara@xerocopiadora.com.br','Joao Melara','567','Rua das Palmeiras','Espirito Santo'); 
+-- Insert sample client data
+INSERT INTO clientes (codigo, cpf, nome, email, rua, numero, complemento, bairro, cep, cidade, uf, milhas, data_criacao) VALUES
+('a3773666-379c-4273-ab10-22632f56d21b', '62529933014', 'Joao Melara', 'joaomelara@xerocopiadora.com.br', 'Rua das Palmeiras', '567', 'Apartamento', 'PBandeirantes', '29142120', 'Cariacica', 'ES', 0, '2025-06-22 09:21:22.508404')
+ON CONFLICT (codigo) DO NOTHING; 

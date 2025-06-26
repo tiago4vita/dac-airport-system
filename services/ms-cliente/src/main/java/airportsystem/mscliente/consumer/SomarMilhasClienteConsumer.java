@@ -40,7 +40,7 @@ public class SomarMilhasClienteConsumer {
 
     @RabbitListener(queues = "cliente.somar-milhas")
     @Transactional
-    public void receiveMessage(String msg) throws JsonMappingException, JsonProcessingException {
+    public String receiveMessage(String msg) throws JsonMappingException, JsonProcessingException {
         Map<String, Object> response = new HashMap<>();
         try {
             // Parse the message as a JSON node
@@ -100,13 +100,14 @@ public class SomarMilhasClienteConsumer {
             response.put("errorType", "INTERNAL_ERROR");
         }
 
-        // Send response to retorno queue
+        // Return response directly
         try {
             String responseJson = objectMapper.writeValueAsString(response);
-            rabbitTemplate.convertAndSend("retorno", responseJson);
-            System.out.println("Resposta enviada para a fila retorno: " + responseJson);
+            System.out.println("Resposta retornada: " + responseJson);
+            return responseJson;
         } catch (JsonProcessingException e) {
             System.err.println("Erro ao converter resposta para JSON: " + e.getMessage());
+            return "{\"success\":false,\"message\":\"Erro crítico ao processar JSON\",\"errorType\":\"CRITICAL_ERROR\"}";
         }
     }
 

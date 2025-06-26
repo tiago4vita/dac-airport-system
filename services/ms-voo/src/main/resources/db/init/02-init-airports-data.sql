@@ -1,12 +1,3 @@
--- Create airports table if it doesn't exist
-CREATE TABLE IF NOT EXISTS aeroporto (
-    id SERIAL PRIMARY KEY,
-    codigo VARCHAR(3) NOT NULL UNIQUE,
-    nome VARCHAR(100) NOT NULL,
-    cidade VARCHAR(100) NOT NULL,
-    uf VARCHAR(2) NOT NULL
-);
-
 -- Insert Brazilian airports
 INSERT INTO aeroporto (codigo, nome, cidade, uf) VALUES
     ('GRU', 'Aeroporto Internacional de São Paulo/Guarulhos', 'Guarulhos', 'SP'),
@@ -29,4 +20,4 @@ INSERT INTO aeroporto (codigo, nome, cidade, uf) VALUES
     ('AJU', 'Aeroporto de Aracaju', 'Aracaju', 'SE'),
     ('JPA', 'Aeroporto Internacional de João Pessoa', 'João Pessoa', 'PB'),
     ('MCP', 'Aeroporto Internacional de Macapá', 'Macapá', 'AP')
-ON CONFLICT (codigo) DO NOTHING;
+ON CONFLICT (codigo) DO NOTHING; 
