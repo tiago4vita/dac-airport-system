@@ -37,6 +37,11 @@ public class RabbitMQConfig {
     }
 
     @Bean
+    public Queue funcionarioListarQueue() {
+        return new Queue("funcionario.listar", false);
+    }
+
+    @Bean
     public ObjectMapper objectMapper() {
         return JsonMapper.builder().findAndAddModules().build();
     }
