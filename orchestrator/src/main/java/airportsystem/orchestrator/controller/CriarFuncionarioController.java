@@ -20,7 +20,7 @@ public class CriarFuncionarioController {
         this.criarFuncionarioSaga = criarFuncionarioSaga;
     }
     
-    @PostMapping("/funcionario")
+    @PostMapping("/funcionarios")
     public ResponseEntity<String> criarFuncionario(@RequestBody FuncionarioRequestDTO funcionarioRequest) {
         try {
             String response = criarFuncionarioSaga.execute(funcionarioRequest);

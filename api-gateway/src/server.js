@@ -921,9 +921,9 @@ app.get('/voo/:codigoVoo', async (req, res) => {
 
 
 
-//R16 - BUSCAR TODOS OS FUNCIONARIOS
+// R16 – BUSCAR TODOS OS FUNCIONARIOS
 app.get('/funcionarios', async (req, res) => {
-  // Get token from Authorization header
+  // 1) validação do token
   const authHeader = req.headers.authorization;
   if (!authHeader) {
     return res.status(401).json({
@@ -931,10 +931,7 @@ app.get('/funcionarios', async (req, res) => {
       message: 'No authorization token provided'
     });
   }
-
   const token = authHeader.split(' ')[1];
-  
-  // Verify token and check if user type is FUNCIONARIO
   if (!hasUserType(token, 'FUNCIONARIO')) {
     return res.status(403).json({
       error: 'Forbidden',
@@ -942,132 +939,77 @@ app.get('/funcionarios', async (req, res) => {
     });
   }
 
-  //TODO: Implementar a lógica para buscar todos os funcionarios no ms-func usando saga
-  //sem tokens retornar 401
-  //sem funcionarios retornar 204
-});
-
-//R17 - CRIAR FUNCIONARIO
-app.post('/funcionario', async (req, res) => {
-  // Get token from Authorization header
-  const authHeader = req.headers.authorization;
-  if (!authHeader) {
-    return res.status(401).json({
-      error: 'Unauthorized',
-      message: 'No authorization token provided'
-    });
-  }
-
-  const token = authHeader.split(' ')[1];
-
-  // Verify token and check if user type is FUNCIONARIO
-  if (!hasUserType(token, 'FUNCIONARIO')) {
-    return res.status(403).json({
-      error: 'Forbidden',
-      message: 'User must be of type FUNCIONARIO to access this resource'
-    });
-  }
-
+  // 2) encaminha para o Orchestrator
   try {
-    const { cpf, email, nome, telefone, senha } = req.body;
+    const orchestratorUrl = `${process.env.ORCHESTRATOR_URL}/funcionarios`;
+    console.log('Forwarding GET /funcionarios to orchestrator:', orchestratorUrl);
 
-    // Validate required fields
-    if (!cpf || !email || !nome || !telefone || !senha) {
-      return res.status(400).json({
-        error: 'Missing required fields',
-        message: 'All fields are required'
-      });
-    }
+    const response = await fetch(orchestratorUrl, {
+      method: 'GET',
+      headers: { Authorization: `Bearer ${token}` }
+    });
 
-    // Validate CPF format (11 digits)
-    if (!/^\d{11}$/.test(cpf)) {
-      return res.status(400).json({
-        error: 'Invalid CPF',
-        message: 'CPF must be 11 digits'
-      });
-    }
+    const text = await response.text();
+    const data = text ? JSON.parse(text) : [];
 
-    // Validate email format
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      return res.status(400).json({
-        error: 'Invalid email',
-        message: 'Email must be in valid format'
-      });
-    }
-
-    // Validate nome is not empty
-    if (!nome.trim()) {
-      return res.status(400).json({
-        error: 'Invalid nome',
-        message: 'Nome cannot be empty'
-      });
-    }
-
-    // Validate telefone format (11 digits)
-    if (!/^\d{11}$/.test(telefone)) {
-      return res.status(400).json({
-        error: 'Invalid telefone',
-        message: 'Telefone must be 11 digits'
-      });
-    }
-
-    // Validate senha is not empty
-    if (!senha.trim()) {
-      return res.status(400).json({
-        error: 'Invalid senha',
-        message: 'Senha cannot be empty'
-      });
-    }
-
-    // Hash the password before sending to service
-    const hashedPassword = hashPassword(senha);
-
-    const funcionarioData = {
-      cpf,
-      email,
-      nome,
-      telefone,
-      senha: hashedPassword
-    };
-
-    const createFuncUrl = `${process.env.ORCHESTRATOR_URL}/funcionario`;
-        console.log('Forwarding to orchestrator:', createFuncUrl);
-        const response = await fetch(createFuncUrl, {
-           method: 'POST',
-           headers: {
-             'Content-Type': 'application/json'
-           },
-           body: JSON.stringify(req.body)
-         });
-         console.log('Orchestrator response status:', response.status);
-         let responseBody;
-         const contentType = response.headers.get('content-type');
-             if (contentType && contentType.includes('application/json')) {
-               responseBody = await response.json();
-               console.log('Orchestrator response body:', responseBody);
-             }
-           if (response.status === 200 && responseBody) {
-            console.log('Generating Func:',responseBody)
-           }
-
-           if (responseBody) {
-                 res.json(responseBody);
-               } else {
-                 res.end();
-               }
-    //TODO: Implementar a lógica para criar funcionário usando saga
-    //sem tokens retornar 401
-    //campos invalidos retornar 400
-    //se o funcionário já existir retornar 409
-
+    // 3) devolve status e corpo conforme o Orchestrator
+    return res.status(response.status).json(data);
   } catch (error) {
-    console.error('Error creating employee:', error);
-    res.status(500).json({
-      error: 'Internal Server Error', 
+    console.error('Error in GET /funcionarios:', error);
+    return res.status(500).json({
+      error: 'Internal Server Error',
       message: error.message
     });
   }
 });
+
+
+// R17 – CRIAR FUNCIONARIO
+app.post('/funcionarios', async (req, res) => {
+  // 1) validação do token
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    return res.status(401).json({
+      error: 'Unauthorized',
+      message: 'No authorization token provided'
+    });
+  }
+  const token = authHeader.split(' ')[1];
+  if (!hasUserType(token, 'FUNCIONARIO')) {
+    return res.status(403).json({
+      error: 'Forbidden',
+      message: 'User must be of type FUNCIONARIO to access this resource'
+    });
+  }
+
+  // 2) encaminha para o Orchestrator
+  try {
+    const orchestratorUrl = `${process.env.ORCHESTRATOR_URL}/funcionarios`;
+    console.log('Forwarding POST /funcionarios to orchestrator:', orchestratorUrl);
+
+    const response = await fetch(orchestratorUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify(req.body)
+    });
+
+    const text = await response.text();
+    const data = text ? JSON.parse(text) : null;
+
+    // 3) devolve status e corpo conforme o Orchestrator
+    return res.status(response.status).json(data);
+  } catch (error) {
+    console.error('Error in POST /funcionarios:', error);
+    return res.status(500).json({
+      error: 'Internal Server Error',
+      message: error.message
+    });
+  }
+});
+
 
 //R18 - UPDATE FUNCIONARIO
 app.put('/funcionarios/{codigoFuncionario}', async (req, res) => {

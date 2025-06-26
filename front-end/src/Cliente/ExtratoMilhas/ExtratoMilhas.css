@@ -36,7 +36,7 @@ body {
   }
   
   /* Paginação */
-  .paginacao {
+  .paginacao_milhas {
     display: flex;
     justify-content: center;
     gap: 8px;
@@ -54,7 +54,14 @@ body {
     cursor: pointer;
     transition: 0.2s;
   }
-  
+
+.paginacao {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+  }
+
   .pagina.ativa {
     background-color: #0f172a;
     color: white;

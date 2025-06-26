@@ -79,13 +79,15 @@ export const Extrato = () => {
         </table>
 
         <div className="paginacao">
-          {Array.from({ length: totalPaginas }, (_, idx) => (
+          {Array.from({ length: totalPaginas }, (_, i) => (
             <button
-              key={idx}
-              onClick={() => setPaginaAtual(idx + 1)}
-              className={paginaAtual === idx + 1 ? "ativa" : ""}
+              key={i}
+              onClick={() => setPaginaAtual(i + 1)}
+              className={`pagina ${
+                paginaAtual === i + 1 ? "ativa" : ""
+              }`}
             >
-              {idx + 1}
+              {i + 1}
             </button>
           ))}
         </div>
