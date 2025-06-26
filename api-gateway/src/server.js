@@ -861,7 +861,7 @@ app.post('/voos', async (req, res) => {
   }
 
   const token = authHeader.split(' ')[1];
-  
+
   // Verify token and check if user type is FUNCIONARIO
   if (!hasUserType(token, 'FUNCIONARIO')) {
     return res.status(403).json({
@@ -943,6 +943,31 @@ app.post('/voos', async (req, res) => {
       });
     }
 
+    const createVooUrl = `${process.env.ORCHESTRATOR_URL}/voos`;
+    console.log('Forwarding to orchestrator:', createVooUrl);
+    const response = await fetch(createVooUrl, {
+       method: 'POST',
+       headers: {
+         'Content-Type': 'application/json'
+       },
+       body: JSON.stringify(req.body)
+     });
+     console.log('Orchestrator response status:', response.status);
+     let responseBody;
+     const contentType = response.headers.get('content-type');
+         if (contentType && contentType.includes('application/json')) {
+           responseBody = await response.json();
+           console.log('Orchestrator response body:', responseBody);
+         }
+       if (response.status === 200 && responseBody) {
+        console.log('Generating Voo:',responseBody)
+       }
+
+       if (responseBody) {
+             res.json(responseBody);
+           } else {
+             res.end();
+           }
     //TODO: Implementar a lógica para criar o voo usando saga
     //Verificar se o codigo do voo é o mesmo do JWT
     //Se não for, retornar 403
@@ -966,7 +991,7 @@ app.get('/aeroportos', async (req, res) => {
 });
 
 // R? - BUSCAR VOO POR CODIGO
-app.get('/voos/{codigoVoo}', async (req, res) => {
+app.get('/voo/:codigoVoo', async (req, res) => {
   // Get token from Authorization header
   const authHeader = req.headers.authorization;
   if (!authHeader) {
@@ -974,22 +999,23 @@ app.get('/voos/{codigoVoo}', async (req, res) => {
       error: 'Unauthorized',
       message: 'No authorization token provided'
     });
+
+    if (response.status === 204) {
+      return res.status(204).send(); // No Content
+    }
+
+    const text = await response.text();
+    const data = text ? JSON.parse(text) : null;
+    return res.status(response.status).json(data);
+
+  } catch (error) {
+    console.error('Error in GET /voo/{codigoVoo}:', error);
+    return res.status(500).json({ error: 'Internal Server Error' });
   }
 
-  const token = authHeader.split(' ')[1];
-  
-  // Verify token is valid
-  const decodedToken = verifyToken(token);
-  if (!decodedToken) {
-    return res.status(401).json({
-      error: 'Unauthorized',
-      message: 'Invalid or expired token'
-    });
-  }
 
-  //TODO: Implementar a lógica para buscar o voo no ms-voo usando saga
-  //sem voo retornar 204
 });
+
 
 //R16 - BUSCAR TODOS OS FUNCIONARIOS
 app.get('/funcionarios', async (req, res) => {
@@ -1018,7 +1044,7 @@ app.get('/funcionarios', async (req, res) => {
 });
 
 //R17 - CRIAR FUNCIONARIO
-app.post('/funcionarios', async (req, res) => {
+app.post('/funcionario', async (req, res) => {
   // Get token from Authorization header
   const authHeader = req.headers.authorization;
   if (!authHeader) {
@@ -1029,7 +1055,7 @@ app.post('/funcionarios', async (req, res) => {
   }
 
   const token = authHeader.split(' ')[1];
-  
+
   // Verify token and check if user type is FUNCIONARIO
   if (!hasUserType(token, 'FUNCIONARIO')) {
     return res.status(403).json({
@@ -1100,6 +1126,31 @@ app.post('/funcionarios', async (req, res) => {
       senha: hashedPassword
     };
 
+    const createFuncUrl = `${process.env.ORCHESTRATOR_URL}/funcionario`;
+        console.log('Forwarding to orchestrator:', createFuncUrl);
+        const response = await fetch(createFuncUrl, {
+           method: 'POST',
+           headers: {
+             'Content-Type': 'application/json'
+           },
+           body: JSON.stringify(req.body)
+         });
+         console.log('Orchestrator response status:', response.status);
+         let responseBody;
+         const contentType = response.headers.get('content-type');
+             if (contentType && contentType.includes('application/json')) {
+               responseBody = await response.json();
+               console.log('Orchestrator response body:', responseBody);
+             }
+           if (response.status === 200 && responseBody) {
+            console.log('Generating Func:',responseBody)
+           }
+
+           if (responseBody) {
+                 res.json(responseBody);
+               } else {
+                 res.end();
+               }
     //TODO: Implementar a lógica para criar funcionário usando saga
     //sem tokens retornar 401
     //campos invalidos retornar 400
