@@ -118,7 +118,7 @@ public class CriarVooConsumer {
 
         try {
             String responseJson = objectMapper.writeValueAsString(response);
-            rabbitTemplate.convertAndSend("retorno", responseJson);
+            //rabbitTemplate.convertAndSend("retorno", responseJson);
             System.out.println("Resposta enviada para a fila retorno: " + responseJson);
             return responseJson;
         } catch (JsonProcessingException e) {

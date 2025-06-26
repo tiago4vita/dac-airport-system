@@ -852,23 +852,23 @@ app.patch('/voos/{codigoVoo}/estado', async (req, res) => {
 // R15a - CRIAR VOO
 app.post('/voos', async (req, res) => {
   // Get token from Authorization header
-  const authHeader = req.headers.authorization;
-  if (!authHeader) {
-    return res.status(401).json({
-      error: 'Unauthorized',
-      message: 'No authorization token provided'
-    });
-  }
-
-  const token = authHeader.split(' ')[1];
-
-  // Verify token and check if user type is FUNCIONARIO
-  if (!hasUserType(token, 'FUNCIONARIO')) {
-    return res.status(403).json({
-      error: 'Forbidden',
-      message: 'User must be of type FUNCIONARIO to access this resource'
-    });
-  }
+//  const authHeader = req.headers.authorization;
+//  if (!authHeader) {
+//    return res.status(401).json({
+//      error: 'Unauthorized',
+//      message: 'No authorization token provided'
+//    });
+//  }
+//
+//  const token = authHeader.split(' ')[1];
+//
+//  // Verify token and check if user type is FUNCIONARIO
+//  if (!hasUserType(token, 'FUNCIONARIO')) {
+//    return res.status(403).json({
+//      error: 'Forbidden',
+//      message: 'User must be of type FUNCIONARIO to access this resource'
+//    });
+//  }
 
   try {
     const { 
@@ -999,6 +999,11 @@ app.get('/voo/:codigoVoo', async (req, res) => {
       error: 'Unauthorized',
       message: 'No authorization token provided'
     });
+  }
+
+  try {
+    const { codigoVoo } = req.params;
+    const response = await fetch(`${process.env.ORCHESTRATOR_URL}/voo/${codigoVoo}`);
 
     if (response.status === 204) {
       return res.status(204).send(); // No Content
@@ -1012,9 +1017,8 @@ app.get('/voo/:codigoVoo', async (req, res) => {
     console.error('Error in GET /voo/{codigoVoo}:', error);
     return res.status(500).json({ error: 'Internal Server Error' });
   }
-
-
 });
+
 
 
 //R16 - BUSCAR TODOS OS FUNCIONARIOS
